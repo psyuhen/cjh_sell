@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/gray"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/pop_main_head"
+        layout="@layout/pop_main_head" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/shop_add_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/add_shop_ll2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:orientation="horizontal"
+                android:visibility="visible" >
+
+                <TextView
+                    android:id="@+id/add_shop_publish_text"
+                    style="@style/pop_publish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_shop_publish_text" />
+
+                <TextView
+                    android:id="@+id/add_shop_category_text"
+                    style="@style/pop_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_shop_category_text" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/pop_shop_title_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_title_text" />
+
+            <EditText
+                android:id="@+id/pop_title_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="5.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_shop_title_edit_hint"
+                android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_shop_head_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_head_text" />
+
+            <FrameLayout
+                android:id="@+id/relative_head_edit_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="120.0dip"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/shop_add_head_image"
+                    android:layout_width="80.0dip"
+                    android:layout_height="80.0dip"
+                    android:layout_marginLeft="30.0dip"
+                    android:layout_marginTop="20.0dip"
+                    android:background="@drawable/content_add_image_icon"
+                    android:clickable="true" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/pop_shop_content_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_content_text" />
+
+            <EditText
+                android:id="@+id/pop_content_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="120.0dip"
+                android:layout_margin="5.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:gravity="top|left"
+                android:hint="@string/pop_shop_content_hint"
+                android:paddingLeft="20.0dip"
+                android:paddingTop="20.0dip" />
+
+            <LinearLayout
+                android:id="@+id/add_image_deatil_ll1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/add_image_deatil_text"
+                    style="@style/pop_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_image_deatil_text" />
+
+                <TextView
+                    android:id="@+id/add_image_deatil_text_agreement"
+                    style="@style/pop_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_image_deatil_text_agreement" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/relative_details_image_edit_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="120.0dip"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/shop_add_details_image_image"
+                    android:layout_width="80.0dip"
+                    android:layout_height="80.0dip"
+                    android:layout_marginLeft="30.0dip"
+                    android:layout_marginTop="20.0dip"
+                    android:background="@drawable/content_add_image_icon"
+                    android:clickable="true" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/pop_shop_tel_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_tel_text" />
+
+            <EditText
+                android:id="@+id/pop_tel_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="5.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_shop_tel_edit_hint"
+                android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_shop_person_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_person_text" />
+
+            <EditText
+                android:id="@+id/pop_person_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="5.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_shop_person_edit_hint"
+                android:paddingLeft="20.0dip" />
+
+            <ImageView 
+                android:layout_marginTop="15.0dip"
+                style="@style/pop_shop_item_line" />
+
+            <RelativeLayout
+                android:id="@+id/shop_link_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:background="@color/whitebg" >
+
+                <TextView
+                    android:id="@+id/pop_link_text"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:text="@string/pop_link_text" />
+
+                <CheckBox
+                    android:id="@+id/pop_link_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10.0dip" >
+                </CheckBox>
+            </RelativeLayout>
+
+            <ImageView 
+                android:layout_marginBottom="15.0dip"
+                style="@style/pop_shop_item_line" />
+
+            <TextView
+                android:id="@+id/pop_shop_address_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_address_text" />
+
+            <EditText
+                android:id="@+id/pop_address_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="5.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_shop_address_edit_hint"
+                android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_shop_location_title_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_location_title_text" />
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <RelativeLayout
+                android:id="@+id/shop_location_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="80.0dip"
+                android:background="@color/whitebg" >
+
+                <TextView
+                    android:id="@+id/pop_shop_location_text"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_shop_location_text" />
+
+                <ImageView
+                    android:id="@+id/pop_shop_location_images_arrow"
+                    android:layout_width="30.0dip"
+                    android:layout_height="30.0dip"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10.0dip"
+                    android:background="@drawable/arrow_right" />
+            </RelativeLayout>
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <TextView
+                android:id="@+id/pop_shop_time_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_shop_time_text" />
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <RelativeLayout
+                android:id="@+id/shop_time_all_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="80.0dip"
+                android:background="@color/whitebg" >
+
+                <TextView
+                    android:id="@+id/pop_time_all_text"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_time_all_text" />
+
+                <CheckBox
+                    android:id="@+id/pop_shop_check_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10.0dip" />
+            </RelativeLayout>
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <RelativeLayout
+                android:id="@+id/shop_time_start_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="80.0dip"
+                android:background="@color/whitebg" >
+
+                <TextView
+                    android:id="@+id/pop_shop_time_start_text"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_shop_time_start_text" />
+
+                <TextView
+                    android:id="@+id/pop_shop_time_start"
+                    style="@style/pop_shop_right_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_shop_time_start" />
+            </RelativeLayout>
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <RelativeLayout
+                android:id="@+id/shop_time_end_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="80.0dip"
+                android:background="@color/whitebg" >
+
+                <TextView
+                    android:id="@+id/pop_shop_time_end_text"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_shop_time_end_text" />
+
+                <TextView
+                    android:id="@+id/pop_shop_time_end"
+                    style="@style/pop_shop_right_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10.0dip"
+                    android:text="@string/pop_shop_time_end" />
+            </RelativeLayout>
+
+            <ImageView style="@style/pop_shop_item_line" />
+
+            <Button
+                android:id="@+id/shop_add_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_margin="20.0dip"
+                android:background="@drawable/btn_shop_pop_add"
+                android:text="@string/shop_add_btn_text" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

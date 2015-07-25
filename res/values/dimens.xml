@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- 顶部导航栏高度 -->
+    <dimen name="title_bar_height">60dp</dimen>
+    <!-- 我的 -->
+    <dimen name="me_ll">70dp</dimen>
+    <!-- 弹出选择框 -->
+    <dimen name="pop_rl_height">80.0dp</dimen>
+    <dimen name="pop_image_width">60.0dp</dimen>
+    <dimen name="pop_image_height">60.0dp</dimen>
+    <dimen name="regiset_edit_height">60.0dp</dimen>
+    <dimen name="register_top_height">60.0dp</dimen>
+    <!-- 商品 -->
+    <dimen name="goods_imagebtn_width">40.0dip</dimen>
+    <dimen name="goods_imagebtn_height">40.0dip</dimen>
+    <dimen name="goods_detail_image_width">80.0dp</dimen>
+    <dimen name="goods_detail_image_height">80.0dp</dimen>
+    <dimen name="goods_detail_deleteimage_width">20.0dp</dimen>
+    <dimen name="goods_detail_deleteimage_height">20.0dp</dimen>
+    <dimen name="head_image_width">80.0dip</dimen>
+    <dimen name="head_image_height">80.0dip</dimen>
+    <dimen name="arrow_width">20.0dip</dimen>
+    <dimen name="arrow_height">20.0dip</dimen>
+    <dimen name="decorate_item_height">60.0dip</dimen>
+    <dimen name="goods_view_image_height">400.0dip</dimen>
+    <dimen name="goods_view_icon_width">30.0dip</dimen>
+    <dimen name="goods_view_icon_height">30.0dip</dimen>
+    <!-- 聊天 -->
+    <dimen name="chat_imgbtn_icon_height">44.0dp</dimen>
+    <dimen name="chat_imgbtn_icon_width">44.0dp</dimen>
+    <dimen name="chat_imgaddbtn_icon_width">36.0dip</dimen>
+    <dimen name="chat_imgaddbtn_icon_height">36.0dip</dimen>
+    <!-- 营销 -->
+    <dimen name="market_source_title_height">60.0dip</dimen>
+    <dimen name="market_today_yestoday_ll_height">50.0dip</dimen>
+
+</resources>

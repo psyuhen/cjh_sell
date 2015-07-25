@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="35"
+    android:background="@drawable/head_bg"
+    android:orientation="vertical" >
+
+    <com.cjh.common.CircleImageView
+        android:id="@+id/goods_head"
+        android:layout_width="100dip"
+        android:layout_height="100.0dip"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10.0dip"
+        android:background="@drawable/login_head_icon" >
+    </com.cjh.common.CircleImageView>
+
+    <RelativeLayout
+        android:id="@+id/goods_top_center_rl"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20.0dip"
+        android:layout_toRightOf="@+id/goods_head"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/goods_title"
+            style="@style/goods_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15.0dip"
+            android:text="@string/goods_title_text" />
+
+        <ImageView
+            android:id="@+id/goods_stars"
+            android:layout_width="40.0dip"
+            android:layout_height="40.0dip"
+            android:layout_below="@+id/goods_title"
+            android:layout_marginTop="12.0dip"
+            android:background="@drawable/star" />
+
+        <TextView
+            android:id="@+id/goods_level"
+            style="@style/level_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/goods_stars"
+            android:layout_below="@+id/goods_title"
+            android:layout_marginTop="12.0dip"
+            android:layout_toRightOf="@+id/goods_stars"
+            android:text="@string/goods_level_text" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/goods_top_right_image"
+        android:layout_width="30.0dip"
+        android:layout_height="60.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10.0dip"
+        android:background="@drawable/right_icon" />
+
+</RelativeLayout>

@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <include
+        android:id="@+id/content_head"
+        layout="@layout/content_head"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/goods_bottom_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/market_top_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:background="@color/white" >
+
+                <ImageView
+                    android:id="@+id/left_image"
+                    android:layout_width="40.0dip"
+                    android:layout_height="40.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30.0dip"
+                    android:background="@drawable/market_data_icon" />
+
+                <TextView
+                    android:id="@+id/market_data_text"
+                    style="@style/market_data_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_toRightOf="@+id/left_image"
+                    android:text="@string/market_data_text" />
+            </RelativeLayout>
+
+            <ImageView style="@style/market_item_line" />
+
+            <LinearLayout
+                android:id="@+id/market_center_top_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_bg"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <RelativeLayout
+                    android:id="@+id/market_left_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/white" >
+
+                    <ImageView
+                        android:id="@+id/market_left_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/market_visit_icon" />
+
+                    <TextView
+                        android:id="@+id/market_left_num"
+                        style="@style/market_center_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/market_left_image"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dip"
+                        android:text="@string/market_left_visit_num_text" />
+
+                    <TextView
+                        android:id="@+id/goods_left_text"
+                        style="@style/market_center_bottom_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/market_left_num"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dip"
+                        android:text="@string/market_left_visit_text" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/market_center_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/gray" >
+
+                    <ImageView
+                        android:id="@+id/market_center_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/market_conversion_icon" />
+
+                    <TextView
+                        android:id="@+id/market_center_num"
+                        style="@style/market_center_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/market_center_image"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dip"
+                        android:text="@string/market_center_conversion_num_text" />
+
+                    <TextView
+                        android:id="@+id/market_center_num_text"
+                        style="@style/market_center_bottom_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/market_center_num"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dip"
+                        android:text="@string/market_center_conversion_text" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="10.0dip"
+                android:background="@color/white_bg"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <View
+                    android:id="@+id/good_left_line"
+                    android:layout_width="50.0dip"
+                    android:layout_height="10.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_line"
+                    android:visibility="visible" />
+
+                <View
+                    android:id="@+id/good_center_line"
+                    android:layout_width="50.0dip"
+                    android:layout_height="10.0dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_line"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/market_order_complete_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5.0dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="成交订单"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <HorizontalScrollView
+                        android:layout_width="fill_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="20dp" >
+
+                        <view
+                            android:id="@+id/line_view"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dp"
+                            class="com.cjh.common.LineView" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/market_item_line"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="12.0dip" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/market_today_yestoday_ll_height"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/market_order_today_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_order_today_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_visit_icon" />
+
+                        <TextView
+                            android:id="@+id/market_today_text"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_toRightOf="@+id/market_order_today_image"
+                            android:text="@string/market_today_text" />
+
+                        <TextView
+                            android:id="@+id/market_today_count"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_today_count" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="5.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:background="?android:attr/listDivider" />
+
+                    <RelativeLayout
+                        android:id="@+id/market_order_yesterday_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_order_yesterday_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_conversion_icon" />
+
+                        <TextView
+                            android:id="@+id/market_yesterday_text"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_toRightOf="@+id/market_order_yesterday_image"
+                            android:text="@string/market_yesterday_text" />
+
+                        <TextView
+                            android:id="@+id/market_yesterday_count"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_yesterday_count" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView style="@style/market_item_line" />
+
+            <LinearLayout
+                android:id="@+id/market_today_mnoney_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15.0dip"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5.0dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/market_today_mnoney"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <HorizontalScrollView
+                        android:layout_width="fill_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="20dp" >
+
+                        <view
+                            android:id="@+id/today_mnoney_lineview"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dp"
+                            class="com.cjh.common.LineView" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/market_item_line"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="12.0dip" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/market_today_yestoday_ll_height"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/market_money_today_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_money_today_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_visit_icon" />
+
+                        <TextView
+                            android:id="@+id/market_money_today_text"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_toRightOf="@+id/market_money_today_image"
+                            android:text="@string/market_today_text" />
+
+                        <TextView
+                            android:id="@+id/market_money_today_count"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_money_today_count" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="5.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:background="?android:attr/listDivider" />
+
+                    <RelativeLayout
+                        android:id="@+id/market_money_yesterday_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_money_order_yesterday_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_conversion_icon" />
+
+                        <TextView
+                            android:id="@+id/market_money_yesterday_text"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_toRightOf="@+id/market_money_order_yesterday_image"
+                            android:text="@string/market_yesterday_text" />
+
+                        <TextView
+                            android:id="@+id/market_money_yesterday_count"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_money_yesterday_count" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/market_today_customer_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15.0dip"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5.0dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/market_today_customer"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <HorizontalScrollView
+                        android:layout_width="fill_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="20dp" >
+
+                        <view
+                            android:id="@+id/today_customer_lineview"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dp"
+                            class="com.cjh.common.LineView" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/market_item_line"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="12.0dip" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/market_today_yestoday_ll_height"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/market_customer_today_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" 
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/market_customer_today_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_visit_icon" />
+
+                        <TextView
+                            android:id="@+id/market_customer_today_text"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_toRightOf="@+id/market_customer_today_image"
+                            android:text="@string/market_today_text" />
+
+                        <TextView
+                            android:id="@+id/market_customer_today_count"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_customer_today_count" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="5.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:background="?android:attr/listDivider" />
+
+                    <RelativeLayout
+                        android:id="@+id/market_customer_yesterday_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_customer_order_yesterday_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_conversion_icon" />
+
+                        <TextView
+                            android:id="@+id/market_customer_yesterday_text"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_toRightOf="@+id/market_customer_order_yesterday_image"
+                            android:text="@string/market_yesterday_text" />
+
+                        <TextView
+                            android:id="@+id/market_customer_yesterday_count"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_customer_yesterday_count" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/market_everyday_collect_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15.0dip"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5.0dip" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/market_everyday_collect"
+                        android:textColor="@android:color/black"
+                        android:textSize="22sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <HorizontalScrollView
+                        android:layout_width="fill_parent"
+                        android:layout_height="320dp"
+                        android:layout_marginTop="20dp" >
+
+                        <view
+                            android:id="@+id/everyday_collect_lineview"
+                            android:layout_width="fill_parent"
+                            android:layout_height="300dp"
+                            class="com.cjh.common.LineView" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/market_item_line"
+                    android:layout_marginLeft="20.0dip"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="12.0dip" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/market_today_yestoday_ll_height"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/market_everyday_collect_today_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:visibility="gone" >
+
+                        <ImageView
+                            android:id="@+id/market_everyday_collect_today_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_visit_icon" />
+
+                        <TextView
+                            android:id="@+id/market_everyday_collect_today_text"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_toRightOf="@+id/market_everyday_collect_today_image"
+                            android:text="@string/market_today_text" />
+
+                        <TextView
+                            android:id="@+id/market_everyday_collect_today_count"
+                            style="@style/market_center_bottom_black_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_everyday_collect_today_count" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="1px"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="5.0dip"
+                        android:layout_marginTop="5.0dip"
+                        android:background="?android:attr/listDivider"
+                        android:visibility="gone" />
+
+                    <RelativeLayout
+                        android:id="@+id/market_everyday_collect_yesterday_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/market_everyday_collect_yesterday_image"
+                            android:layout_width="40.0dip"
+                            android:layout_height="40.0dip"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="12.0dip"
+                            android:background="@drawable/market_conversion_icon" />
+
+                        <TextView
+                            android:id="@+id/market_everyday_collect_yesterday_text"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="6.0dip"
+                            android:layout_toRightOf="@+id/market_everyday_collect_yesterday_image"
+                            android:text="@string/market_yesterday_text" />
+
+                        <TextView
+                            android:id="@+id/market_everyday_collect_yesterday_count"
+                            style="@style/market_center_bottom_gray_style"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20.0dip"
+                            android:text="@string/market_everyday_collect_yesterday_count" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/market_bottom_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="70.0dip"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <RelativeLayout
+                    android:id="@+id/market_yessales_rl"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" >
+
+                    <ImageView
+                        android:id="@+id/market_yessales_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:background="@drawable/marketing_left_yessales_icon" />
+
+                    <TextView
+                        android:id="@+id/market_yessales_text"
+                        style="@style/market_data_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_toRightOf="@+id/market_yessales_image"
+                        android:text="@string/market_yessales_text" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/market_historysales_rl"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" >
+
+                    <ImageView
+                        android:id="@+id/market_historysales_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:background="@drawable/marketing_center_historysales_icon" />
+
+                    <TextView
+                        android:id="@+id/market_historysales_text"
+                        style="@style/market_data_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_toRightOf="@+id/market_historysales_image"
+                        android:text="@string/market_historysales_text" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/market_goodsscannum_rl"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1" >
+
+                    <ImageView
+                        android:id="@+id/market_goodsscannum_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="40.0dip"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:background="@drawable/marketing_right_goodsscannum_icon" />
+
+                    <TextView
+                        android:id="@+id/market_goodsscannum_text"
+                        style="@style/market_data_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_toRightOf="@+id/market_goodsscannum_image"
+                        android:text="@string/market_goodsscannum_text" />
+
+                    <ImageView
+                        android:id="@+id/market_special_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/arrow_icon" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ImageView style="@style/market_item_line" />
+
+            <Button
+                android:id="@+id/order_completed_source_btn"
+                style="@style/order_completed_source_btn_style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20.0dip"
+                android:background="@drawable/btn_common"
+                android:text="@string/order_completed_source_btn_text" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

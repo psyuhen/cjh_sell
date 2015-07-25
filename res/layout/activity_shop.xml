@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <include
+        android:id="@+id/content_head"
+        android:layout_height="80dp"
+        layout="@layout/content_head" />
+
+    <RelativeLayout
+        android:id="@+id/shop_bottom_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="10" >
+
+        <LinearLayout
+            android:id="@+id/shop_center_top_ll"
+            android:layout_width="fill_parent"
+            android:layout_height="70.0dip"
+            android:background="@color/white_bg"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/shop_left_rl"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/shop_left_image"
+                    android:layout_width="40.0dip"
+                    android:layout_height="40.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:background="@drawable/shop_home_icon" />
+
+                <TextView
+                    android:id="@+id/shop_home"
+                    style="@style/shop_nav_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/shop_left_image"
+                    android:text="@string/shop_home_text" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/shop_right_rl"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="3.0dip"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/shop_right_image"
+                    android:layout_width="40.0dip"
+                    android:layout_height="40.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10.0dip"
+                    android:background="@drawable/shop_decorate_icon" />
+
+                <TextView
+                    android:id="@+id/shop_decorate"
+                    style="@style/shop_nav_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/shop_right_image"
+                    android:text="@string/shop_decorate_text" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/line_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="10.0dip"
+            android:layout_below="@+id/shop_center_top_ll"
+            android:background="@color/white_bg"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <View
+                android:id="@+id/shop_left_line"
+                android:layout_width="50.0dip"
+                android:layout_height="10.0dip"
+                android:layout_weight="1"
+                android:background="@drawable/red_line"
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/shop_right_line"
+                android:layout_width="50.0dip"
+                android:layout_height="10.0dip"
+                android:layout_weight="1"
+                android:background="@drawable/red_line"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+      
+
+        <android.support.v4.view.ViewPager
+            android:layout_marginTop="10.0dip"
+            android:id="@+id/shop_viewpager"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line_rl"
+            android:background="@color/white" />
+    </RelativeLayout>
+
+</LinearLayout>

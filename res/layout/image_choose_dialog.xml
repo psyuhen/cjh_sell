@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/dialog_ll1"
+        android:layout_width="fill_parent"
+        android:layout_height="80.0dip"
+        android:background="@color/dialog_top_bg" >
+
+        <ImageView
+            android:id="@+id/dialog_alert_image"
+            android:layout_width="60.0dip"
+            android:layout_height="60.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dip"
+            android:background="@drawable/dialog_alert_icon" />
+
+        <TextView
+            android:id="@+id/dialog_title_text"
+            style="@style/dialog_btn_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dip"
+            android:layout_toRightOf="@+id/dialog_alert_image"
+            android:text="@string/dialog_title_text" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_rl2"
+        android:layout_width="fill_parent"
+        android:layout_height="280.0dip"
+        android:layout_below="@+id/dialog_ll1"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/dialog_album"
+            style="@style/dialog_btn_text_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/btn_dialog"
+            android:gravity="center"
+            android:text="@string/dialog_album" />
+
+        <Button
+            android:id="@+id/dialog_camera"
+            style="@style/dialog_btn_text_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/btn_dialog"
+            android:gravity="center"
+            android:text="@string/dialog_camera" />
+
+        <Button
+            android:id="@+id/dialog_filemanager"
+            style="@style/dialog_btn_text_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/btn_dialog"
+            android:gravity="center"
+            android:text="@string/dialog_filemanager"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            style="@style/dialog_btn_text_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20.0dip"
+            android:background="@drawable/btn_dialog"
+            android:gravity="center"
+            android:text="@string/dialog_cancel" />
+    </LinearLayout>
+
+    <!-- Line 3 -->
+
+</RelativeLayout>
