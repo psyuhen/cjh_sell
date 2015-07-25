@@ -97,6 +97,8 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			}
 			ClassifyInfo classifyInfo = JsonUtil.parse2Object(json, ClassifyInfo.class);
 			if(classifyInfo == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "没有查询到该分类信息");
+				finish();
 				return;
 			}
 			title.setText(classifyInfo.getName());
@@ -159,6 +161,8 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
+//			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
+			finish();
 		} catch (InterruptedException e) {
 			Log.e(TAG, "更新分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
@@ -173,16 +177,18 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.getRequest(url);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
+				CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
+//			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
+			finish();
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新分类信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
+			Log.e(TAG, "删除分类信息失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新分类信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
+			Log.e(TAG, "删除分类信息失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		}
 	}
 

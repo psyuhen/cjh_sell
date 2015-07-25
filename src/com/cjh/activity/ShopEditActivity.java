@@ -295,7 +295,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			storeInfo.setAddress(address);
 			storeInfo.setPhone(phone);
 			storeInfo.setName(shopName);
-			storeInfo.setStore_id(Integer.parseInt(sessionManager.get("store_id")));
+			storeInfo.setStore_id(sessionManager.getInt("store_id"));
 
 			//更新商家信息
 			String url = HttpUtil.BASE_URL + "/store/modify.do";

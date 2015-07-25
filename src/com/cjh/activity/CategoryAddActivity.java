@@ -3,13 +3,7 @@ package com.cjh.activity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.cjh.adapter.AddImageAdapter;
-import com.cjh.bean.AddImage;
-import com.cjh.cjh_sell.R;
-import com.cjh.common.Constants;
-import com.cjh.utils.CommonsUtil;
-import com.cjh.utils.ImageUtil;
+import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,30 +14,50 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cjh.adapter.AddImageAdapter;
+import com.cjh.bean.AddImage;
+import com.cjh.bean.ClassifyInfo;
+import com.cjh.cjh_sell.R;
+import com.cjh.common.Constants;
+import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.HttpUtil;
+import com.cjh.utils.ImageUtil;
+/**
+ * 类型添加
+ * @author Administrator
+ *
+ */
 public class CategoryAddActivity extends BaseTwoActivity{
+	public static final String TAG = "CategoryAddActivity";
 	// 添加图片对话框
-		private AlertDialog imageChooseDialog = null;
+	private AlertDialog imageChooseDialog = null;
 	// 添加图片
-		private ImageView content_add_image;
-		// 获取的图片和路径
-		private String picturePath;
-		private String ImageName;
-		// 图片添加管理
-		private GridView gridView;
-		// gridview适配器
-		private AddImageAdapter adapter;
-		private List<AddImage> lists;
+	private ImageView content_add_image;
+	// 获取的图片和路径
+	private String picturePath;
+	private String ImageName;
+	// 图片添加管理
+	private GridView gridView;
+	// gridview适配器
+	private AddImageAdapter adapter;
+	private List<AddImage> lists;
+	
+	private EditText add_category_title_edit;//类型名称
+	private EditText add_category_content_edit;//类型详情
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_category);
 		initView();
@@ -51,16 +65,18 @@ public class CategoryAddActivity extends BaseTwoActivity{
 	}
 	@Override
 	public void initView() {
-		// TODO Auto-generated method stub
 		super.initView();
 		content_add_image=(ImageView) findViewById(R.id.content_add_image);
 		content_add_image.setOnClickListener(this);
 		gridView = (GridView) findViewById(R.id.content_add_gridview);
 		lists = new ArrayList<AddImage>();
+		
+		add_category_title_edit = (EditText) findViewById(R.id.add_category_title_edit);
+		add_category_content_edit = (EditText) findViewById(R.id.add_category_content_edit);
 	}
 	
 	private void initData() {
-		// TODO Auto-generated method stub
+		
 		title.setText("添加类别");
 		right_imgbtn.setVisibility(View.GONE);
 		right_text.setText("添加");
@@ -69,15 +85,60 @@ public class CategoryAddActivity extends BaseTwoActivity{
 		right_text.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				CommonsUtil.showShortToast(CategoryAddActivity.this, "添加完成！");
-				startActivity(new Intent(CategoryAddActivity.this, CategoryActivity.class));
+				addClassify();
 			}
 		});
 	}
+	
+	private void addClassify(){
+		String title = add_category_title_edit.getText().toString();
+		String content = add_category_content_edit.getText().toString();
+		
+		boolean cancel = false;
+		View focusView = null;
+		// 必输的判断.
+		if (TextUtils.isEmpty(title)) {
+			add_category_title_edit.setError(getString(R.string.error_field_required));
+			focusView = add_category_title_edit;
+			cancel = true;
+		} else if (TextUtils.isEmpty(content)) {
+			add_category_content_edit.setError(getString(R.string.error_field_required));
+			focusView = add_category_content_edit;
+			cancel = true;
+		}
+		
+		if (cancel) {
+			// 有错误，不登录，焦点在错误的输入框中，并显示错误
+			focusView.requestFocus();
+		}else{
+			ClassifyInfo classifyInfo = new ClassifyInfo();
+			classifyInfo.setName(title);
+			classifyInfo.setDesc(content);
+			classifyInfo.setClassify_type("1");//1为商品
+			
+			String url = HttpUtil.BASE_URL + "/classify/add.do";
+			try {
+				String json = HttpUtil.postRequest(url,classifyInfo);
+				if(json == null){
+					CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
+					return;
+				}
+				
+				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类成功");
+//				startActivity(new Intent(CategoryAddActivity.this, CategoryActivity.class));
+				finish();
+			} catch (InterruptedException e) {
+				Log.e(TAG, "添加商品分类失败", e);
+				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
+			} catch (ExecutionException e) {
+				Log.e(TAG, "添加商品分类失败", e);
+				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
+			}
+		}
+	}
+	
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.content_add_image:
@@ -100,7 +161,6 @@ public class CategoryAddActivity extends BaseTwoActivity{
 	
 	
 	private void showImageChoose() {
-		// TODO Auto-generated method stub
 		imageChooseDialog = new AlertDialog.Builder(CategoryAddActivity.this)
 				.create();
 		imageChooseDialog.show();
@@ -120,7 +180,6 @@ public class CategoryAddActivity extends BaseTwoActivity{
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE:
 			Uri selectImage = data.getData();

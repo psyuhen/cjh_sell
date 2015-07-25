@@ -1,8 +1,5 @@
 package com.cjh.activity;
 
-import com.cjh.adapter.CategoryFragmentAdapter;
-import com.cjh.cjh_sell.R;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +10,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
+import com.cjh.adapter.CategoryFragmentAdapter;
+import com.cjh.cjh_sell.R;
 /**
  * 类型管理
  * @author ps

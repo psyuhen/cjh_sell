@@ -23,7 +23,6 @@ import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
-import com.cjh.utils.auth.SessionManager;
 
 /**
  * 店铺名片展示
@@ -99,7 +98,6 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				shop_my_name.setText(user.getName());
 				shop_my_address.setText(store.getAddress());
 				shop_my_tel.setText(store.getPhone());
-				activity.sessionManager.put("store_id", ""+store.getStore_id());
 			}
 		} catch (InterruptedException e) {
 			Log.e(TAG, "根据用户获取商家信息失败", e);

@@ -98,6 +98,15 @@ public class SessionManager {
 		editor.commit();
 	}
 	/**
+	 * 把数据存在SgamsSaleAppPref中
+	 * @param key
+	 * @param value
+	 */
+	public void putInt(String key,int value){
+		editor.putInt(key, value);
+		editor.commit();
+	}
+	/**
 	 * 返回key对应的键值
 	 * @param key
 	 * @return

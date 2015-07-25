@@ -147,17 +147,24 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			return;
 		}
 		
+		int store_id = sessionManager.getInt("store_id");//获取商家ID
+		
 		MerchInfo merchInfo = new MerchInfo();
 		merchInfo.setName(title);
 		merchInfo.setDesc(content);
+		merchInfo.setStore_id(store_id);
 		
 		String url = HttpUtil.BASE_URL + "/merch/add.do";
 		try {
 			String json = HttpUtil.postRequest(url, merchInfo);
-			if(json != null){
-				CommonsUtil.showShortToast(GoodsAddActivity.this, "添加成功");
-				startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
+			if(json == null){
+				CommonsUtil.showShortToast(GoodsAddActivity.this, "添加商品失败");
+				return ;
 			}
+			
+			CommonsUtil.showShortToast(GoodsAddActivity.this, json);
+			startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
+			finish();
 		} catch (InterruptedException e) {
 			Log.i(TAG, "添加商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
@@ -169,7 +176,6 @@ public class GoodsAddActivity extends BaseTwoActivity {
 	}
 
 	private void showImageChoose() {
-		
 		imageChooseDialog = new AlertDialog.Builder(GoodsAddActivity.this)
 				.create();
 		imageChooseDialog.show();

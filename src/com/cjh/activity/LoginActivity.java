@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
@@ -148,6 +149,16 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				
 				user = JsonUtil.parse2Object(json, User.class);
 				sessionManager.createLoginSession(user);
+				
+				//根据用户Id查询商家信息
+				url = HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user.getUser_id();
+				json = HttpUtil.getRequest(url);
+				if(json == null){
+					CommonsUtil.showLongToast(getApplicationContext(), "获取用户商家信息失败");
+					return ;
+				}
+				Store store = JsonUtil.parse2Object(json, Store.class);
+				sessionManager.putInt("store_id", store.getStore_id());
 				
 				startActivity(new Intent(LoginActivity.this, ShopActivity.class));
 				finish();

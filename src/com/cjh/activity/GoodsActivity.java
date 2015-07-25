@@ -101,6 +101,7 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.right_imgbtn:
 			startActivity(new Intent(GoodsActivity.this, GoodsAddActivity.class));
+			finish();
 			break;
 
 		}

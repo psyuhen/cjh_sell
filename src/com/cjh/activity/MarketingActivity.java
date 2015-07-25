@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.cjh.bean.FavoriteStat;
 import com.cjh.bean.OrderStat;
-import com.cjh.bean.Store;
 import com.cjh.bean.VisitStat;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.LineView;
@@ -110,14 +109,8 @@ public class MarketingActivity extends BaseTwoActivity implements
 		
 		//每日收藏
 		FavoriteStat favoriteStat = new FavoriteStat();
-		String store_id = sessionManager.get("store_id");
-		if(store_id == null || "".equals(store_id)){
-			String user_id = sessionManager.get("user_id");
-			Store store = queryByUserId(user_id);
-			store_id = String.valueOf(store.getStore_id());
-			sessionManager.put("store_id", store_id);
-		}
-		favoriteStat.setStore_id(Integer.parseInt(store_id));//商家ID
+		int store_id = sessionManager.getInt("store_id");
+		favoriteStat.setStore_id(store_id);//商家ID
 		
 		favoriteStat.setStat_date(today);
 		FavoriteStat todayFavorite = countByDayAndUser(favoriteStat);
@@ -136,7 +129,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		
 		//每日顾客
 		VisitStat visitStat = new VisitStat();
-		visitStat.setStore_id(Integer.parseInt(store_id));//商家ID
+		visitStat.setStore_id(store_id);//商家ID
 		
 		visitStat.setStat_date(today);
 		VisitStat todayVisit = countByDayAndUser(visitStat);
@@ -385,27 +378,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 		} catch (ExecutionException e) {
 			Log.e(TAG, "统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		}
-		return null;
-	}
-	
-	private Store queryByUserId(String user_id){
-		String url = HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
-		try {
-			String json = HttpUtil.getRequest(url);
-			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "查询商家信息失败");
-				return null;
-			}
-			
-			Store store = JsonUtil.parse2Object(json, Store.class);
-			return store;
-		} catch (InterruptedException e) {
-			Log.e(TAG, "查询商家信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询商家信息失败");
-		} catch (ExecutionException e) {
-			Log.e(TAG, "查询商家信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询商家信息失败");
 		}
 		return null;
 	}
