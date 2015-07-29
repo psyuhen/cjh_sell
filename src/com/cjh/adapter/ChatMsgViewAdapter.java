@@ -5,13 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-
-
-import com.cjh.bean.ChatMsgItem;
-import com.cjh.cjh_sell.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.cjh.bean.ChatMsgItem;
+import com.cjh.cjh_sell.R;
+import com.cjh.utils.DateUtil;
 /**
  * 聊天窗口适配器
  * @author ps
@@ -84,7 +81,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 				.getExpressionString(context, str, regular);
 
 		viewHolder.msg_text.setText(spannableString);
-		viewHolder.msg_sendtime.setText(entity.getSendDate()+"");
+		viewHolder.msg_sendtime.setText(DateUtil.format(entity.getSendDate()));
 		// viewHolder.msg_text.setText(entity.getText());
 		viewHolder.msg_username.setText(entity.getSendUser());
 		return convertView;

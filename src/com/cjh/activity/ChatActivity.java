@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.cjh.adapter.ChatMsgViewAdapter;
-import com.cjh.bean.ChatMsgItem;
-import com.cjh.cjh_sell.R;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+
+import com.cjh.adapter.ChatMsgViewAdapter;
+import com.cjh.bean.ChatMsgItem;
+import com.cjh.bean.User;
+import com.cjh.cjh_sell.R;
+import com.cjh.utils.SocketUtil;
 
 /**
  * 聊天窗口
@@ -23,15 +27,15 @@ public class ChatActivity extends BaseTwoActivity{
 	private ListView mListView;
 	private List<ChatMsgItem> msgList;
 	private Button chat_send_btn;
-//	private EditText chat_edit_text;
+	private EditText chat_edit_text;
+	private String buyer_user_id;
+	private String buyer_user_name;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		initView();
 		initData();
-		mAdapter = new ChatMsgViewAdapter(ChatActivity.this, msgList);
-		mListView.setAdapter(mAdapter);
 		title.setText("詹姆斯");
 	}
 	@Override
@@ -40,12 +44,16 @@ public class ChatActivity extends BaseTwoActivity{
 		mListView = (ListView) findViewById(R.id.chat_msg_listview);
 		chat_send_btn = (Button) findViewById(R.id.chat_send_message_btn);
 		chat_send_btn.setOnClickListener(this);
-	//	chat_edit_text = (EditText) findViewById(R.id.chat_send_edit_msg);
+		chat_edit_text = (EditText) findViewById(R.id.chat_send_edit_msg);
+		
+		Intent intent = getIntent();
+		buyer_user_id = intent.getStringExtra("buyer_user_id");
+		buyer_user_name = intent.getStringExtra("buyer_user_name");
 	}
 	private void initData() {
 		title.setText("聊天");
 		msgList = new ArrayList<ChatMsgItem>();
-		for (int i = 0; i < 10; i++) {
+		/*for (int i = 0; i < 10; i++) {
 			ChatMsgItem msgItem = new ChatMsgItem();
 			msgItem.setSendDate(new Date());
 			if (i % 2 == 0) {
@@ -62,18 +70,37 @@ public class ChatActivity extends BaseTwoActivity{
 			}
 			msgList.add(msgItem);
 
-		}
+		}*/
 	}
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.chat_send_message_btn:
-			
+			send();
 			break;
 
 		default:
 			break;
 		}
+	}
+	
+	private void send(){
+		User user = sessionManager.getUserDetails();
+		ChatMsgItem msgItem = new ChatMsgItem();
+		msgItem.setSendDate(new Date());
+		msgItem.setComing(false);
+		msgItem.setSendUser(user.getName());
+		msgItem.setToUser(buyer_user_name);
+		String chatContent = chat_edit_text.getText().toString();
+		msgItem.setContent(chatContent);
+		msgList.add(msgItem);
+		mAdapter = new ChatMsgViewAdapter(ChatActivity.this, msgList);
+		mListView.setAdapter(mAdapter);
+		
+		//发送到后端
+		SocketUtil.send(chatContent, buyer_user_id, user.getUser_id()+"");
+		
+		chat_edit_text.setText("");
 	}
 }

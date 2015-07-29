@@ -22,7 +22,7 @@ public class ShopFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		View contentView = inflater.inflate(R.layout.fragment_shop, container,
 				false);
 		mViewPager = (ViewPager) contentView.findViewById(R.id.shop_viewpager);
@@ -37,7 +37,7 @@ public class ShopFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		switch (v.getId()) {
 		case R.id.order_top_rl:
 			startActivity(new Intent(getActivity(), SettingActivity.class));

@@ -4,6 +4,7 @@ import com.cjh.cjh_sell.R;
 import com.cjh.fragment.OrderFragment;
 import com.cjh.fragment.MeFragment;
 import com.cjh.fragment.ShopFragment;
+import com.cjh.utils.auth.SessionManager;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -23,7 +24,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
+/**
+ * 首页
+ * @author ps
+ *
+ */
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	// 静态fragment管理器
 	private static FragmentManager fMgr;
@@ -35,10 +40,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageButton shop_add_details_image_image;
 	private ImageButton shop_add_head_image;
 	private AlertDialog imageChooseDialog = null;
+	public SessionManager sessionManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		sessionManager = new SessionManager(getApplicationContext());
 		setContentView(R.layout.activity_main);
 		settingBtn = (ImageButton) findViewById(R.id.top_more_right);
 		edit_imaggbtn = (ImageButton) findViewById(R.id.top_edit_right);
@@ -49,12 +56,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void initData() {
-		// TODO Auto-generated method stub
 		settingBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				
 				startActivity(new Intent(MainActivity.this,
 						SettingActivity.class));
 			}
@@ -65,7 +71,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * 初始化首个Fragment
 	 */
 	private void initFragment() {
-		// TODO Auto-generated method stub
 		FragmentTransaction ft = fMgr.beginTransaction();
 		MeFragment homeFragment = new MeFragment();
 		ft.add(R.id.fragmentRoot, homeFragment, "navFragment");
@@ -79,12 +84,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * 处理底部点击事件
 	 */
 	private void dealBottomButtonsClickEvent() {
-		// TODO Auto-generated method stub
+		
 		findViewById(R.id.rbnav).setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				if (fMgr.findFragmentByTag("navFragment") != null
 						&& fMgr.findFragmentByTag("navFragment").isVisible()) {
 					return;
@@ -94,7 +97,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 
 			private void initTopRightIcon() {
-				// TODO Auto-generated method stub
+				
 				settingBtn.setVisibility(View.GONE);
 				edit_imaggbtn.setVisibility(View.GONE);
 			}
@@ -103,7 +106,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				popAllFragmentsExceptTheBottomOne();
 				FragmentTransaction ft = fMgr.beginTransaction();
 				ft.hide(fMgr.findFragmentByTag("navFragment"));
@@ -115,7 +117,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 
 			private void initTopRightIcon() {
-				// TODO Auto-generated method stub
+				
 				settingBtn.setVisibility(View.GONE);
 				edit_imaggbtn.setVisibility(View.GONE);
 			}
@@ -124,7 +126,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				popAllFragmentsExceptTheBottomOne();
 				FragmentTransaction ft = fMgr.beginTransaction();
 				ft.hide(fMgr.findFragmentByTag("navFragment"));
@@ -136,13 +137,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 
 			private void initTopRightIcon() {
-				// TODO Auto-generated method stub
 				settingBtn.setVisibility(View.GONE);
 				edit_imaggbtn.setVisibility(View.GONE);
 				edit_imaggbtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
+						
 						showpopaddshop(MainActivity.this, v);
 					}
 				});
@@ -152,7 +152,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		//
 		// @Override
 		// public void onClick(View v) {
-		// // TODO Auto-generated method stub
+		// 
 		// popAllFragmentsExceptTheBottomOne();
 		// FragmentTransaction ft = fMgr.beginTransaction();
 		// ft.hide(fMgr.findFragmentByTag("homeFragment"));
@@ -188,7 +188,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.pop_main_head_left_text:
 			addshopPopWindow.dismiss();
@@ -214,7 +213,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showImageChoose() {
-		// TODO Auto-generated method stub
 		imageChooseDialog = new AlertDialog.Builder(MainActivity.this).create();
 		imageChooseDialog.show();
 		imageChooseDialog.getWindow().setContentView(
@@ -228,7 +226,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showpopaddshop(Context context, View parent) {
-		// TODO Auto-generated method stub
+		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View vPopWindow = inflater.inflate(R.layout.pop_add_shop, null,

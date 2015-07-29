@@ -26,7 +26,7 @@ public class MeFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 
 		View contentView = inflater.inflate(R.layout.fragmeng_me, container,
 				false);
@@ -42,7 +42,7 @@ public class MeFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		switch (v.getId()) {
 		case R.id.me_order_rl:
 			startActivity(new Intent(getActivity(), OrderActivity.class));

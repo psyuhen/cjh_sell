@@ -85,7 +85,7 @@ public class CategoryAddActivity extends BaseTwoActivity{
 		right_text.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				addClassify();
+				addClassify();//新增分类
 			}
 		});
 	}
@@ -241,7 +241,7 @@ public class CategoryAddActivity extends BaseTwoActivity{
 			addImage.setBitmap(photo);
 			lists.add(addImage);
 			adapter.notifyDataSetChanged();
-			content_add_image.setVisibility(View.GONE);
+			content_add_image.setVisibility(View.GONE);//新增按钮隐藏
 		}
 	}
 }

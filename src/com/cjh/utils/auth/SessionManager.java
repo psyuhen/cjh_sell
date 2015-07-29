@@ -38,22 +38,22 @@ public class SessionManager {
 	private static final String PREF_NAME = "SgamsSaleAppPref";
 
 	// All Shared Preferences Keys
-	private static final String IS_LOGIN = "IsLoggedIn";
+	public static final String IS_LOGIN = "IsLoggedIn";
 
 	// user id (make variable public to access from outside)
-	private static final String KEY_USER_ID = "user_id";
+	public static final String KEY_USER_ID = "user_id";
 
 	// qq (make variable public to access from outside)
-	private static final String KEY_QQ = "qq";
+	public static final String KEY_QQ = "qq";
 
 	// we chat (make variable public to access from outside)
-	private static final String KEY_WE_CHAT = "we_chat";
+	public static final String KEY_WE_CHAT = "we_chat";
 
 	// User name (make variable public to access from outside)
-	private static final String KEY_NAME = "name";
+	public static final String KEY_NAME = "name";
 
 	// mobile (make variable public to access from outside)
-	private static final String KEY_MOBILE = "mobile";
+	public static final String KEY_MOBILE = "mobile";
 
 	// Constructor
 	public SessionManager(Context context) {
@@ -104,6 +104,15 @@ public class SessionManager {
 	 */
 	public void putInt(String key,int value){
 		editor.putInt(key, value);
+		editor.commit();
+	}
+	/**
+	 * 把数据存在SgamsSaleAppPref中
+	 * @param key
+	 * @param value
+	 */
+	public void putBoolean(String key,boolean value){
+		editor.putBoolean(key, value);
 		editor.commit();
 	}
 	/**

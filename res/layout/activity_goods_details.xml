@@ -109,8 +109,9 @@
                     android:id="@+id/goods_detail_content"
                     style="@style/goods_detail_black_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10.0dip"
+                    android:layout_height="240.0dip"
+                    android:layout_margin="15.0dip"
+                    android:gravity="top|left"
                     android:background="@drawable/goods_detail_edit"
                     android:text="@string/goods_detail_content" />
             </LinearLayout>

@@ -186,7 +186,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 				dataslist.add(0);
 			}
 		}
-		everyday_collect_lineview.setDataList(dataslist);
+		lineView.setDataList(dataslist);
 	}
 	public void fillMoneyData(List<OrderStat> money){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
@@ -205,7 +205,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 				dataslist.add(0);
 			}
 		}
-		everyday_collect_lineview.setDataList(dataslist);
+		today_mnoney_lineview.setDataList(dataslist);
 	}
 	public void fillFavoriteData(List<FavoriteStat> favorite){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();

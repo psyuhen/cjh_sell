@@ -122,10 +122,11 @@
                 <EditText
                     android:id="@+id/category_detail_content"
                     style="@style/goods_detail_black_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="200.0dip"
                     android:layout_margin="10.0dip"
-                    android:background="@drawable/goods_detail_edit"
+                    android:background="@drawable/pop_title_edit"
+                    android:hint="@string/add_category_content_hint"
                     android:text="@string/category_detail_content" />
             </LinearLayout>
 

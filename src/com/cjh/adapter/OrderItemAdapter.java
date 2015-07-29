@@ -71,7 +71,7 @@ public class OrderItemAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		OrderItem orderItem = orderlist.get(position);
+		final OrderItem orderItem = orderlist.get(position);
 		viewHolder.ordertime_text.setText(DateUtil.format(orderItem.getOrdertime()));
 		viewHolder.serialnumber_text.setText(orderItem.getSerialnum());
 		viewHolder.buyer_text.setText(orderItem.getBuyer());
@@ -90,7 +90,8 @@ public class OrderItemAdapter extends BaseAdapter {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(context, ChatActivity.class);
-//						intent.putExtra("buyer_user_id", orderItem.get);
+						intent.putExtra("buyer_user_id", orderItem.getBuyer_user_id());
+						intent.putExtra("buyer_user_name", orderItem.getBuyer());
 						context.startActivity(intent);
 					}
 				});

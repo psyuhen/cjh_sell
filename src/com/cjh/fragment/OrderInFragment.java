@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
+import com.cjh.activity.MainActivity;
 import com.cjh.activity.OrderActivity;
 import com.cjh.activity.OrderDetailsActivity;
 import com.cjh.adapter.OrderItemAdapter;
@@ -31,7 +32,6 @@ import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
-import com.cjh.utils.auth.SessionManager;
 /**
  * 进行中订单
  * @author ps
@@ -120,10 +120,18 @@ public class OrderInFragment extends Fragment {
 	}
 
 	private List<Order> getInOrderInfo(){
-		OrderActivity activity = (OrderActivity)context;
-		SessionManager sessionManager = activity.sessionManager;
-		User user = sessionManager.getUserDetails();
-		
+		User user = null;
+		if(context instanceof OrderActivity){
+			OrderActivity activity = (OrderActivity)context;
+			user = activity.sessionManager.getUserDetails();
+		}else if(context instanceof MainActivity){
+			MainActivity activity = (MainActivity)context;
+			user = activity.sessionManager.getUserDetails();
+		}
+		if(user == null){
+			CommonsUtil.showLongToast(getActivity(), "请先登录");
+			return null;
+		}
 		
 		String url = HttpUtil.BASE_URL + "/order/getInOrderInfo.do";
 		Order order = new Order();

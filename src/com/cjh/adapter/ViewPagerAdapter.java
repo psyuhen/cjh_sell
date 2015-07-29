@@ -2,9 +2,6 @@ package com.cjh.adapter;
 
 import java.util.List;
 
-import com.cjh.activity.MainActivity;
-import com.cjh.cjh_sell.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +13,9 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
+import com.cjh.activity.LoginActivity;
+import com.cjh.cjh_sell.R;
 
 /**
  * 
@@ -87,7 +87,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 	private void goHome() {
 		// 跳转
-		Intent intent = new Intent(activity, MainActivity.class);
+		Intent intent = new Intent(activity, LoginActivity.class);
 		activity.startActivity(intent);
 		activity.finish();
 	}

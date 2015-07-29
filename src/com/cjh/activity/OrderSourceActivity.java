@@ -2,7 +2,9 @@ package com.cjh.activity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
@@ -109,9 +111,12 @@ public class OrderSourceActivity extends BaseTwoActivity {
 	}
 	
 	private List<OrderStat> countByMonth(String statDate){
-		String url = HttpUtil.BASE_URL + "/order/countByMonth.do?stat_date="+statDate;
+		String url = HttpUtil.BASE_URL + "/order/countByMonth.do";
 		try {
-			String json = HttpUtil.getRequest(url);
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("stat_date", statDate);
+			map.put("user_id", sessionManager.getInt("user_id")+"");
+			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
 				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 				return null;

@@ -199,7 +199,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		merchInfo.setDesc(content);
 		merchInfo.setIn_stock(Integer.valueOf(stock));
 		merchInfo.setPrice(Float.valueOf(price));
-		merchInfo.setClassify_id(Integer.valueOf(type));
+		//merchInfo.setClassify_id(Integer.valueOf(type));
 		
 		
 		String url = HttpUtil.BASE_URL + "/merch/modify.do";
@@ -207,7 +207,10 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			String json = HttpUtil.postRequest(url, merchInfo);
 			if(json != null){
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新成功");
-				startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+				//startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+				finish();
+			}else{
+				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新失败");
 			}
 		} catch (InterruptedException e) {
 			Log.e(TAG, "更新商品失败", e);

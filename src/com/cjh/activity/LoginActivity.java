@@ -18,6 +18,7 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.SecureUtil;
 import com.cjh.utils.Validator;
+import com.cjh.utils.auth.SessionManager;
 
 /**
  * 登录
@@ -56,6 +57,8 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 		login_retrieve.setOnClickListener(this);
 		login_btn = (Button) findViewById(R.id.login_btn);
 		login_btn.setOnClickListener(this);
+		
+		back.setVisibility(View.GONE);
 		
 		// 初始化登录页面
 		mMobileView = (EditText) findViewById(R.id.login_username_edit);
@@ -137,6 +140,7 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				String json = HttpUtil.getRequest(url);
 				if(json == null){
 					CommonsUtil.showLongToast(getApplicationContext(), "手机号码不存在");
+					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
 					return ;
 				}
 				
@@ -144,6 +148,7 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				json = HttpUtil.postRequest(url, user);
 				if(json == null){
 					CommonsUtil.showLongToast(getApplicationContext(), "登录失败,用户密码错误或者网络异常");
+					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
 					return ;
 				}
 				
@@ -160,7 +165,7 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				Store store = JsonUtil.parse2Object(json, Store.class);
 				sessionManager.putInt("store_id", store.getStore_id());
 				
-				startActivity(new Intent(LoginActivity.this, ShopActivity.class));
+				startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				finish();
 			}catch (Exception e) {
 				Log.e(TAG, "用户登录失败", e);

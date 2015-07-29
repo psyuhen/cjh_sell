@@ -16,11 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cjh.activity.MainActivity;
 import com.cjh.activity.ShopActivity;
 import com.cjh.activity.ShopEditActivity;
 import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
+import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 
@@ -85,8 +87,18 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void querybyuserid(){
-		ShopActivity activity = (ShopActivity)context;
-		User user = activity.sessionManager.getUserDetails();
+		User user = null;
+		if(context instanceof ShopActivity){
+			ShopActivity activity = (ShopActivity)context;
+			user = activity.sessionManager.getUserDetails();
+		}else if(context instanceof MainActivity){
+			MainActivity activity = (MainActivity)context;
+			user = activity.sessionManager.getUserDetails();
+		}
+		if(user == null){
+			CommonsUtil.showLongToast(getActivity(), "请先登录");
+			return;
+		}
 		//根据用户查询商家信息
 		String url1 = HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user.getUser_id();
 		try {
