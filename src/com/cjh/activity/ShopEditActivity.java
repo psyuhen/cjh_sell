@@ -1,6 +1,9 @@
 package com.cjh.activity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -10,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +40,8 @@ import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
+import com.cjh.utils.QiNiuUtil;
+import com.qiniu.api.io.PutRet;
 
 /**
  * 
@@ -111,7 +117,18 @@ public class ShopEditActivity extends BaseTwoActivity {
 				lists.remove(addImage);
 				adapter.notifyDataSetChanged();
 				//添加图片控件出现
-				content_add_image.setVisibility(View.GONE);
+				content_add_image.setVisibility(View.VISIBLE);
+				
+				String fileName = addImage.getFileName();
+				QiNiuUtil.deleteFile(fileName);
+				
+
+				//更新数据库的文件名
+				Store storeInfo = new Store();
+				storeInfo.setStore_id(sessionManager.getInt("store_id"));
+				storeInfo.setLogo("");
+
+				updateStore(storeInfo);
 			}
 		});
 		
@@ -231,6 +248,57 @@ public class ShopEditActivity extends BaseTwoActivity {
 			adapter.notifyDataSetChanged();
 			//添加图片控件消失
 			content_add_image.setVisibility(View.GONE);
+			
+			//上传图片到7牛
+			File image = ImageUtil.bitmap2file(ShopEditActivity.this, photo);
+			if(image == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
+				return;
+			}
+			addImage.setFile(image);
+			addImage.setFileName(image.getName());
+			PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
+			if(!putRet.ok()){
+				CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+				return;
+			}
+			
+			CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+			
+			//更新数据库的文件名
+			Store storeInfo = new Store();
+			storeInfo.setStore_id(sessionManager.getInt("store_id"));
+			storeInfo.setLogo(image.getName());
+
+			updateStore(storeInfo);
+		}
+	}
+	
+	/**
+	 * 获取网络图片
+	 * @param url
+	 */
+	private void getImageToView(String url){
+		try {
+			URL picUrl = new URL(url);
+			Bitmap bitmap = BitmapFactory.decodeStream(picUrl.openStream()); 
+			AddImage addImage = new AddImage();
+			addImage.setBitmap(bitmap);
+			
+			//添加图片控件消失
+			content_add_image.setVisibility(View.GONE);//添加图标隐藏
+			File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
+			if(image != null){
+				addImage.setFile(image);
+				addImage.setFileName(image.getName());
+			}
+			
+			lists.add(addImage);
+			adapter.notifyDataSetChanged();
+		} catch (FileNotFoundException e) {
+			Log.e(TAG,"文件找不到", e);
+		} catch (IOException e) {
+			Log.e(TAG,"IO异常", e);
 		}
 	}
 	
@@ -246,6 +314,10 @@ public class ShopEditActivity extends BaseTwoActivity {
 				shop_edit_detail_content.setText(store.getDesc());
 				shop_edit_detail_address.setText(store.getAddress());
 				shop_edit_detail_tel.setText(store.getPhone());
+				
+				String fileName = store.getLogo();
+				String imageUrl = QiNiuUtil.getImageUrl(fileName);
+				getImageToView(imageUrl);
 			}
 		} catch (InterruptedException e) {
 			Log.e(TAG, "根据用户获取商家信息失败", e);
@@ -297,19 +369,26 @@ public class ShopEditActivity extends BaseTwoActivity {
 			storeInfo.setName(shopName);
 			storeInfo.setStore_id(sessionManager.getInt("store_id"));
 
-			//更新商家信息
-			String url = HttpUtil.BASE_URL + "/store/modify.do";
-			String json = null;
-			try {
-				json = HttpUtil.postRequest(url, storeInfo);
-			} catch (InterruptedException e) {
-				Log.e(TAG, "更新商家信息失败", e);
-			} catch (ExecutionException e) {
-				Log.e(TAG, "更新商家信息失败", e);
+			updateStore(storeInfo);
+		}
+	}
+	
+	
+	private void updateStore(Store storeInfo){
+		//更新商家信息
+		String url = HttpUtil.BASE_URL + "/store/modify.do";
+		String json = null;
+		try {
+			json = HttpUtil.postRequest(url, storeInfo);
+			if(json == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "更新商家信息失败");
+				return;
 			}
-			if(json != null){
-				CommonsUtil.showShortToast(getApplicationContext(), json);
-			}
+			CommonsUtil.showShortToast(getApplicationContext(), json);
+		} catch (InterruptedException e) {
+			Log.e(TAG, "更新商家信息失败", e);
+		} catch (ExecutionException e) {
+			Log.e(TAG, "更新商家信息失败", e);
 		}
 	}
 }

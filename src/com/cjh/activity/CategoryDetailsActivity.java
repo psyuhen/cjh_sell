@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
@@ -323,7 +325,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			//上传图片到7牛
 			File image = ImageUtil.bitmap2file(CategoryDetailsActivity.this, photo);
 			if(image == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
 			}
 			PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
@@ -420,9 +422,11 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 	}
 	//删除图片信息
 	private void deleteGallery(String gallery_id){
-		String url = HttpUtil.BASE_URL + "/gallery/delete.do?gallery_id="+gallery_id;
+		String url = HttpUtil.BASE_URL + "/gallery/delete.do";
 		try {
-			String json = HttpUtil.getRequest(url);
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("gallery_id", gallery_id);
+			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 				return;

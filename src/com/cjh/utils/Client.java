@@ -23,7 +23,7 @@ import com.bgpublish.socket.FileSerial;
  */
 public class Client {
 	public static final String TAG = "Client";
-	private String ip = "192.168.1.104";
+	private String ip = "192.168.1.102";
 	private int port = 11000;
 	private Socket socket = null;
 	private ObjectOutputStream oos = null;

@@ -30,17 +30,19 @@ public class ChatActivity extends BaseTwoActivity{
 	private EditText chat_edit_text;
 	private String buyer_user_id;
 	private String buyer_user_name;
+	private User user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		initView();
 		initData();
-		title.setText("詹姆斯");
+		title.setText(buyer_user_name);
 	}
 	@Override
 	public void initView() {
 		super.initView();
+		right_imgbtn.setVisibility(View.GONE);
 		mListView = (ListView) findViewById(R.id.chat_msg_listview);
 		chat_send_btn = (Button) findViewById(R.id.chat_send_message_btn);
 		chat_send_btn.setOnClickListener(this);
@@ -52,7 +54,10 @@ public class ChatActivity extends BaseTwoActivity{
 	}
 	private void initData() {
 		title.setText("聊天");
+		user = sessionManager.getUserDetails();
 		msgList = new ArrayList<ChatMsgItem>();
+		mAdapter = new ChatMsgViewAdapter(getApplicationContext(), msgList);
+		mListView.setAdapter(mAdapter);
 		/*for (int i = 0; i < 10; i++) {
 			ChatMsgItem msgItem = new ChatMsgItem();
 			msgItem.setSendDate(new Date());
@@ -86,7 +91,6 @@ public class ChatActivity extends BaseTwoActivity{
 	}
 	
 	private void send(){
-		User user = sessionManager.getUserDetails();
 		ChatMsgItem msgItem = new ChatMsgItem();
 		msgItem.setSendDate(new Date());
 		msgItem.setComing(false);
@@ -95,8 +99,7 @@ public class ChatActivity extends BaseTwoActivity{
 		String chatContent = chat_edit_text.getText().toString();
 		msgItem.setContent(chatContent);
 		msgList.add(msgItem);
-		mAdapter = new ChatMsgViewAdapter(ChatActivity.this, msgList);
-		mListView.setAdapter(mAdapter);
+		mAdapter.notifyDataSetChanged();
 		
 		//发送到后端
 		SocketUtil.send(chatContent, buyer_user_id, user.getUser_id()+"");

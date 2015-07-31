@@ -1,8 +1,13 @@
 package com.cjh.activity;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
@@ -28,6 +33,7 @@ import android.widget.Toast;
 
 import com.cjh.adapter.AddImageAdapter;
 import com.cjh.bean.AddImage;
+import com.cjh.bean.Gallery;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
@@ -35,7 +41,10 @@ import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
+import com.cjh.utils.QiNiuUtil;
 import com.cjh.utils.Validator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.qiniu.api.io.PutRet;
 /**
  * 商品明细
  * @author ps
@@ -54,6 +63,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	// gridview适配器
 	private AddImageAdapter adapter;
 	private List<AddImage> lists;
+	private List<AddImage> old_lists;
 	
 	private EditText goods_detail_title;//标题
 	private EditText goods_detail_content;//内容
@@ -81,6 +91,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		content_add_image.setOnClickListener(this);
 		gridView = (GridView) findViewById(R.id.content_add_gridview);
 		lists = new ArrayList<AddImage>();
+		old_lists = new ArrayList<AddImage>();
 		
 		goods_detail_title = (EditText) findViewById(R.id.goods_detail_title);
 		goods_detail_content = (EditText) findViewById(R.id.goods_detail_content);
@@ -171,7 +182,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		String content = goods_detail_content.getText().toString();//正文内容
 		String price = goods_detail_price.getText().toString();//价格
 		String stock = goods_detail_stock.getText().toString();//库存
-		String type = goods_detail_type.getText().toString();//分类
+//		String type = goods_detail_type.getText().toString();//分类
 		
 		if(TextUtils.isEmpty(title)){
 			goods_detail_title.setError(getString(R.string.error_field_required));
@@ -207,7 +218,28 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			String json = HttpUtil.postRequest(url, merchInfo);
 			if(json != null){
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新成功");
-				//startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+				
+				//先删除图片，再重新保存吧
+				if(lists != null && !lists.isEmpty()){
+					for (AddImage addImage: old_lists) {
+						deleteGallery(addImage.getFileName(), addImage.getId()+"");
+					}
+					for (AddImage addImage: lists) {
+						File image = addImage.getFile();
+						PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
+						if(!putRet.ok()){
+							Log.e(TAG, putRet.getResponse(), putRet.getException());
+						}else{
+							Gallery gallery = new Gallery();
+							gallery.setMerch_id(merch_id);
+							gallery.setFile_name(image.getName());
+							gallery.setName(image.getName());
+							addGallery(gallery);
+						}
+					}
+				}
+				
+				
 				finish();
 			}else{
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新失败");
@@ -220,6 +252,47 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showLongToast(getApplicationContext(), "更新商品失败");
 		}
 		
+	}
+	//新增图片信息
+	private void addGallery(Gallery gallery){
+		String url = HttpUtil.BASE_URL + "/gallery/add.do";
+		try {
+			String json = HttpUtil.postRequest(url, gallery);
+			if(json == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+				return;
+			}
+			CommonsUtil.showShortToast(getApplicationContext(), json);
+			
+		} catch (InterruptedException e) {
+			Log.e(TAG, "更新图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+		} catch (ExecutionException e) {
+			Log.e(TAG, "更新图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+		}
+	}
+	//删除图片信息
+	private void deleteGallery(String fileName,String gallery_id){
+		String url = HttpUtil.BASE_URL + "/gallery/delete.do";
+		try {
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("gallery_id", gallery_id);
+			String json = HttpUtil.postRequest(url,map);
+			if(json == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+				return;
+			}
+			CommonsUtil.showShortToast(getApplicationContext(), json);
+			
+			QiNiuUtil.deleteFile(fileName);
+		} catch (InterruptedException e) {
+			Log.e(TAG, "删除图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+		} catch (ExecutionException e) {
+			Log.e(TAG, "删除图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+		}
 	}
 
 	//根据商品ID查询商品信息
@@ -241,6 +314,24 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			goods_detail_price.setText(merchInfo.getPrice() + "");
 			goods_detail_stock.setText(merchInfo.getIn_stock() + "");
 			goods_detail_type.setText(merchInfo.getClassify_id()+"");
+			
+			//查询图片
+			lists.clear();
+			adapter.notifyDataSetChanged();
+			
+			//查询图片
+			url = HttpUtil.BASE_URL + "/gallery/queryByMerchId.do?merch_id="+merch_id;
+			json = HttpUtil.getRequest(url);
+			if(json != null){
+				List<Gallery> galleries = JsonUtil.parse2ListObject(json, new TypeReference<List<Gallery>>() {});
+				if(galleries != null && !galleries.isEmpty()){
+					for (Gallery gallery : galleries) {
+						String imageUrl = QiNiuUtil.getImageUrl(gallery.getFile_name());
+						getImageToView(gallery.getGallery_id(),imageUrl,gallery.getFile_name());
+					}
+				}
+			}
+			
 		} catch (InterruptedException e) {
 			Log.e(TAG, "查询merch_id为["+merch_id+"]商品信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
@@ -377,12 +468,43 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			if (lists.size()<6) {
 				AddImage addImage = new AddImage();
 				addImage.setBitmap(photo);
+				
 				lists.add(addImage);
 				adapter.notifyDataSetChanged();
+				
+				File image = ImageUtil.bitmap2file(GoodsDetailsActivity.this, photo);
+				if(image != null){
+					addImage.setFileName(image.getName());
+				}
 			} else{
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "最多添加六张图片");
 			}
 		
 		}
+	}
+	/**
+	 * 保存裁剪之后的图片数据
+	 * 
+	 * @param picdata
+	 */
+	private void getImageToView(int gallery_id,String url,String fileName) {
+		URL picUrl;
+		Bitmap photo;
+		try {
+			picUrl = new URL(url);
+			photo = BitmapFactory.decodeStream(picUrl.openStream());
+			AddImage addImage = new AddImage();
+			addImage.setId(gallery_id);
+			addImage.setBitmap(photo);
+			addImage.setFileName(fileName);
+			lists.add(addImage);
+			old_lists.add(addImage);
+			adapter.notifyDataSetChanged();
+			
+		} catch (MalformedURLException e) {
+			Log.e(TAG,"url不正确", e);
+		} catch (IOException e) {
+			Log.e(TAG,"IO异常", e);
+		} 
 	}
 }

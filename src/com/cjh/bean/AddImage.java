@@ -1,10 +1,14 @@
 package com.cjh.bean;
 
+import java.io.File;
+
 import android.graphics.Bitmap;
 
 public class AddImage {
 
 	private int id;
+	private String fileName;
+	private File file;
 	private Bitmap bitmap;
 
 	public int getId() {
@@ -13,6 +17,23 @@ public class AddImage {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	public Bitmap getBitmap() {
@@ -31,7 +52,6 @@ public class AddImage {
 
 	public AddImage() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

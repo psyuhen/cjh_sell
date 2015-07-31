@@ -125,6 +125,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="200.0dip"
                     android:layout_margin="10.0dip"
+                    android:gravity="top|left"
                     android:background="@drawable/pop_title_edit"
                     android:hint="@string/add_category_content_hint"
                     android:text="@string/category_detail_content" />
