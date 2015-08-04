@@ -36,6 +36,8 @@ public class CategoryActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_category);
+		sessionManager.checkLogin();
+		
 		initView();
 		initData();
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {

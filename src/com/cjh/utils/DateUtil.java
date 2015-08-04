@@ -106,4 +106,19 @@ public class DateUtil {
 		int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		return days;
 	}
+	
+	/**
+	 * <pre>
+	 * 获取两时间相差多少分钟
+	 * </pre>
+	 * @param startday 开始时间
+	 * @param endday 结束时间
+	 * @return 分钟
+	 */
+	public static int getDiffMins(Date startday,Date endday){     
+        long sl=startday.getTime();
+        long el=endday.getTime();       
+        long ei=el-sl;           
+        return (int)(ei/(60000));
+    }
 }

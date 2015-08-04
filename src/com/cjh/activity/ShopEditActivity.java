@@ -1,9 +1,6 @@
 package com.cjh.activity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -120,15 +116,20 @@ public class ShopEditActivity extends BaseTwoActivity {
 				content_add_image.setVisibility(View.VISIBLE);
 				
 				String fileName = addImage.getFileName();
-				QiNiuUtil.deleteFile(fileName);
+				try {
+					QiNiuUtil.deleteFile(fileName);
+					//更新数据库的文件名
+					Store storeInfo = new Store();
+					storeInfo.setStore_id(sessionManager.getInt("store_id"));
+					storeInfo.setLogo("");
+
+					updateStore(storeInfo);
+				} catch (InterruptedException e) {
+					Log.e(TAG,"删除7牛上的文件失败", e);
+				} catch (ExecutionException e) {
+					Log.e(TAG,"删除7牛上的文件失败", e);
+				}
 				
-
-				//更新数据库的文件名
-				Store storeInfo = new Store();
-				storeInfo.setStore_id(sessionManager.getInt("store_id"));
-				storeInfo.setLogo("");
-
-				updateStore(storeInfo);
 			}
 		});
 		
@@ -257,20 +258,28 @@ public class ShopEditActivity extends BaseTwoActivity {
 			}
 			addImage.setFile(image);
 			addImage.setFileName(image.getName());
-			PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-			if(!putRet.ok()){
-				CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-				return;
+			PutRet putRet = null;
+			try {
+				putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
+				if(!putRet.ok()){
+					CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+					return;
+				}
+				
+				CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+				
+				//更新数据库的文件名
+				Store storeInfo = new Store();
+				storeInfo.setStore_id(sessionManager.getInt("store_id"));
+				storeInfo.setLogo(image.getName());
+
+				updateStore(storeInfo);
+			} catch (InterruptedException e) {
+				Log.e(TAG,"上传文件到7牛失败", e);
+			} catch (ExecutionException e) {
+				Log.e(TAG,"上传文件到7牛失败", e);
 			}
 			
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-			
-			//更新数据库的文件名
-			Store storeInfo = new Store();
-			storeInfo.setStore_id(sessionManager.getInt("store_id"));
-			storeInfo.setLogo(image.getName());
-
-			updateStore(storeInfo);
 		}
 	}
 	
@@ -279,9 +288,9 @@ public class ShopEditActivity extends BaseTwoActivity {
 	 * @param url
 	 */
 	private void getImageToView(String url){
+		Bitmap bitmap = null;
 		try {
-			URL picUrl = new URL(url);
-			Bitmap bitmap = BitmapFactory.decodeStream(picUrl.openStream()); 
+			bitmap = QiNiuUtil.getQiNiu(url);
 			AddImage addImage = new AddImage();
 			addImage.setBitmap(bitmap);
 			
@@ -295,11 +304,12 @@ public class ShopEditActivity extends BaseTwoActivity {
 			
 			lists.add(addImage);
 			adapter.notifyDataSetChanged();
-		} catch (FileNotFoundException e) {
-			Log.e(TAG,"文件找不到", e);
-		} catch (IOException e) {
-			Log.e(TAG,"IO异常", e);
+		} catch (InterruptedException e1) {
+			Log.e(TAG,"", e1);
+		} catch (ExecutionException e1) {
+			Log.e(TAG,"", e1);
 		}
+		
 	}
 	
 	private void querybyuserid(){

@@ -8,8 +8,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
-import com.cjh.utils.auth.SessionManager;
 
 public class BaseTwoActivity extends FragmentActivity implements OnClickListener{
 	public TextView title;

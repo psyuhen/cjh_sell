@@ -70,7 +70,6 @@
                 android:layout_margin="10.0dip"
                 android:text="@string/pop_title_text" />
 
-            <!-- 标题 -->
             <EditText
                 android:id="@+id/pop_title_edit"
                 style="@style/pop_edit_hint_style"
@@ -95,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <!-- 正文内容 -->
                 <EditText
                     android:id="@+id/pop_content_edit"
                     style="@style/pop_edit_hint_style"
@@ -109,13 +107,14 @@
                     android:paddingTop="20.0dip" />
             </FrameLayout>
 
-             <TextView
+            <TextView
                 android:id="@+id/pop_image_text"
                 style="@style/pop_title_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10.0dip"
                 android:text="@string/pop_image_text" />
+
             <RelativeLayout
                 android:id="@+id/image_rl"
                 android:layout_width="fill_parent"
@@ -123,11 +122,11 @@
                 android:background="@color/whitebg" >
 
                 <GridView
-                    android:layout_marginTop="6.0dip"
                     android:id="@+id/content_add_gridview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30.0dip"
+                    android:layout_marginTop="6.0dip"
                     android:numColumns="6" >
                 </GridView>
 
@@ -142,24 +141,114 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/pop_tel_text"
-                style="@style/pop_tel_title_text_style"
+                android:id="@+id/pop_price_text"
+                style="@style/pop_title_text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10.0dip"
-                android:text="@string/pop_tel_text" />
+                android:text="@string/pop_price_text" />
 
-            <!-- 联系电话 -->
             <EditText
-                android:id="@+id/pop_tel_edit"
+                android:id="@+id/pop_price_edit"
                 style="@style/pop_edit_hint_style"
                 android:layout_width="fill_parent"
                 android:layout_height="60.0dip"
                 android:layout_margin="15.0dip"
                 android:background="@drawable/pop_title_edit"
-                android:gravity="center"
-                android:hint="@string/pop_tel_edit"
+                android:hint="@string/pop_price_edit"
                 android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_stock_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_stock_text" />
+
+            <EditText
+                android:id="@+id/pop_stock_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="15.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_stock_edit"
+                android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_type_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_type_text" />
+
+            <EditText
+                android:id="@+id/pop_type_edit"
+                style="@style/pop_edit_hint_style"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+                android:layout_margin="15.0dip"
+                android:background="@drawable/pop_title_edit"
+                android:hint="@string/pop_type_edit"
+                android:paddingLeft="20.0dip" />
+
+            <TextView
+                android:id="@+id/pop_category_text"
+                style="@style/pop_title_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:text="@string/pop_category_text" />
+
+            <RelativeLayout
+                android:id="@+id/goods_category_ll"
+                android:layout_width="fill_parent"
+                android:layout_height="60.0dip"
+				android:layout_margin="15.0dip"
+                android:background="@color/whitebg"
+                android:clickable="true"
+                 >
+
+                <TextView
+                    android:id="@+id/pop_category"
+                    style="@style/pop_title_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5.0dip"
+                    android:text="@string/pop_category" />
+                <TextView 
+                    android:id="@+id/add_goods_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/title_text_style"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/add_goods_image_arrow"
+                    android:layout_marginRight="5.0dip"
+                    android:text="@string/default_category"/>
+                
+                <ImageView 
+                    android:id="@+id/add_goods_image_arrow"
+                    android:layout_width="@dimen/arrow_width"
+                    android:layout_height="@dimen/arrow_height"
+                    android:background="@drawable/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10.0dip"
+                    
+                    />
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/goods_add_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_margin="20.0dip"
+                android:background="@drawable/btn_shop_pop_add"
+                android:text="@string/shop_add_btn_text" />
         </LinearLayout>
     </ScrollView>
 

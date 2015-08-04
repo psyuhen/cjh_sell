@@ -2,6 +2,8 @@ package com.cjh.adapter;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.cjh.activity.GoodsViewActivity;
 import com.cjh.bean.GoodsItem;
 import com.cjh.cjh_sell.R;
@@ -73,14 +75,13 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		viewHolder.title_text.setText(goodsList.get(position).getTitle());
-		viewHolder.price_text.setText("￥" + goodsList.get(position).getPrice());
-		viewHolder.sellmount_text.setText("总销量"
-				+ goodsList.get(position).getSellmount() + "件");
-		viewHolder.stock_text.setText("库存" + goodsList.get(position).getStock()
-				+ "件");
-		viewHolder.standard_text.setText("规格:"
-				+ goodsList.get(position).getStandard());
+		GoodsItem goodsItem = goodsList.get(position);
+		
+		viewHolder.title_text.setText(StringUtils.trimToEmpty(goodsItem.getTitle()));
+		viewHolder.price_text.setText("￥" + goodsItem.getPrice());
+		viewHolder.sellmount_text.setText("总销量"+ goodsItem.getSellmount() + "件");
+		viewHolder.stock_text.setText("库存" + goodsItem.getStock() + "件");
+		viewHolder.standard_text.setText("规格:" + StringUtils.trimToEmpty(goodsItem.getStandard()));
 		if (position % 3 == 1) {
 			viewHolder.img_image.setImageResource(R.drawable.c1);
 		}
@@ -91,21 +92,18 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			viewHolder.img_image.setImageResource(R.drawable.c3);
 		}
 		viewHolder.goods_see.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				context.startActivity(new Intent(context, GoodsViewActivity.class));
 			}
 		});
 		viewHolder.goods_bind.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				Toast.makeText(context, "复制链接", Toast.LENGTH_SHORT).show();
 			}
 		});
 		viewHolder.goods_share.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				Toast.makeText(context, "分享商品", Toast.LENGTH_SHORT).show();

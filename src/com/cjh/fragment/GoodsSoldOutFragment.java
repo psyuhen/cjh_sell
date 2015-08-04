@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.cjh.activity.GoodsActivity;
 import com.cjh.activity.GoodsDetailsActivity;
 import com.cjh.adapter.GoodsOnofferAdapter;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
 import com.cjh.bean.User;
@@ -29,7 +30,6 @@ import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
-import com.cjh.utils.auth.SessionManager;
 
 public class GoodsSoldOutFragment extends Fragment {
 	public static final String TAG = "GoodsSoldOutFragment";
@@ -95,7 +95,7 @@ public class GoodsSoldOutFragment extends Fragment {
 			goodsItem.setImg("image");
 			goodsItem.setPrice(merchInfo.getPrice());
 			goodsItem.setSellmount(merchInfo.getSales_volume());
-			goodsItem.setStandard("个");
+			goodsItem.setStandard(merchInfo.getUnit());
 			goodsItem.setStock(merchInfo.getIn_stock());
 			goodsItem.setTitle(merchInfo.getName());
 			goodsList.add(goodsItem);

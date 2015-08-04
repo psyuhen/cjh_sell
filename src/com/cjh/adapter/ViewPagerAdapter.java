@@ -15,6 +15,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.cjh.activity.LoginActivity;
+import com.cjh.activity.MainActivity;
+import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
 
 /**
@@ -86,7 +88,25 @@ public class ViewPagerAdapter extends PagerAdapter {
 	}
 
 	private void goHome() {
-		// 跳转
+		SessionManager sessionManager = new SessionManager(activity);
+		if(!sessionManager.isLoggedIn()){
+			goLogin();
+		}else{
+			if(sessionManager.loginLongTime() > 30){
+				goLogin();
+			}else{
+				goMain();
+			}
+		}
+	}
+	
+	private void goMain(){
+		Intent intent = new Intent(activity, MainActivity.class);
+		activity.startActivity(intent);
+		activity.finish();
+	}
+	
+	private void goLogin(){
 		Intent intent = new Intent(activity, LoginActivity.class);
 		activity.startActivity(intent);
 		activity.finish();

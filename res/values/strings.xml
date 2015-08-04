@@ -101,6 +101,8 @@
     <string name="login_by_other_text">其他方式登录</string>
     
     <string name="error_invalid_number">请输入正确的数字</string>
+    <string name="error_invalid_digit">请输入正确的数字</string>
+    <string name="error_invalid_float">请输入正确的浮点数</string>
     <string name="error_invalid_mobile">输入的手机号码不可用</string>
     <string name="error_length_password">密码至少6位且不超过20位</string>
     <string name="error_invalid_password">密码以字母开头只能包含字符、数字和下划线</string>
@@ -222,6 +224,7 @@
     <string name="goods_detail_stock">999</string>
     <string name="goods_detail_category_text">分类至</string>
     <string name="goods_detail_category">未分类</string>
+    <string name="publish_goods_text">发布</string>
     <string name="delete_goods_text">删除商品</string>
     <string name="goods_details_offshelft_btn">下架商品</string>
     <string name="pop_image_text">商品图片</string>
@@ -311,5 +314,14 @@
     <string name="market_everyday_collect_yesterday_count">0</string>
     <string name="order_completed_source_btn_text">成交订单</string>
     <string name="market_order_completed">成交订单</string>
-
+    <string name="pop_price_text">商品价格</string>
+    <string name="pop_price_edit">请输入价格</string>
+    <string name="pop_stock_text">商品库存</string>
+    <string name="pop_stock_edit">请输入库存</string>
+    <string name="pop_type_text">商品单位</string>
+    <string name="pop_type_edit">请输入商品单位</string>
+    <string name="pop_category_text">请选择商品类别</string>
+    <string name="pop_category">请点击选择</string>
+    <string name="choose_category">请选择类别</string>
+    <string name="default_category">瓜果蔬菜</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.cjh.activity;
 
+import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
-import com.cjh.utils.auth.SessionManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

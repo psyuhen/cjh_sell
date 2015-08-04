@@ -1,9 +1,6 @@
 package com.cjh.activity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -13,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -286,24 +282,22 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
 	/**
 	 * 获取网络图片
 	 * @param url
 	 */
 	private void getImageToView(String url){
 		try {
-			URL picUrl = new URL(url);
-			Bitmap bitmap = BitmapFactory.decodeStream(picUrl.openStream()); 
+			Bitmap bitmap = QiNiuUtil.getQiNiu(url);
 			category_detail_image1.setImageBitmap(bitmap);//已成功添加的图标
-		} catch (FileNotFoundException e) {
-			Log.e(TAG,"文件找不到", e);
-		} catch (IOException e) {
-			Log.e(TAG,"IO异常", e);
+			category_detail_image.setVisibility(View.GONE);//添加图标隐藏
+			category_detail_deleteimage1.setVisibility(View.VISIBLE);//删除图标显示
+			category_detail_image1.setVisibility(View.VISIBLE);//显示已添加的图标
+		} catch (InterruptedException e1) {
+			Log.e(TAG,"", e1);
+		} catch (ExecutionException e1) {
+			Log.e(TAG,"", e1);
 		}
-		category_detail_image.setVisibility(View.GONE);//添加图标隐藏
-		category_detail_deleteimage1.setVisibility(View.VISIBLE);//删除图标显示
-		category_detail_image1.setVisibility(View.VISIBLE);//显示已添加的图标
 	}
 	/**
 	 * 保存裁剪之后的图片数据
@@ -328,29 +322,35 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
 			}
-			PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-			if(!putRet.ok()){
-				CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-//				Log.e("", putRet.get);
-				return;
-			}
-			
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-			
-			//获取7牛上的文件名和路径保存到数据库中
-			boolean isAdd = false;
-			if(gallery == null){//新增图片数据
-				gallery = new Gallery();
-				isAdd = true;
-			}
-			gallery.setClassify_id(classify_id);
-			gallery.setFile_name(image.getName());
-			gallery.setName(image.getName());
-			
-			if(isAdd){
-				addGallery(gallery);
-			}else{
-				updateGallery(gallery);
+			PutRet putRet = null;
+			try {
+				putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
+				if(!putRet.ok()){
+					CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+					return;
+				}
+				
+				CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+				
+				//获取7牛上的文件名和路径保存到数据库中
+				boolean isAdd = false;
+				if(gallery == null){//新增图片数据
+					gallery = new Gallery();
+					isAdd = true;
+				}
+				gallery.setClassify_id(classify_id);
+				gallery.setFile_name(image.getName());
+				gallery.setName(image.getName());
+				
+				if(isAdd){
+					addGallery(gallery);
+				}else{
+					updateGallery(gallery);
+				}
+			} catch (InterruptedException e) {
+				Log.e(TAG,"上传文件到7牛失败", e);
+			} catch (ExecutionException e) {
+				Log.e(TAG,"上传文件到7牛失败", e);
 			}
 		}
 	}

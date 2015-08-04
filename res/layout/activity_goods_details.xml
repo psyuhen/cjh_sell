@@ -109,9 +109,8 @@
                     android:id="@+id/goods_detail_content"
                     style="@style/goods_detail_black_style"
                     android:layout_width="wrap_content"
-                    android:layout_height="240.0dip"
-                    android:layout_margin="15.0dip"
-                    android:gravity="top|left"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10.0dip"
                     android:background="@drawable/goods_detail_edit"
                     android:text="@string/goods_detail_content" />
             </LinearLayout>
@@ -244,111 +243,6 @@
 
                 <ImageView style="@style/goods_detail_line" />
 
-                <RelativeLayout
-                    android:id="@+id/goods_detail_category_rl"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50.0dip" >
-
-                    <TextView
-                        android:id="@+id/goods_detail_category_text"
-                        style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20.0dip"
-                        android:text="@string/goods_detail_category_text" />
-
-                    <ImageView
-                        android:id="@+id/goods_detail_category_arrow"
-                        android:layout_width="10.0dip"
-                        android:layout_height="10.0dip"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15.0dip"
-                        android:background="@drawable/arrow_icon" />
-
-                    <TextView
-                        android:id="@+id/goods_detail_category"
-                        style="@style/goods_detail_gray_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_toLeftOf="@+id/goods_detail_category_arrow"
-                        android:text="@string/goods_detail_category" />
-                </RelativeLayout>
-
-                <ImageView style="@style/goods_detail_line" />
-
-                <RelativeLayout
-                    android:id="@+id/goods_detail_category_rl"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50.0dip" >
-
-                    <TextView
-                        android:id="@+id/goods_detail_category_text"
-                        style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20.0dip"
-                        android:text="@string/goods_detail_category_text" />
-
-                    <ImageView
-                        android:id="@+id/goods_detail_category_arrow"
-                        android:layout_width="10.0dip"
-                        android:layout_height="10.0dip"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15.0dip"
-                        android:background="@drawable/arrow_icon" />
-
-                    <TextView
-                        android:id="@+id/goods_detail_category"
-                        style="@style/goods_detail_gray_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_toLeftOf="@+id/goods_detail_category_arrow"
-                        android:text="@string/goods_detail_category" />
-                </RelativeLayout>
-
-                <ImageView style="@style/goods_detail_line" />
-
-                <RelativeLayout
-                    android:id="@+id/goods_detail_category_rl"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50.0dip" >
-
-                    <TextView
-                        android:id="@+id/goods_detail_category_text"
-                        style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20.0dip"
-                        android:text="@string/goods_detail_category_text" />
-
-                    <ImageView
-                        android:id="@+id/goods_detail_category_arrow"
-                        android:layout_width="10.0dip"
-                        android:layout_height="10.0dip"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15.0dip"
-                        android:background="@drawable/arrow_icon" />
-
-                    <TextView
-                        android:id="@+id/goods_detail_category"
-                        style="@style/goods_detail_gray_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10.0dip"
-                        android:layout_toLeftOf="@+id/goods_detail_category_arrow"
-                        android:text="@string/goods_detail_category" />
-                </RelativeLayout>
             </LinearLayout>
 
             <RelativeLayout
@@ -359,6 +253,18 @@
                 android:layout_marginBottom="10.0dip"
                 android:background="@color/whitebg" >
 
+                <Button
+                    android:id="@+id/goods_details_pubilsh_goods_btn"
+                    style="@style/goods_detail_red_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="5.0dip"
+                    android:layout_toLeftOf="@+id/goods_details_delete_goods_btn"
+                    android:background="@drawable/btn_order_details"
+                    android:padding="10.0dip"
+                    android:text="@string/publish_goods_text" />
+                
                 <Button
                     android:id="@+id/goods_details_delete_goods_btn"
                     style="@style/goods_detail_red_style"

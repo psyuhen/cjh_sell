@@ -1,13 +1,14 @@
 package com.cjh.activity;
 
-import com.cjh.cjh_sell.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import com.cjh.auth.SessionManager;
+import com.cjh.cjh_sell.R;
 
 /**
  * 
@@ -80,6 +81,25 @@ public class SplashActivity extends Activity {
 	}
 
 	private void goHome() {
+		SessionManager sessionManager = new SessionManager(getApplicationContext());
+		if(!sessionManager.isLoggedIn()){
+			goLogin();
+		}else{
+			if(sessionManager.loginLongTime() > 30){
+				goLogin();
+			}else{
+				goMain();
+			}
+		}
+	}
+	
+	private void goMain(){
+		Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+		SplashActivity.this.startActivity(intent);
+		SplashActivity.this.finish();
+	}
+	
+	private void goLogin(){
 		Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 		SplashActivity.this.startActivity(intent);
 		SplashActivity.this.finish();

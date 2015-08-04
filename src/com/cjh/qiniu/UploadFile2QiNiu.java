@@ -58,11 +58,11 @@ import com.qiniu.api.rs.RSClient;
 public class UploadFile2QiNiu {
 	private static UploadFile2QiNiu uploadFile2QiNiu;
 	//访问key
-	private String accessKey;
+	private String accessKey="-fEnz8U73A56AiBnDAxDca7zQKOhXqKW3ewg5Dnt";
 	//密钥key
-	private String secretKey;
+	private String secretKey="B1tvmnT882rHUThFDnvDN8T4nTq7aciXFzWxUSuz";
 	//空间名称和资源名称
-	private String bucketName;
+	private String bucketName="ingbbtest";
 	//凭证算法
 	private Mac mac;
 	//生成文件上传的凭证

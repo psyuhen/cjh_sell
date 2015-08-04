@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
@@ -18,7 +19,6 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.SecureUtil;
 import com.cjh.utils.Validator;
-import com.cjh.utils.auth.SessionManager;
 
 /**
  * 登录

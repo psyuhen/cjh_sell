@@ -21,6 +21,7 @@ public class MerchInfo implements Serializable{
 	private int image_resource_id;
 	private String name;
 	private String desc;
+	private String unit;
 	private float price;
 	private int sales_volume;
 	private int in_stock;
@@ -119,6 +120,12 @@ public class MerchInfo implements Serializable{
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public String getUnit() {
+		return unit;
+	}
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 	
 }

@@ -25,10 +25,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cjh.adapter.AddImageAdapter;
+import com.cjh.adapter.CommonAdapter;
+import com.cjh.adapter.ViewHolder;
 import com.cjh.bean.AddImage;
+import com.cjh.bean.CategoryItem;
+import com.cjh.bean.ClassifyInfo;
 import com.cjh.bean.Gallery;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
@@ -38,6 +45,7 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
+import com.cjh.utils.Validator;
 import com.qiniu.api.io.PutRet;
 /**
  * 添加商品
@@ -61,7 +69,18 @@ public class GoodsAddActivity extends BaseTwoActivity {
 	
 	private EditText pop_title_edit;//标题
 	private EditText pop_content_edit;//正文内容
-	//private EditText pop_tel_edit;//联系电话
+	private EditText pop_price_edit;//价格
+	private EditText pop_stock_edit;//库存
+	private EditText pop_type_edit;//单位
+	
+	// 添加类别对话框
+	private AlertDialog categoryChooseDialog = null;
+	private RelativeLayout goods_category_ll;
+	private Button goods_add_btn;
+	private ListView category_listview;
+	private TextView add_goods_category;
+	private List<CategoryItem> categoryList;
+	private int classify_id;
 	
 
 	@Override
@@ -82,7 +101,15 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		
 		pop_title_edit = (EditText) findViewById(R.id.pop_title_edit);
 		pop_content_edit = (EditText) findViewById(R.id.pop_content_edit);
-		//pop_tel_edit = (EditText) findViewById(R.id.pop_tel_edit);
+		pop_price_edit = (EditText) findViewById(R.id.pop_price_edit);
+		pop_stock_edit = (EditText) findViewById(R.id.pop_stock_edit);
+		pop_type_edit = (EditText) findViewById(R.id.pop_type_edit);
+		
+		goods_category_ll = (RelativeLayout) findViewById(R.id.goods_category_ll);
+		goods_category_ll.setOnClickListener(this);
+		goods_add_btn = (Button) findViewById(R.id.goods_add_btn);
+		goods_add_btn.setOnClickListener(this);
+		add_goods_category = (TextView) findViewById(R.id.add_goods_category);
 	}
 
 	private void initData() {
@@ -105,6 +132,39 @@ public class GoodsAddActivity extends BaseTwoActivity {
 
 			}
 		});
+		//查询分类数据
+		queryclassify();
+	}
+	private void queryclassify() {
+		categoryList=new ArrayList<CategoryItem>();
+		
+		String url = HttpUtil.BASE_URL + "/classify/querybytype.do?classify_type="+1;
+		try {
+			String jsons = HttpUtil.getRequest(url);
+			if(jsons == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
+				return;
+			}
+			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
+			if(list == null){
+				Log.w(TAG, "转换分类列表信息失败");
+				return;
+			}
+			for (ClassifyInfo classifyInfo : list) {
+				CategoryItem categoryItem=new CategoryItem();
+				categoryItem.setId(classifyInfo.getClassify_id());
+				categoryItem.setNum(classifyInfo.getClassify_num());
+				categoryItem.setTitle(classifyInfo.getName());
+				
+				categoryList.add(categoryItem);
+			}
+		} catch (InterruptedException e) {
+			Log.e(TAG, "查询分类列表失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
+		} catch (ExecutionException e) {
+			Log.e(TAG, "查询分类列表失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
+		}
 	}
 
 	@Override
@@ -128,9 +188,49 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		case R.id.right_text:
 			addGoods();
 			break;
+		case R.id.goods_add_btn:
+			addGoods();
+			break;
+		case R.id.goods_category_ll:
+			showCategoryList();
+			break;
 		default:
 			break;
 		}
+	}
+	private void showCategoryList() {
+		categoryChooseDialog = new AlertDialog.Builder(GoodsAddActivity.this)
+				.create();
+		categoryChooseDialog.show();
+		categoryChooseDialog.getWindow().setContentView(R.layout.pop_category);
+		category_listview = (ListView) categoryChooseDialog
+				.findViewById(R.id.category_listview);
+
+		category_listview.setAdapter(showAdater());
+		category_listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long len) {
+				categoryChooseDialog.dismiss();
+				CategoryItem item = (CategoryItem)parent.getItemAtPosition(position);
+				add_goods_category.setText(item.getTitle());
+				classify_id = item.getId();
+			}
+		});
+
+	}
+
+	public CommonAdapter<CategoryItem> showAdater() {
+		return new CommonAdapter<CategoryItem>(GoodsAddActivity.this,
+				categoryList, R.layout.item_add_category) {
+
+			@Override
+			public void convert(ViewHolder helper, CategoryItem item) {
+				helper.setText(R.id.item_add_category_title, item.getTitle());
+			}
+		};
+
 	}
 	
 	//添加商品
@@ -141,7 +241,9 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		
 		String title = pop_title_edit.getText().toString();//标题
 		String content = pop_content_edit.getText().toString();//正文内容
-		//String tel = pop_tel_edit.getText().toString();;//联系电话
+		String price = pop_price_edit.getText().toString();//价格
+		String stock = pop_stock_edit.getText().toString();//价格
+		String type = pop_type_edit.getText().toString();//单位
 		
 		if(TextUtils.isEmpty(title)){
 			pop_title_edit.setError(getString(R.string.error_field_required));
@@ -159,6 +261,25 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		merchInfo.setName(title);
 		merchInfo.setDesc(content);
 		merchInfo.setStore_id(store_id);
+		merchInfo.setClassify_id(classify_id);
+		merchInfo.setUnit(type);
+		if(!TextUtils.isEmpty(price)){
+			if(Validator.isNumber(price)){
+				merchInfo.setPrice(Float.valueOf(price));
+			}else{
+				pop_price_edit.setError(getString(R.string.error_invalid_float));
+				return;
+			}
+		}
+		if(!TextUtils.isEmpty(stock)){
+			if(Validator.isDigits(stock)){
+				merchInfo.setIn_stock(Integer.valueOf(stock));
+			}else{
+				pop_price_edit.setError(getString(R.string.error_invalid_digit));
+				return;
+			}
+		}
+		
 		
 		String url = HttpUtil.BASE_URL + "/merch/add.do";
 		try {
@@ -170,7 +291,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			
 			CommonsUtil.showShortToast(GoodsAddActivity.this, json);
 			//查询Merch_id
-			url = HttpUtil.BASE_URL + "/gallery/queryMerchByMap.do";
+			url = HttpUtil.BASE_URL + "/merch/queryMerchByMap.do";
 			Map<String,String> map = new HashMap<String, String>();
 			map.put("name", title);
 			map.put("desc", content);
@@ -199,8 +320,8 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				}
 			}
 			
-			startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
-			finish();
+			//startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
+			GoodsAddActivity.this.finish();
 		} catch (InterruptedException e) {
 			Log.i(TAG, "添加商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
@@ -254,29 +375,31 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE:
-			Uri selectImage = data.getData();
-			if (selectImage != null) {
-				String uriStr = selectImage.toString();
-				String path = uriStr.substring(10, uriStr.length());
-				if (path.startsWith("com.sec.android.gallery3d")) {
-					Toast.makeText(
-							this,
-							"It's auto backup pic path:"
-									+ selectImage.toString(),
-							Toast.LENGTH_SHORT).show();
+			if(data != null){
+				Uri selectImage = data.getData();
+				if (selectImage != null) {
+					String uriStr = selectImage.toString();
+					String path = uriStr.substring(10, uriStr.length());
+					if (path.startsWith("com.sec.android.gallery3d")) {
+						Toast.makeText(
+								this,
+								"It's auto backup pic path:"
+										+ selectImage.toString(),
+								Toast.LENGTH_SHORT).show();
+					}
 				}
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = GoodsAddActivity.this.getContentResolver().query(
+						selectImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				picturePath = cursor.getString(columnIndex);
+				ImageName = picturePath.substring(picturePath.lastIndexOf("."),
+						picturePath.length());
+				ImageName = "test123" + ImageName;
+				cursor.close();
+				ImageUtil.startPhotoZoom(data.getData(),GoodsAddActivity.this);
 			}
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = GoodsAddActivity.this.getContentResolver().query(
-					selectImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			picturePath = cursor.getString(columnIndex);
-			ImageName = picturePath.substring(picturePath.lastIndexOf("."),
-					picturePath.length());
-			ImageName = "test123" + ImageName;
-			cursor.close();
-			ImageUtil.startPhotoZoom(data.getData(),GoodsAddActivity.this);
 			break;
 		case Constants.CAMERA_REQUEST_CODE:
 			if (CommonsUtil.hasSdcard()) {

@@ -1,11 +1,5 @@
 package com.cjh.activity;
 
-import com.cjh.cjh_sell.R;
-import com.cjh.fragment.OrderFragment;
-import com.cjh.fragment.MeFragment;
-import com.cjh.fragment.ShopFragment;
-import com.cjh.utils.auth.SessionManager;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,6 +18,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.cjh.auth.SessionManager;
+import com.cjh.cjh_sell.R;
+import com.cjh.fragment.MeFragment;
+import com.cjh.fragment.OrderFragment;
+import com.cjh.fragment.ShopFragment;
 /**
  * 首页
  * @author ps
@@ -47,6 +47,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		sessionManager = new SessionManager(getApplicationContext());
 		setContentView(R.layout.activity_main);
+		sessionManager.checkLogin();
+		
 		settingBtn = (ImageButton) findViewById(R.id.top_more_right);
 		edit_imaggbtn = (ImageButton) findViewById(R.id.top_edit_right);
 		initData();
@@ -84,7 +86,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * 处理底部点击事件
 	 */
 	private void dealBottomButtonsClickEvent() {
-		
+		//订单导航
 		findViewById(R.id.rbnav).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -102,6 +104,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				edit_imaggbtn.setVisibility(View.GONE);
 			}
 		});
+		//首页
 		findViewById(R.id.rbHome).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -122,6 +125,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				edit_imaggbtn.setVisibility(View.GONE);
 			}
 		});
+		//商家
 		findViewById(R.id.rbMe).setOnClickListener(new OnClickListener() {
 
 			@Override

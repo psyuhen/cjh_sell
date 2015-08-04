@@ -30,7 +30,7 @@ public class OrderFragment extends Fragment implements OnClickListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		View contentView = inflater.inflate(R.layout.fragment_order, container,
 				false);
 		order_top_rl=(RelativeLayout) contentView.findViewById(R.id.order_top_rl);
@@ -51,15 +51,12 @@ public class OrderFragment extends Fragment implements OnClickListener{
 		return contentView;
 	}
 	private void initView() {
-		// TODO Auto-generated method stub
 		
 	}
 	private void initData() {
-		// TODO Auto-generated method stub
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				// TODO Auto-generated method stub
 				switch (position) {
 				case 0:
 					order_left_line.setVisibility(View.VISIBLE);
@@ -74,20 +71,20 @@ public class OrderFragment extends Fragment implements OnClickListener{
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
+				
 
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
+				
 
 			}
 		});
 	}
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		switch (v.getId()) {
 		case R.id.order_left_rl:
 			order_left_line.setVisibility(View.VISIBLE);

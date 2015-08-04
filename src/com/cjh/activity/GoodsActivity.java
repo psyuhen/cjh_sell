@@ -32,6 +32,8 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_goods);
+		sessionManager.checkLogin();
+		
 		initView();
 		initData();
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {

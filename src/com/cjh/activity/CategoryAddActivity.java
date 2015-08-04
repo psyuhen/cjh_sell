@@ -182,6 +182,9 @@ public class CategoryAddActivity extends BaseTwoActivity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE:
+			if(data == null){
+				break;
+			}
 			Uri selectImage = data.getData();
 			if (selectImage != null) {
 				String uriStr = selectImage.toString();
