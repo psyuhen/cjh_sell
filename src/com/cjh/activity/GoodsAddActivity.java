@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 import com.cjh.adapter.AddImageAdapter;
 import com.cjh.adapter.CommonAdapter;
 import com.cjh.adapter.ViewHolder;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.CategoryItem;
 import com.cjh.bean.ClassifyInfo;
@@ -46,14 +49,17 @@ import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
 import com.cjh.utils.Validator;
-import com.qiniu.api.io.PutRet;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
 /**
  * 添加商品
  * @author ps
  *
  */
 public class GoodsAddActivity extends BaseTwoActivity {
-	public static final String TAG = "GoodsAddActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsAddActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片
@@ -147,7 +153,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			}
 			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 			if(list == null){
-				Log.w(TAG, "转换分类列表信息失败");
+				LOGGER.error(">>> 转换分类列表信息失败");
 				return;
 			}
 			for (ClassifyInfo classifyInfo : list) {
@@ -159,10 +165,10 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				categoryList.add(categoryItem);
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询分类列表失败", e);
+			LOGGER.error(">>> 查询分类列表失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询分类列表失败", e);
+			LOGGER.error(">>> 查询分类列表失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 		}
 	}
@@ -301,20 +307,29 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				List<MerchInfo> merchList = JsonUtil.parse2ListMerchInfo(json);
 				if(merchList != null && !merchList.isEmpty()){
 					MerchInfo merch = merchList.get(0);
+					final int merchId = merch.getMerch_id();
 					//上传图片到7牛吧
 					if(lists != null && !lists.isEmpty()){
 						for (AddImage addImage : lists) {
 							File image = addImage.getFile();
-							PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-							if(!putRet.ok()){
-								Log.e(TAG, putRet.getResponse(), putRet.getException());
-							}else{
-								Gallery gallery = new Gallery();
-								gallery.setMerch_id(merch.getMerch_id());
-								gallery.setFile_name(image.getName());
-								gallery.setName(image.getName());
-								addGallery(gallery);
-							}
+							int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+							QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
+								@Override
+								public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+									if(info.statusCode == HttpStatus.OK.value()){
+										CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+										
+										Gallery gallery = new Gallery();
+										gallery.setMerch_id(merchId);
+										gallery.setFile_name(key);
+										gallery.setName(key);
+										addGallery(gallery);
+									}else{
+										CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+										LOGGER.error(">>> 保存图片到服务器失败");
+									}
+								}
+							});
 						}
 					}
 				}
@@ -323,10 +338,10 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			//startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
 			GoodsAddActivity.this.finish();
 		} catch (InterruptedException e) {
-			Log.i(TAG, "添加商品失败", e);
+			LOGGER.error(">>> 添加商品失败",e);
 			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
 		} catch (ExecutionException e) {
-			Log.i(TAG, "添加商品失败", e);
+			LOGGER.error(">>> 添加商品失败",e);
 			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
 		}
 		
@@ -344,10 +359,10 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新图片失败", e);
+			LOGGER.error(">>> 更新图片失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新图片失败", e);
+			LOGGER.error(">>> 更新图片失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		}
 	}
@@ -447,7 +462,6 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			}else{
 				CommonsUtil.showShortToast(GoodsAddActivity.this, "最多添加六张图片");
 			}
-			
 		}
 	}
 	

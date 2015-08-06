@@ -1,9 +1,6 @@
 package com.cjh.fragment;
 
-import com.cjh.activity.SettingActivity;
-import com.cjh.adapter.OrderFragmentAdapter;
-import com.cjh.cjh_sell.R;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,10 +8,20 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.cjh.activity.MainActivity;
+import com.cjh.activity.SettingActivity;
+import com.cjh.adapter.OrderFragmentAdapter;
+import com.cjh.cjh_sell.R;
+/**
+ * 订单信息
+ * @author ps
+ *
+ */
 public class OrderFragment extends Fragment implements OnClickListener{
 	private ViewPager mViewPager;
 	private OrderFragmentAdapter mFragmentAdapter;
@@ -25,6 +32,13 @@ public class OrderFragment extends Fragment implements OnClickListener{
 
 	private View order_left_line;
 	private View order_right_line;
+	
+	private TextView order_title;
+	
+	private Context context;
+	public void setContext(Context context) {
+		this.context = context;
+	}
 	
 	//private ImageButton settingBtn;
 	@Override
@@ -46,12 +60,13 @@ public class OrderFragment extends Fragment implements OnClickListener{
 				getActivity().getSupportFragmentManager(), getActivity());
 		mViewPager.setAdapter(mFragmentAdapter);
 		
+		order_title = (TextView)contentView.findViewById(R.id.order_title);
+		
 		initView();
 		initData();
 		return contentView;
 	}
 	private void initView() {
-		
 	}
 	private void initData() {
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -71,16 +86,18 @@ public class OrderFragment extends Fragment implements OnClickListener{
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
-
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				
-
 			}
 		});
+		
+		if(this.context != null){
+			MainActivity activity = (MainActivity)this.context;
+			String storeName = activity.sessionManager.get("store_name");
+			order_title.setText(storeName);
+		}
 	}
 	@Override
 	public void onClick(View v) {

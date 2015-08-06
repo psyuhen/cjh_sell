@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +17,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.ClassifyInfo;
 import com.cjh.bean.Gallery;
 import com.cjh.cjh_sell.R;
@@ -30,14 +33,18 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
-import com.qiniu.api.io.PutRet;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
 /**
  * 分类明细
  * @author ps
  *
  */
 public class CategoryDetailsActivity extends BaseTwoActivity {
-	public static final String TAG = "CategoryDetailsActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryDetailsActivity.class);
+
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片图标
@@ -116,13 +123,15 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			if(gallery != null){
 				//再从7牛上获取图片
 				String imageUrl = QiNiuUtil.getImageUrl(gallery.getFile_name());
-				getImageToView(imageUrl);
+				if(!"".equals(imageUrl)){
+					getImageToView(imageUrl);
+				}
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询分类信息失败", e);
+			LOGGER.error(">>> 查询分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询分类信息失败", e);
+			LOGGER.error(">>> 查询分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
 		}
 	}
@@ -182,10 +191,10 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 //			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
 			finish();
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新分类信息失败", e);
+			LOGGER.error(">>> 更新分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新分类信息失败", e);
+			LOGGER.error(">>> 更新分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
 		}
 	}
@@ -202,10 +211,10 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 //			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
 			finish();
 		} catch (InterruptedException e) {
-			Log.e(TAG, "删除分类信息失败", e);
+			LOGGER.error(">>> 删除分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "删除分类信息失败", e);
+			LOGGER.error(">>> 删除分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		}
 	}
@@ -294,9 +303,9 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			category_detail_deleteimage1.setVisibility(View.VISIBLE);//删除图标显示
 			category_detail_image1.setVisibility(View.VISIBLE);//显示已添加的图标
 		} catch (InterruptedException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 程序出错", e1);
 		} catch (ExecutionException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 程序出错", e1);
 		}
 	}
 	/**
@@ -322,36 +331,34 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
 			}
-			PutRet putRet = null;
-			try {
-				putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-				if(!putRet.ok()){
-					CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-					return;
+			String user_id = sessionManager.get(SessionManager.KEY_USER_ID);
+			QiNiuUtil.resumeUploadFile(image.getName(), image, user_id, new UpCompletionHandler() {
+				@Override
+				public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+					if(info.statusCode == HttpStatus.OK.value()){
+						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+						
+						//获取7牛上的文件名和路径保存到数据库中
+						boolean isAdd = false;
+						if(gallery == null){//新增图片数据
+							gallery = new Gallery();
+							isAdd = true;
+						}
+						gallery.setClassify_id(classify_id);
+						gallery.setFile_name(key);
+						gallery.setName(key);
+						
+						if(isAdd){
+							addGallery(gallery);
+						}else{
+							updateGallery(gallery);
+						}
+					}else{
+						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+						LOGGER.error(">>> 保存图片到服务器失败");
+					}
 				}
-				
-				CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-				
-				//获取7牛上的文件名和路径保存到数据库中
-				boolean isAdd = false;
-				if(gallery == null){//新增图片数据
-					gallery = new Gallery();
-					isAdd = true;
-				}
-				gallery.setClassify_id(classify_id);
-				gallery.setFile_name(image.getName());
-				gallery.setName(image.getName());
-				
-				if(isAdd){
-					addGallery(gallery);
-				}else{
-					updateGallery(gallery);
-				}
-			} catch (InterruptedException e) {
-				Log.e(TAG,"上传文件到7牛失败", e);
-			} catch (ExecutionException e) {
-				Log.e(TAG,"上传文件到7牛失败", e);
-			}
+			});
 		}
 	}
 	
@@ -373,10 +380,10 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			
 			return gallery;
 		} catch (InterruptedException e) {
-			Log.e(TAG, "根据分类Id查询图片信息失败", e);
+			LOGGER.error(">>> 根据分类Id查询图片信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "根据分类Id查询图片信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "根据分类Id查询图片信息失败", e);
+			LOGGER.error(">>> 根据分类Id查询图片信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "根据分类Id查询图片信息失败");
 		}
 		
@@ -388,17 +395,17 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.postRequest(url, gallery);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+				CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新图片失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+			LOGGER.error(">>> 新增图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新图片失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+			LOGGER.error(">>> 新增图片失败", e);
+			CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
 		}
 	}
 	//更新图片信息
@@ -413,10 +420,10 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新图片失败", e);
+			LOGGER.error(">>> 更新图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新图片失败", e);
+			LOGGER.error(">>> 更新图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		}
 	}
@@ -435,13 +442,11 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			
 			QiNiuUtil.deleteFile(gallery.getFile_name());
 		} catch (InterruptedException e) {
-			Log.e(TAG, "删除图片失败", e);
+			LOGGER.error(">>> 删除图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "删除图片失败", e);
+			LOGGER.error(">>> 删除图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 		}
 	}
-	
-	
 }

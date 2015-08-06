@@ -3,7 +3,6 @@ package com.cjh.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,6 +18,8 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.SecureUtil;
 import com.cjh.utils.Validator;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 登录
@@ -26,7 +27,7 @@ import com.cjh.utils.Validator;
  *
  */
 public class LoginActivity extends BaseTwoActivity implements OnClickListener {
-	public static final String TAG = "LoginActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginActivity.class);
 	private TextView login_register;
 	private TextView login_retrieve;
 	private Button login_btn;
@@ -164,12 +165,13 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				}
 				Store store = JsonUtil.parse2Object(json, Store.class);
 				sessionManager.putInt("store_id", store.getStore_id());
+				sessionManager.put("store_name", store.getName());
 				
 				startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				finish();
 			}catch (Exception e) {
-				Log.e(TAG, "用户登录失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败"+e.getMessage());
+				LOGGER.error(">>> 用户登录失败", e);
+				CommonsUtil.showLongToast(getApplicationContext(), "用户登录失败");
 			}
 		}
 	}

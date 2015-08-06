@@ -162,6 +162,9 @@ public class SessionManager {
 
 	public int loginLongTime(){
 		Date startday = DateUtil.parseDate(get(LOGIN_TIME), new String[]{"yyyyMMddHHmmss"});
+		if(startday == null){
+			return 10031;
+		}
 		Date endday = new Date();
 		return DateUtil.getDiffMins(startday, endday);
 	}

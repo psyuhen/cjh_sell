@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.cjh.adapter.CategoryFragmentAdapter;
 import com.cjh.cjh_sell.R;
@@ -31,6 +32,7 @@ public class CategoryActivity extends BaseActivity {
 	private PopupWindow addADPopWindow = null;
 
 	private AlertDialog imageChooseDialog = null;
+	private TextView order_title;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +81,16 @@ public class CategoryActivity extends BaseActivity {
 		ad_right_line = findViewById(R.id.ad_right_line);
 		edit_imaggbtn = (ImageButton) findViewById(R.id.right_imgbtn);
 		edit_imaggbtn.setOnClickListener(this);
+		
+		order_title = (TextView)findViewById(R.id.order_title);
 	}
 
 	private void initData() {
 		title.setText("类别管理");
 		mViewPager.setAdapter(mFragmentAdapter);
+		
+		String storeName = sessionManager.get("store_name");
+		order_title.setText(storeName);
 	}
 
 	@Override

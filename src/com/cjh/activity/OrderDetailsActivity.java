@@ -8,7 +8,6 @@ import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -20,6 +19,8 @@ import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 订单详情
@@ -27,7 +28,7 @@ import com.cjh.utils.JsonUtil;
  *
  */
 public class OrderDetailsActivity extends BaseTwoActivity {
-	public static final String TAG = "OrderDetailsActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderDetailsActivity.class);
 	private TextView order_details_serial;
 	private TextView order_details_time;
 	private TextView order_details_payway;
@@ -147,10 +148,10 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 			Order order = JsonUtil.parse2Object(json, Order.class);
 			return order;
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询订单信息失败", e);
+			LOGGER.error(">>> 查询订单信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询订单信息失败", e);
+			LOGGER.error(">>> 查询订单信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 		}
 		

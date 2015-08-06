@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/content_head"
-        android:layout_height="80dp"
+        android:layout_height="100dip"
         layout="@layout/content_head" />
 
     <RelativeLayout

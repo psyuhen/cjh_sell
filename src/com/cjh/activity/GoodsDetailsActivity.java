@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import com.cjh.adapter.AddImageAdapter;
 import com.cjh.adapter.CommonAdapter;
 import com.cjh.adapter.ViewHolder;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.CategoryItem;
 import com.cjh.bean.ClassifyInfo;
@@ -49,14 +52,17 @@ import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
 import com.cjh.utils.Validator;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.qiniu.api.io.PutRet;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
 /**
  * 商品明细
  * @author ps
  *
  */
 public class GoodsDetailsActivity extends BaseTwoActivity {
-	public static final String TAG = "GoodsDetailsActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsDetailsActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片
@@ -175,7 +181,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 			if(list == null){
-				Log.w(TAG, "转换分类列表信息失败");
+				LOGGER.error(">>> 转换分类列表信息失败");
 				return;
 			}
 			for (ClassifyInfo classifyInfo : list) {
@@ -188,11 +194,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			queryGoods();
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询分类列表失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
+			LOGGER.error(">>> 查询分类列表失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询分类列表失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
+			LOGGER.error(">>> 查询分类列表失败",e);
 		}
 	}
 
@@ -322,18 +328,25 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 					for (AddImage addImage: old_lists) {
 						deleteGallery(addImage.getFileName(), addImage.getId()+"");
 					}
+					int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
 					for (AddImage addImage: lists) {
 						File image = addImage.getFile();
-						PutRet putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-						if(!putRet.ok()){
-							Log.e(TAG, putRet.getResponse(), putRet.getException());
-						}else{
-							Gallery gallery = new Gallery();
-							gallery.setMerch_id(merch_id);
-							gallery.setFile_name(image.getName());
-							gallery.setName(image.getName());
-							addGallery(gallery);
-						}
+						QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
+							@Override
+							public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+								if(info.statusCode == HttpStatus.OK.value()){
+									CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+									Gallery gallery = new Gallery();
+									gallery.setMerch_id(merch_id);
+									gallery.setFile_name(key);
+									gallery.setName(key);
+									addGallery(gallery);
+								}else{
+									CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+									LOGGER.error(">>> 保存图片到服务器失败");
+								}
+							}
+						});
 					}
 				}
 				
@@ -343,11 +356,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新失败");
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "更新商品失败");
+			LOGGER.error(">>> 更新商品失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "更新商品失败");
+			LOGGER.error(">>> 更新商品失败",e);
 		}
 		
 	}
@@ -363,11 +376,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+			LOGGER.error(">>> 更新图片失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+			LOGGER.error(">>> 更新图片失败",e);
 		}
 	}
 	//删除图片信息
@@ -385,11 +398,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			
 			QiNiuUtil.deleteFile(fileName);
 		} catch (InterruptedException e) {
-			Log.e(TAG, "删除图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+			LOGGER.error(">>> 删除图片失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "删除图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+			LOGGER.error(">>> 删除图片失败",e);
 		}
 	}
 
@@ -403,8 +416,6 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				CommonsUtil.showLongToast(getApplicationContext(), "查询商品列表失败");
 				return;
 			}
-			
-			Log.e(TAG, json);
 			
 			MerchInfo merchInfo = JsonUtil.parse2Object(json, MerchInfo.class);
 			goods_detail_title.setText(merchInfo.getName());
@@ -436,17 +447,19 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				if(galleries != null && !galleries.isEmpty()){
 					for (Gallery gallery : galleries) {
 						String imageUrl = QiNiuUtil.getImageUrl(gallery.getFile_name());
-						getImageToView(gallery.getGallery_id(),imageUrl,gallery.getFile_name());
+						if(!"".equals(imageUrl)){
+							getImageToView(gallery.getGallery_id(),imageUrl,gallery.getFile_name());
+						}
 					}
 				}
 			}
 			
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询merch_id为["+merch_id+"]商品信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
+			LOGGER.error(">>> 查询商品信息失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询merch_id为["+merch_id+"]商品信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
+			LOGGER.error(">>> 查询商品信息失败",e);
 		}
 	}
 	
@@ -464,11 +477,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showLongToast(getApplicationContext(), json);
 			startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
 		} catch (InterruptedException e) {
-			Log.e(TAG, "删除商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
+			LOGGER.error(">>> 删除商品失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "删除商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
+			LOGGER.error(">>> 删除商品失败",e);
 		}
 	}
 	
@@ -486,11 +499,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "下架商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "下架商品失败");
+			LOGGER.error(">>> 下架商品失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "下架商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "下架商品失败");
+			LOGGER.error(">>> 下架商品失败",e);
 		}
 		
 	}
@@ -509,11 +522,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "发布商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "发布商品失败");
+			LOGGER.error(">>> 发布商品失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "发布商品失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "发布商品失败");
+			LOGGER.error(">>> 发布商品失败",e);
 		}
 		
 	}
@@ -634,9 +647,9 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			adapter.notifyDataSetChanged();
 			
 		} catch (InterruptedException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 程序出错",e1);
 		} catch (ExecutionException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 程序出错",e1);
 		}
 	}
 }

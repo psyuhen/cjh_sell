@@ -75,6 +75,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void initFragment() {
 		FragmentTransaction ft = fMgr.beginTransaction();
 		MeFragment homeFragment = new MeFragment();
+		homeFragment.setContext(MainActivity.this);
 		ft.add(R.id.fragmentRoot, homeFragment, "navFragment");
 
 		ft.addToBackStack("navFragment");
@@ -86,7 +87,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	 * 处理底部点击事件
 	 */
 	private void dealBottomButtonsClickEvent() {
-		//订单导航
+		//首页导航
 		findViewById(R.id.rbnav).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -104,7 +105,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				edit_imaggbtn.setVisibility(View.GONE);
 			}
 		});
-		//首页
+		//订单
 		findViewById(R.id.rbHome).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -113,6 +114,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				FragmentTransaction ft = fMgr.beginTransaction();
 				ft.hide(fMgr.findFragmentByTag("navFragment"));
 				OrderFragment gf = new OrderFragment();
+				gf.setContext(MainActivity.this);
 				ft.add(R.id.fragmentRoot, gf, "OrderFragment");
 				ft.addToBackStack("OrderFragment");
 				ft.commit();
@@ -134,6 +136,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				FragmentTransaction ft = fMgr.beginTransaction();
 				ft.hide(fMgr.findFragmentByTag("navFragment"));
 				ShopFragment mg = new ShopFragment();
+				mg.setContext(MainActivity.this);
 				ft.add(R.id.fragmentRoot, mg, "ShopFragment");
 				ft.addToBackStack("ShopFragment");
 				ft.commit();
@@ -233,8 +236,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final View vPopWindow = inflater.inflate(R.layout.pop_add_shop, null,
-				false);
+		final View vPopWindow = inflater.inflate(R.layout.pop_add_shop, null,false);
 		// 屏幕高度和宽度
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);

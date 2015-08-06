@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.cjh.utils.QiNiuUtil;
 
 /**
  * 店铺名片展示
@@ -40,6 +43,7 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 	private TextView shop_my_name;
 	private TextView shop_my_address;
 	private TextView shop_my_tel;
+	private ImageView shop_my_image;
 	
 
 	private RelativeLayout shop_nav_item_delivery_rl;
@@ -81,6 +85,7 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 		shop_my_name = (TextView)contentView.findViewById(R.id.shop_my_name);
 		shop_my_address = (TextView)contentView.findViewById(R.id.shop_my_address);
 		shop_my_tel = (TextView)contentView.findViewById(R.id.shop_my_tel);
+		shop_my_image = (ImageView)contentView.findViewById(R.id.shop_my_image);
 		
 		querybyuserid();
 		return contentView;
@@ -110,6 +115,15 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				shop_my_name.setText(user.getName());
 				shop_my_address.setText(store.getAddress());
 				shop_my_tel.setText(store.getPhone());
+				
+				String logo = store.getLogo();
+				if(logo != null && !"".equals(logo)){
+					String imageUrl = QiNiuUtil.getImageUrl(logo);
+					if(!"".equals(imageUrl)){
+						Bitmap bitmap = QiNiuUtil.getQiNiu(imageUrl);
+						shop_my_image.setImageBitmap(bitmap);
+					}
+				}
 			}
 		} catch (InterruptedException e) {
 			Log.e(TAG, "根据用户获取商家信息失败", e);

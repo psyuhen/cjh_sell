@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutionException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -18,13 +17,15 @@ import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.SecureUtil;
 import com.cjh.utils.Validator;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 注册
  * @author ps
  *
  */
 public class RegisteActivity extends BaseTwoActivity{
-	public static final String TAG = "RegisteActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegisteActivity.class);
 	private EditText mMobileView;
 	private EditText mPasswordView;
 	private EditText mComfirmPasswordView;
@@ -68,9 +69,9 @@ public class RegisteActivity extends BaseTwoActivity{
 							mMobileView.setError("手机号码已被注册！");
 						}
 					} catch (InterruptedException e) {
-						Log.e(TAG, "判断手机号码是否被注册失败", e);
+						LOGGER.error(">>> 判断手机号码是否被注册失败", e);
 					} catch (ExecutionException e) {
-						Log.e(TAG, "判断手机号码是否被注册失败", e);
+						LOGGER.error(">>> 判断手机号码是否被注册失败", e);
 					}
 				}
 			}
@@ -141,7 +142,7 @@ public class RegisteActivity extends BaseTwoActivity{
 			try{
 				String request = HttpUtil.postRequest(url1, user);
 				if(request == null){
-					Log.e(TAG, "手机号码注册失败!");
+					LOGGER.error(">>> 手机号码注册失败");
 					CommonsUtil.showLongToast(getApplicationContext(), "手机号码注册失败!");
 					return;
 				}
@@ -158,8 +159,8 @@ public class RegisteActivity extends BaseTwoActivity{
 				startActivity(new Intent(RegisteActivity.this, LoginActivity.class));
 				finish();
 			}catch (Exception e) {
-				Log.e(TAG, "注册失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), e.getMessage());
+				LOGGER.error(">>> 注册失败",e);
+				CommonsUtil.showLongToast(getApplicationContext(), "注册失败");
 			}
 		}
 	}

@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cjh.adapter.AddImageAdapter;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.Store;
 import com.cjh.bean.User;
@@ -37,7 +40,10 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
-import com.qiniu.api.io.PutRet;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
 
 /**
  * 
@@ -46,7 +52,7 @@ import com.qiniu.api.io.PutRet;
  *
  */
 public class ShopEditActivity extends BaseTwoActivity {
-	public static final String TAG = "ShopEditActivity"; 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShopEditActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	private ImageView content_add_image;
@@ -116,19 +122,13 @@ public class ShopEditActivity extends BaseTwoActivity {
 				content_add_image.setVisibility(View.VISIBLE);
 				
 				String fileName = addImage.getFileName();
-				try {
-					QiNiuUtil.deleteFile(fileName);
-					//更新数据库的文件名
-					Store storeInfo = new Store();
-					storeInfo.setStore_id(sessionManager.getInt("store_id"));
-					storeInfo.setLogo("");
+				QiNiuUtil.deleteFile(fileName);
+				//更新数据库的文件名
+				Store storeInfo = new Store();
+				storeInfo.setStore_id(sessionManager.getInt("store_id"));
+				storeInfo.setLogo("");
 
-					updateStore(storeInfo);
-				} catch (InterruptedException e) {
-					Log.e(TAG,"删除7牛上的文件失败", e);
-				} catch (ExecutionException e) {
-					Log.e(TAG,"删除7牛上的文件失败", e);
-				}
+				updateStore(storeInfo);
 				
 			}
 		});
@@ -186,6 +186,9 @@ public class ShopEditActivity extends BaseTwoActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE:
+			if(data == null){
+				break;
+			}
 			Uri selectImage = data.getData();
 			if (selectImage != null) {
 				String uriStr = selectImage.toString();
@@ -242,6 +245,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 	private void getImageToView(Intent data, Context context) {
 		Bundle extras = data.getExtras();
 		if (extras != null) {
+			LOGGER.info(">>> come in");
 			Bitmap photo = extras.getParcelable("data");
 			AddImage addImage = new AddImage();
 			addImage.setBitmap(photo);
@@ -250,36 +254,35 @@ public class ShopEditActivity extends BaseTwoActivity {
 			//添加图片控件消失
 			content_add_image.setVisibility(View.GONE);
 			
+			LOGGER.info(">>> come in 2");
 			//上传图片到7牛
 			File image = ImageUtil.bitmap2file(ShopEditActivity.this, photo);
 			if(image == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
 			}
+			LOGGER.info(">>> come in 3");
 			addImage.setFile(image);
 			addImage.setFileName(image.getName());
-			PutRet putRet = null;
-			try {
-				putRet = QiNiuUtil.resumeUploadFile(image.getName(), image);
-				if(!putRet.ok()){
-					CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-					return;
-				}
-				
-				CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-				
-				//更新数据库的文件名
-				Store storeInfo = new Store();
-				storeInfo.setStore_id(sessionManager.getInt("store_id"));
-				storeInfo.setLogo(image.getName());
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
+				@Override
+				public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+					if(info.statusCode == HttpStatus.OK.value()){
+						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+						
+						//更新数据库的文件名
+						Store storeInfo = new Store();
+						storeInfo.setStore_id(sessionManager.getInt("store_id"));
+						storeInfo.setLogo(key);
 
-				updateStore(storeInfo);
-			} catch (InterruptedException e) {
-				Log.e(TAG,"上传文件到7牛失败", e);
-			} catch (ExecutionException e) {
-				Log.e(TAG,"上传文件到7牛失败", e);
-			}
-			
+						updateStore(storeInfo);
+					}else{
+						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+						LOGGER.error("保存图片到服务器失败");
+					}
+				}
+			});
 		}
 	}
 	
@@ -305,9 +308,9 @@ public class ShopEditActivity extends BaseTwoActivity {
 			lists.add(addImage);
 			adapter.notifyDataSetChanged();
 		} catch (InterruptedException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 获取7牛上的文件失败",e1);
 		} catch (ExecutionException e1) {
-			Log.e(TAG,"", e1);
+			LOGGER.error(">>> 获取7牛上的文件失败",e1);
 		}
 		
 	}
@@ -327,12 +330,14 @@ public class ShopEditActivity extends BaseTwoActivity {
 				
 				String fileName = store.getLogo();
 				String imageUrl = QiNiuUtil.getImageUrl(fileName);
-				getImageToView(imageUrl);
+				if(!"".equals(imageUrl)){
+					getImageToView(imageUrl);
+				}
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "根据用户获取商家信息失败", e);
+			LOGGER.error(">>> 根据用户获取商家信息失败",e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "根据用户获取商家信息失败", e);
+			LOGGER.error(">>> 根据用户获取商家信息失败",e);
 		}
 		
 	}
@@ -396,9 +401,9 @@ public class ShopEditActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 		} catch (InterruptedException e) {
-			Log.e(TAG, "更新商家信息失败", e);
+			LOGGER.error(">>> 更新商家信息失败", e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "更新商家信息失败", e);
+			LOGGER.error(">>> 更新商家信息失败", e);
 		}
 	}
 }

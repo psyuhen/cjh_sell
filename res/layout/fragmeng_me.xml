@@ -15,19 +15,90 @@
             android:orientation="vertical" >
 
             <RelativeLayout
-                android:id="@+id/goods_top_rl"
-                android:layout_width="match_parent"
-                android:layout_height="200.0dip"
-                android:background="@drawable/head_bg" >
-
-                <Button
-                    android:id="@+id/me_login_btn"
-                    android:layout_width="150.0dip"
-                    android:layout_height="50.0dip"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/btn_login"
-                    android:text="@string/login_text" />
-            </RelativeLayout>
+		        android:id="@+id/order_top_rl"
+		        android:layout_width="match_parent"
+		        android:layout_height="100dip"
+		        android:layout_weight="35"
+		        android:background="@drawable/head_bg" >
+		
+		        <com.cjh.common.CircleImageView
+		            android:id="@+id/order_head"
+		            android:layout_width="100dip"
+		            android:layout_height="100.0dip"
+		            android:layout_centerVertical="true"
+		            android:layout_marginLeft="10.0dip"
+		            android:background="@drawable/login_head_icon" >
+		        </com.cjh.common.CircleImageView>
+		
+		        <RelativeLayout
+		            android:id="@+id/order_top_center_rl"
+		            android:layout_width="fill_parent"
+		            android:layout_height="fill_parent"
+		            android:layout_marginLeft="20.0dip"
+		            android:layout_toRightOf="@+id/order_head"  
+		            android:gravity="center_vertical">
+		
+		            <TextView
+		                android:id="@+id/order_title"
+		                style="@style/goods_title"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_marginTop="15.0dip"
+		                android:text="@string/order_title_text" />
+		
+		            <ImageView
+		                android:id="@+id/order_stars"
+		                android:layout_width="40.0dip"
+		                android:layout_height="40.0dip"
+		                android:layout_below="@+id/order_title"
+		                android:layout_marginTop="8.0dip"
+		                android:visibility="gone"
+		                android:background="@drawable/star" />
+		
+		            <TextView
+		                android:id="@+id/order_level"
+		                style="@style/level_style"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_below="@+id/order_title"
+		                android:layout_marginLeft="10.0dip"
+		                android:layout_marginTop="8.0dip"
+		                android:layout_toRightOf="@+id/order_stars"
+		                android:visibility="gone"
+		                android:text="@string/good_level_text" />
+		
+		            <ImageView
+		                android:id="@+id/order_horn"
+		                android:layout_width="20.0dip"
+		                android:layout_height="20.0dip"
+		                android:layout_alignParentBottom="true"
+		                android:layout_marginBottom="30.0dip"
+		                android:background="@drawable/horn_icon"
+		                android:visibility="gone" />
+		
+		            <TextView
+		                android:id="@+id/order_horn_text"
+		                style="@style/horn_style"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentBottom="true"
+		                android:layout_marginBottom="30.0dip"
+		                android:layout_marginLeft="10.0dip"
+		                android:layout_toRightOf="@+id/order_horn"
+		                android:text="@string/order_horn_text"
+		                android:visibility="gone" />
+		        </RelativeLayout>
+		
+		        <ImageView
+		            android:id="@+id/order_top_right_image"
+		            android:layout_width="30.0dip"
+		            android:layout_height="60.0dip"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:layout_marginRight="10.0dip"
+		            android:background="@drawable/right_icon" 
+		            android:visibility="gone"/>
+		    </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/goods_bottom_rl"

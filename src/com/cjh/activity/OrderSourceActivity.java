@@ -9,6 +9,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 
+import android.os.Bundle;
+import android.view.View;
+
 import com.cjh.adapter.OrderSourceAdapter;
 import com.cjh.bean.OrderSourceItem;
 import com.cjh.bean.OrderStat;
@@ -18,17 +21,15 @@ import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.DateUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 订单成交
  * @author ps
  *
  */
 public class OrderSourceActivity extends BaseTwoActivity {
-	public static final String TAG = "OrderSourceActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderSourceActivity.class);
 	private KJListView kjListView;
 	private OrderSourceAdapter adpater;
 	private List<OrderSourceItem> list;
@@ -125,10 +126,10 @@ public class OrderSourceActivity extends BaseTwoActivity {
 			List<OrderStat> list = JsonUtil.parse2ListOrderStat(json);
 			return list;
 		} catch (InterruptedException e) {
-			Log.e(TAG, "统计失败", e);
+			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "统计失败", e);
+			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
 		return null;

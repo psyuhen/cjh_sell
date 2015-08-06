@@ -1,12 +1,6 @@
 package com.cjh.fragment;
 
-import com.cjh.activity.CategoryActivity;
-import com.cjh.activity.GoodsActivity;
-import com.cjh.activity.LoginActivity;
-import com.cjh.activity.MarketingActivity;
-import com.cjh.activity.OrderActivity;
-import com.cjh.activity.ShopActivity;
-import com.cjh.cjh_sell.R;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,14 +8,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.cjh.activity.CategoryActivity;
+import com.cjh.activity.GoodsActivity;
+import com.cjh.activity.MainActivity;
+import com.cjh.activity.MarketingActivity;
+import com.cjh.activity.OrderActivity;
+import com.cjh.activity.ShopActivity;
+import com.cjh.cjh_sell.R;
+/**
+ * 首页民航
+ * @author ps
+ *
+ */
 public class MeFragment extends Fragment implements OnClickListener {
 	private RelativeLayout[] relativeLayouts = new RelativeLayout[5];
+	//订单、商品、类别、营销、商家
 	private int ids[] = { R.id.me_order_rl, R.id.me_goods_rl,
 			R.id.me_category_rl, R.id.me_marketing_rl, R.id.me_shop_rl };
-	private Button login_btn;
+//	private Button login_btn;
+	
+	private TextView order_title;
+	
+	private Context context;
+	public void setContext(Context context) {
+		this.context = context;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,9 +49,23 @@ public class MeFragment extends Fragment implements OnClickListener {
 					.findViewById(ids[i]);
 			relativeLayouts[i].setOnClickListener(this);
 		}
-		login_btn = (Button) contentView.findViewById(R.id.me_login_btn);
-		login_btn.setOnClickListener(this);
+//		login_btn = (Button) contentView.findViewById(R.id.me_login_btn);
+//		login_btn.setOnClickListener(this);
+		order_title = (TextView)contentView.findViewById(R.id.order_title);
+		
+		initData();
+		
 		return contentView;
+	}
+	
+	//显示商家名称，从MainActivity里面获取，不再查询数据库
+	private void initData(){
+		if(this.context != null){
+			MainActivity activity = (MainActivity)this.context;
+			String storeName = activity.sessionManager.get("store_name");
+			order_title.setText(storeName);
+		}
+		
 	}
 
 	@Override
@@ -59,9 +87,9 @@ public class MeFragment extends Fragment implements OnClickListener {
 		case R.id.me_shop_rl:
 			startActivity(new Intent(getActivity(), ShopActivity.class));
 			break;
-		case R.id.me_login_btn:
+		/*case R.id.me_login_btn:
 			startActivity(new Intent(getActivity(), LoginActivity.class));
-			break;
+			break;*/
 		default:
 			break;
 		}

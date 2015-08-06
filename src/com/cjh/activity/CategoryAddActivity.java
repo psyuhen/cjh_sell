@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,13 +31,15 @@ import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 类型添加
  * @author Administrator
  *
  */
 public class CategoryAddActivity extends BaseTwoActivity{
-	public static final String TAG = "CategoryAddActivity";
+	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryAddActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片
@@ -128,10 +129,10 @@ public class CategoryAddActivity extends BaseTwoActivity{
 //				startActivity(new Intent(CategoryAddActivity.this, CategoryActivity.class));
 				finish();
 			} catch (InterruptedException e) {
-				Log.e(TAG, "添加商品分类失败", e);
+				LOGGER.error(">>>添加商品分类失败", e);
 				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
 			} catch (ExecutionException e) {
-				Log.e(TAG, "添加商品分类失败", e);
+				LOGGER.error(">>>添加商品分类失败", e);
 				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
 			}
 		}

@@ -36,7 +36,7 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="20.0dip"
                 android:layout_toRightOf="@+id/order_head"
-                android:orientation="vertical" >
+                android:gravity="center_vertical" >
 
                 <TextView
                     android:id="@+id/order_title"
@@ -52,7 +52,8 @@
                     android:layout_height="40.0dip"
                     android:layout_below="@+id/order_title"
                     android:layout_marginTop="8.0dip"
-                    android:background="@drawable/star" />
+                    android:background="@drawable/star"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/order_level"
@@ -63,7 +64,8 @@
                     android:layout_marginLeft="10.0dip"
                     android:layout_marginTop="18.0dip"
                     android:layout_toRightOf="@+id/order_stars"
-                    android:text="@string/good_level_text" />
+                    android:text="@string/good_level_text"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/order_horn"

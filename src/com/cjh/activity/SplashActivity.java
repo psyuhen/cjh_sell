@@ -9,6 +9,9 @@ import android.os.Message;
 
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+import com.google.code.microlog4android.config.PropertyConfigurator;
 
 /**
  * 
@@ -26,6 +29,8 @@ import com.cjh.cjh_sell.R;
  * 
  */
 public class SplashActivity extends Activity {
+	private static final Logger logger = LoggerFactory.getLogger(SplashActivity.class);
+	
 	boolean isFirstIn = false;
 
 	private static final int GO_HOME = 1000;
@@ -56,8 +61,11 @@ public class SplashActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PropertyConfigurator.getConfigurator(this).configure();
 		setContentView(R.layout.splash);
 
+		logger.info(">>> starting cjh sell app");
+		
 		init();
 	}
 

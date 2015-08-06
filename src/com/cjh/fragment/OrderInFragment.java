@@ -48,6 +48,9 @@ public class OrderInFragment extends Fragment {
 	public OrderInFragment(Context context) {
 		this.context = context;
 	}
+	
+	public OrderInFragment() {
+	}
 
 	/*public static OrderInFragment newInstance() {
 		OrderInFragment fragment = new OrderInFragment();

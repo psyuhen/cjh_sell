@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 /**
  * 商品管理
  * @author ps
@@ -27,6 +28,7 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 	private View goods_right_line;
 
 	private ImageButton edit_imaggbtn;
+	private TextView order_title;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,21 +56,21 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
-
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				
-
 			}
 		});
+		
 	}
 
 	private void initData() {
 		title.setText("商品管理");
 		mViewPager.setAdapter(mFragmentAdapter);
+		
+		String storeName = sessionManager.get("store_name");
+		order_title.setText(storeName);
 	}
 
 	@Override
@@ -85,6 +87,8 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 		goods_right_line = findViewById(R.id.goods_right_line);
 		edit_imaggbtn = (ImageButton) findViewById(R.id.right_imgbtn);
 		edit_imaggbtn.setOnClickListener(this);
+		
+		order_title = (TextView)findViewById(R.id.order_title);
 	}
 
 	@Override
