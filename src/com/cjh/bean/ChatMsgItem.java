@@ -5,10 +5,12 @@ import java.util.Date;
 public class ChatMsgItem {
 	private String sendUser;
 	private String sendUserId;
+	private String sendUserMobile;
 	private String content;
 	private Date sendDate;
 	private String toUser;
 	private String toUserId;
+	private String toUserMobile;
 	private int msgType;
 	private boolean isComing=true;
 	
@@ -64,5 +66,17 @@ public class ChatMsgItem {
 	}
 	public void setToUserId(String toUserId) {
 		this.toUserId = toUserId;
+	}
+	public String getSendUserMobile() {
+		return sendUserMobile;
+	}
+	public void setSendUserMobile(String sendUserMobile) {
+		this.sendUserMobile = sendUserMobile;
+	}
+	public String getToUserMobile() {
+		return toUserMobile;
+	}
+	public void setToUserMobile(String toUserMobile) {
+		this.toUserMobile = toUserMobile;
 	}
 }

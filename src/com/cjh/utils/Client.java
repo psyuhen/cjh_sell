@@ -12,9 +12,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.bgpublish.socket.FileSerial;
+import com.cjh.bean.User;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 客户端
@@ -22,8 +23,10 @@ import com.bgpublish.socket.FileSerial;
  *
  */
 public class Client {
-	public static final String TAG = "Client";
-	private String ip = "192.168.1.102";
+	private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
+
+	//private String ip = "192.168.43.191";
+	private String ip = "203.195.245.171";
 	private int port = 11000;
 	private Socket socket = null;
 	private ObjectOutputStream oos = null;
@@ -35,12 +38,13 @@ public class Client {
 		}
 		try {
 			socket = new Socket(ip,port);
+			socket.setSoTimeout(300);
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (UnknownHostException e) {
-			Log.e(TAG, "Ip地址错误",e);
+			LOGGER.error("Ip地址错误", e);
 		} catch (IOException e) {
-			Log.e(TAG, "连接服务器失败",e);
+			LOGGER.error("连接服务器失败", e);
 		}
 	}
 	
@@ -53,29 +57,29 @@ public class Client {
 			oos.writeObject(fileSerial);
 			oos.flush();
 		} catch (IOException e) {
-			Log.e(TAG, "获取输出流失败",e);
+			LOGGER.error("获取输出流失败", e);
 		}
 	}
 	
 	public void toOnLine(String fromUser){
 		FileSerial fileSerial = new FileSerial();
 		fileSerial.setType(FileSerial.TYPE_ONLINE);
-		fileSerial.setFromUser(fromUser);
+		fileSerial.setFromUserId(fromUser);
 		send(fileSerial);
 	}
 	
 	public void toOffLine(String fromUser){
 		FileSerial fileSerial = new FileSerial();
 		fileSerial.setType(FileSerial.TYPE_OFFLINE);
-		fileSerial.setFromUser(fromUser);
+		fileSerial.setFromUserId(fromUser);
 		send(fileSerial);
 	}
 	
 	public List<FileSerial> findOffLineMsg(String fromUser,String toUser){
 		FileSerial fileSerial = new FileSerial();
 		fileSerial.setType(FileSerial.TYPE_OFFLINE_MSG);
-		fileSerial.setFromUser(fromUser);
-		fileSerial.setToUser(toUser);
+		fileSerial.setFromUserId(fromUser);
+		fileSerial.setToUserId(toUser);
 		send(fileSerial);
 		
 		FileSerial receive = receive();
@@ -88,11 +92,21 @@ public class Client {
 		return list;
 	}
 	
-	public void sendMsg(String chatContent,String toUser,String fromUser){
+	/**
+	 * 发送即时消息
+	 * @param chatContent
+	 * @param toUser
+	 * @param fromUser
+	 */
+	public void sendMsg(String chatContent,User toUser,User fromUser){
 		FileSerial fileSerial = new FileSerial();
 		fileSerial.setType(FileSerial.TYPE_TEXT);
-		fileSerial.setFromUser(fromUser);
-		fileSerial.setToUser(toUser);
+		fileSerial.setFromUserId(fromUser.getUser_id()+"");
+		fileSerial.setFromUserName(fromUser.getName());
+		fileSerial.setFromUserMobile(fromUser.getMobile());
+		fileSerial.setToUserId(toUser.getUser_id()+"");
+		fileSerial.setToUserName(toUser.getName());
+		fileSerial.setToUserMobile(toUser.getMobile());
 		fileSerial.setFileName(chatContent);
 		
 		send(fileSerial);
@@ -107,11 +121,11 @@ public class Client {
 		try {
 			obj = ois.readObject();
 		} catch (StreamCorruptedException e) {
-			Log.e(TAG, "获取输入流失败",e);
+			LOGGER.error("获取输入流失败", e);
 		} catch (IOException e) {
-			Log.e(TAG, "获取输入流失败",e);
+			LOGGER.error("获取输入流失败", e);
 		} catch (ClassNotFoundException e) {
-			Log.e(TAG, "找不到类",e);
+			LOGGER.error("找不到类", e);
 		}
 		if(obj == null){
 			return null;
@@ -125,7 +139,7 @@ public class Client {
 			try {
 				socket.close();
 			} catch (IOException e) {
-				Log.e(TAG, "关闭流失败",e);
+				LOGGER.error("关闭流失败", e);
 			}
 		}
 	}

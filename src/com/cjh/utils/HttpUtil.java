@@ -14,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class HttpUtil {
 //	public static final String BASE_URL = "http://192.168.1.104:8001/sgams";
-	public static final String BASE_URL = "http://192.168.43.191:8001/sgams";
+	public static final String BASE_URL = "http://203.195.245.171:8001/sgams";
 //	public static final String BASE_URL = "http://localhost:8001/sgams";
 	
 	/**
@@ -39,10 +40,12 @@ public class HttpUtil {
 			@Override
 			public String call() throws Exception {
 				RestTemplate restTemplate = new RestTemplate();
-				 ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-				 if(HttpStatus.OK.equals(response.getStatusCode())){
-					 return response.getBody();
-				 }
+				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+				factory.setConnectTimeout(300);
+				ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+				if(HttpStatus.OK.equals(response.getStatusCode())){
+					return response.getBody();
+				}
 				return null;
 			}
 		});

@@ -1,8 +1,11 @@
 package com.cjh.activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +19,8 @@ import com.cjh.bean.ChatMsgItem;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.SocketUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 聊天窗口
@@ -23,6 +28,8 @@ import com.cjh.utils.SocketUtil;
  *
  */
 public class ChatActivity extends BaseTwoActivity{
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatActivity.class);
+
 	private ChatMsgViewAdapter mAdapter;
 	private ListView mListView;
 	private List<ChatMsgItem> msgList;
@@ -30,6 +37,7 @@ public class ChatActivity extends BaseTwoActivity{
 	private EditText chat_edit_text;
 	private String buyer_user_id;
 	private String buyer_user_name;
+	private String buyer_user_mobile;
 	private User user;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,7 @@ public class ChatActivity extends BaseTwoActivity{
 		Intent intent = getIntent();
 		buyer_user_id = intent.getStringExtra("buyer_user_id");
 		buyer_user_name = intent.getStringExtra("buyer_user_name");
+		buyer_user_mobile = intent.getStringExtra("buyer_user_name");
 	}
 	private void initData() {
 		title.setText("聊天");
@@ -58,24 +67,8 @@ public class ChatActivity extends BaseTwoActivity{
 		msgList = new ArrayList<ChatMsgItem>();
 		mAdapter = new ChatMsgViewAdapter(getApplicationContext(), msgList);
 		mListView.setAdapter(mAdapter);
-		/*for (int i = 0; i < 10; i++) {
-			ChatMsgItem msgItem = new ChatMsgItem();
-			msgItem.setSendDate(new Date());
-			if (i % 2 == 0) {
-				msgItem.setComing(true);
-				msgItem.setSendUser("科比");
-				msgItem.setToUser("詹姆斯");
-				msgItem.setContent("詹姆斯你好，請問我這週的時間安排是什麼！");
-			}
-			if (i % 2 == 1) {
-				msgItem.setComing(false);
-				msgItem.setSendUser("詹姆斯");
-				msgItem.setToUser("科比");
-				msgItem.setContent("科比你好，你的白班時間是週一，週三，週五，夜班時間是週二和週四，請注意時間的安排，謝謝查詢");
-			}
-			msgList.add(msgItem);
-
-		}*/
+		
+		getOffLineMsg();
 	}
 	@Override
 	public void onClick(View v) {
@@ -89,7 +82,40 @@ public class ChatActivity extends BaseTwoActivity{
 			break;
 		}
 	}
-	
+	//每次进来先获取离线消息
+	private void getOffLineMsg(){
+		//发送到后端
+		try {
+			List<ChatMsgItem> list = SocketUtil.receive(user.getUser_id()+"", buyer_user_id);
+			if(list != null && !list.isEmpty()){
+				msgList.addAll(list);
+				Collections.sort(list, new Comparator<ChatMsgItem>() {
+					@Override
+					public int compare(ChatMsgItem item1, ChatMsgItem item2) {
+						
+						Date d1 = item1.getSendDate();
+						Date d2 = item2.getSendDate();
+						
+						if(d1 == null){
+							return -1;
+						}
+						
+						if(d2 == null){
+							return 1;
+						}
+						
+						return d1.compareTo(d2);
+					}
+				});
+				mAdapter.notifyDataSetChanged();
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error("接收信息失败",e);
+		} catch (ExecutionException e) {
+			LOGGER.error("接收信息失败",e);
+		}
+	}
+	//发送消息
 	private void send(){
 		ChatMsgItem msgItem = new ChatMsgItem();
 		msgItem.setSendDate(new Date());
@@ -101,8 +127,12 @@ public class ChatActivity extends BaseTwoActivity{
 		msgList.add(msgItem);
 		mAdapter.notifyDataSetChanged();
 		
+		User toUser = new User();
+		toUser.setUser_id(Integer.parseInt(buyer_user_id));
+		toUser.setMobile(buyer_user_mobile);
+		toUser.setName(buyer_user_name);
 		//发送到后端
-		SocketUtil.send(chatContent, buyer_user_id, user.getUser_id()+"");
+		SocketUtil.send(chatContent, toUser, user);
 		
 		chat_edit_text.setText("");
 	}

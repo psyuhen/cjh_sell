@@ -104,6 +104,7 @@ public class OrderCompletedFragment extends Fragment {
 			orderItem.setNum(order.getOrderDetails().get(0).getAmount());
 			orderItem.setOrdertime(new Date());
 			orderItem.setPrice(order.getAmount_money());
+			orderItem.setBuyer_user_mobile(order.getBuyer_phone());
 			orderlist.add(orderItem);
 		}
 	}

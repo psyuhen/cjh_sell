@@ -24,6 +24,10 @@ public class OrderItem {
 	 */
 	private String buyer_user_id;
 	/**
+	 * 买家手机号码
+	 */
+	private String buyer_user_mobile;
+	/**
 	 * 卖家
 	 */
 	private String seller;
@@ -31,6 +35,10 @@ public class OrderItem {
 	 * 卖家
 	 */
 	private String seller_user_id;
+	/**
+	 * 卖家手机号码
+	 */
+	private String seller_user_moblie;
 	/**
 	 *订单日期
 	 */
@@ -127,5 +135,17 @@ public class OrderItem {
 	}
 	public void setSeller_user_id(String seller_user_id) {
 		this.seller_user_id = seller_user_id;
+	}
+	public String getBuyer_user_mobile() {
+		return buyer_user_mobile;
+	}
+	public void setBuyer_user_mobile(String buyer_user_mobile) {
+		this.buyer_user_mobile = buyer_user_mobile;
+	}
+	public String getSeller_user_moblie() {
+		return seller_user_moblie;
+	}
+	public void setSeller_user_moblie(String seller_user_moblie) {
+		this.seller_user_moblie = seller_user_moblie;
 	}
 }

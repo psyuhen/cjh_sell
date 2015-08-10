@@ -92,6 +92,7 @@ public class OrderItemAdapter extends BaseAdapter {
 						Intent intent = new Intent(context, ChatActivity.class);
 						intent.putExtra("buyer_user_id", orderItem.getBuyer_user_id());
 						intent.putExtra("buyer_user_name", orderItem.getBuyer());
+						intent.putExtra("buyer_user_mobile", orderItem.getBuyer_user_mobile());
 						context.startActivity(intent);
 					}
 				});
