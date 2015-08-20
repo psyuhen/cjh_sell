@@ -26,7 +26,7 @@ public class Client {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
 	//private String ip = "192.168.43.191";
-	private String ip = "203.195.245.171";
+	private String ip = HttpUtil.IP;
 	private int port = 11000;
 	private Socket socket = null;
 	private ObjectOutputStream oos = null;

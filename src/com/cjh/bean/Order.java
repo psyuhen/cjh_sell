@@ -35,7 +35,6 @@ public class Order implements Serializable{
 	private String buyer_name;
 //	private String buyer_area;
 //	private String buyer_postcode;
-	private int buyer_addr_id;//买家收货地址ID
 	private String buyer_phone;
 	private String buyer_mobile;
 	private String send_type;
@@ -58,6 +57,15 @@ public class Order implements Serializable{
 	private String buyer_score;
 	private String seller_score;
 	private String status;
+	
+	//买家地址
+	private int town_id;
+	private String province_code;//
+	private String city_code;//
+	private String address;//
+	
+	//买家评价
+	private String buyer_advise;
 	
 	private List<OrderDetail> orderDetails;//int
 
@@ -125,13 +133,6 @@ public class Order implements Serializable{
 		this.buyer_name = buyer_name;
 	}
 
-	public int getBuyer_addr_id() {
-		return buyer_addr_id;
-	}
-
-	public void setBuyer_addr_id(int buyer_addr_id) {
-		this.buyer_addr_id = buyer_addr_id;
-	}
 
 	public String getBuyer_phone() {
 		return buyer_phone;
@@ -307,6 +308,46 @@ public class Order implements Serializable{
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public int getTown_id() {
+		return town_id;
+	}
+
+	public void setTown_id(int town_id) {
+		this.town_id = town_id;
+	}
+
+	public String getProvince_code() {
+		return province_code;
+	}
+
+	public void setProvince_code(String province_code) {
+		this.province_code = province_code;
+	}
+
+	public String getCity_code() {
+		return city_code;
+	}
+
+	public void setCity_code(String city_code) {
+		this.city_code = city_code;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public String getBuyer_advise() {
+		return buyer_advise;
+	}
+
+	public void setBuyer_advise(String buyer_advise) {
+		this.buyer_advise = buyer_advise;
 	}
 
 	public List<OrderDetail> getOrderDetails() {

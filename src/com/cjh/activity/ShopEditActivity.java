@@ -125,11 +125,13 @@ public class ShopEditActivity extends BaseTwoActivity {
 				QiNiuUtil.deleteFile(fileName);
 				//更新数据库的文件名
 				Store storeInfo = new Store();
-				storeInfo.setStore_id(sessionManager.getInt("store_id"));
-				storeInfo.setLogo("");
+				int store_id = sessionManager.getInt("store_id");
+				if(store_id > 0){//
+					storeInfo.setStore_id(store_id);
+					storeInfo.setLogo("");
 
-				updateStore(storeInfo);
-				
+					updateStore(storeInfo);
+				}
 			}
 		});
 		
@@ -273,10 +275,14 @@ public class ShopEditActivity extends BaseTwoActivity {
 						
 						//更新数据库的文件名
 						Store storeInfo = new Store();
-						storeInfo.setStore_id(sessionManager.getInt("store_id"));
-						storeInfo.setLogo(key);
+						int store_id = sessionManager.getInt("store_id");
+						if(store_id > 0){
+							storeInfo.setStore_id(store_id);
+							storeInfo.setLogo(key);
 
-						updateStore(storeInfo);
+							updateStore(storeInfo);
+						}
+						
 					}else{
 						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
 						LOGGER.error("保存图片到服务器失败");
@@ -374,21 +380,52 @@ public class ShopEditActivity extends BaseTwoActivity {
 			// 有错误，不提交
 			focusView.requestFocus();
 		}else {
-			User user = sessionManager.getUserDetails();
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			int store_id = sessionManager.getInt("store_id");
+			
 			Store storeInfo = new Store();
-			storeInfo.setUser_id(user.getUser_id());
+			storeInfo.setUser_id(user_id);
 //			storeInfo.setClassify_id(Integer.parseInt(classify_id));
 			storeInfo.setDesc(shopDesc);
 			storeInfo.setAddress(address);
 			storeInfo.setPhone(phone);
 			storeInfo.setName(shopName);
-			storeInfo.setStore_id(sessionManager.getInt("store_id"));
+			storeInfo.setStore_id(store_id);
 
-			updateStore(storeInfo);
+			if(store_id > 0){
+				updateStore(storeInfo);
+			}else{
+				addStore(storeInfo);
+			}
 		}
 	}
 	
-	
+	private void addStore(Store storeInfo){
+		//注册商家信息
+		String url = HttpUtil.BASE_URL + "/store/register.do";
+		String json = null;
+		try {
+			json = HttpUtil.postRequest(url, storeInfo);
+			if(json == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "注册商家信息失败");
+				return;
+			}
+			CommonsUtil.showShortToast(getApplicationContext(), json);
+			
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			url =  HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
+			json = HttpUtil.getRequest(url);
+			if(json != null){
+				Store store = JsonUtil.parse2Object(json, Store.class);
+				sessionManager.putInt("store_id", store.getStore_id());
+				sessionManager.put("store_name", store.getName());
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(">>> 注册商家信息失败", e);
+		} catch (ExecutionException e) {
+			LOGGER.error(">>> 注册商家信息失败", e);
+		}
+	}
 	private void updateStore(Store storeInfo){
 		//更新商家信息
 		String url = HttpUtil.BASE_URL + "/store/modify.do";

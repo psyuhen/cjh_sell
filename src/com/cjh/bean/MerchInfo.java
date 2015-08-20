@@ -31,6 +31,8 @@ public class MerchInfo implements Serializable{
 	private String last_modify_time;
 	private String create_time;
 	private String order_by_clause;
+	private String sm_recommend;
+	private String free_shipping;
 	public int getMerch_id() {
 		return merch_id;
 	}
@@ -126,6 +128,18 @@ public class MerchInfo implements Serializable{
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+	public String getSm_recommend() {
+		return sm_recommend;
+	}
+	public void setSm_recommend(String sm_recommend) {
+		this.sm_recommend = sm_recommend;
+	}
+	public String getFree_shipping() {
+		return free_shipping;
+	}
+	public void setFree_shipping(String free_shipping) {
+		this.free_shipping = free_shipping;
 	}
 	
 }

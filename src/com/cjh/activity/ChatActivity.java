@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import com.cjh.adapter.ChatMsgViewAdapter;
 import com.cjh.bean.ChatMsgItem;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
+import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.SocketUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -92,7 +94,6 @@ public class ChatActivity extends BaseTwoActivity{
 				Collections.sort(list, new Comparator<ChatMsgItem>() {
 					@Override
 					public int compare(ChatMsgItem item1, ChatMsgItem item2) {
-						
 						Date d1 = item1.getSendDate();
 						Date d2 = item2.getSendDate();
 						
@@ -117,12 +118,17 @@ public class ChatActivity extends BaseTwoActivity{
 	}
 	//发送消息
 	private void send(){
+		String chatContent = chat_edit_text.getText().toString();
+		if(TextUtils.isEmpty(chatContent.trim())){
+			CommonsUtil.showLongToast(getApplicationContext(), "内容不能为空");
+			return;
+		}
+		
 		ChatMsgItem msgItem = new ChatMsgItem();
 		msgItem.setSendDate(new Date());
 		msgItem.setComing(false);
 		msgItem.setSendUser(user.getName());
 		msgItem.setToUser(buyer_user_name);
-		String chatContent = chat_edit_text.getText().toString();
 		msgItem.setContent(chatContent);
 		msgList.add(msgItem);
 		mAdapter.notifyDataSetChanged();

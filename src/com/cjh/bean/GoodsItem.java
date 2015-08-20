@@ -1,21 +1,13 @@
 package com.cjh.bean;
 
 public class GoodsItem {
-	// ���
 	private int id;
-	// ����
 	private String title;
-	// ���
 	private int stock;
-	// ����
 	private int sellmount;
-	// ��Ǯ
 	private float price;
-	//���
 	private String standard;
-	// ͼƬ
 	private String img;
-	// �Ƽ�ͼƬ
 	private String tag;
 
 	public int getId() {

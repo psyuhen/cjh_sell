@@ -24,9 +24,10 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 public class HttpUtil {
-//	public static final String BASE_URL = "http://192.168.1.104:8001/sgams";
-	public static final String BASE_URL = "http://203.195.245.171:8001/sgams";
-//	public static final String BASE_URL = "http://localhost:8001/sgams";
+//	public static final String IP = "192.168.1.104";
+	public static final String IP = "203.195.245.171";
+//	public static final String IP = "192.168.43.191";
+	public static final String BASE_URL = "http://"+ IP +":8001/sgams";
 	
 	/**
 	 * 
@@ -39,9 +40,9 @@ public class HttpUtil {
 		FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				RestTemplate restTemplate = new RestTemplate();
 				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 				factory.setConnectTimeout(300);
+				RestTemplate restTemplate = new RestTemplate(factory);
 				ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 				if(HttpStatus.OK.equals(response.getStatusCode())){
 					return response.getBody();
@@ -65,7 +66,9 @@ public class HttpUtil {
 		FutureTask<byte[]> task = new FutureTask<byte[]>(new Callable<byte[]>() {
 			@Override
 			public byte[] call() throws Exception {
-				RestTemplate restTemplate = new RestTemplate();
+				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+				factory.setConnectTimeout(300);
+				RestTemplate restTemplate = new RestTemplate(factory);
 				restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());    
 				HttpHeaders headers = new HttpHeaders();
 				headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
@@ -94,7 +97,9 @@ public class HttpUtil {
 		FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				RestTemplate restTemplate = new RestTemplate();
+				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+				factory.setConnectTimeout(300);
+				RestTemplate restTemplate = new RestTemplate(factory);
 				ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
 				if(HttpStatus.OK.equals(response.getStatusCode())){
 					return response.getBody();
@@ -118,7 +123,9 @@ public class HttpUtil {
 		FutureTask<ResponseEntity<String>> task = new FutureTask<ResponseEntity<String>>(new Callable<ResponseEntity<String>>() {
 			@Override
 			public ResponseEntity<String> call() throws Exception {
-				RestTemplate restTemplate = new RestTemplate();
+				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+				factory.setConnectTimeout(300);
+				RestTemplate restTemplate = new RestTemplate(factory);
 				ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
 				return response;
 			}
