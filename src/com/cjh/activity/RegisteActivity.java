@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.cjh.bean.User;
@@ -29,6 +30,8 @@ public class RegisteActivity extends BaseTwoActivity{
 	private EditText mMobileView;
 	private EditText mPasswordView;
 	private EditText mComfirmPasswordView;
+	
+	private CheckBox register_agree;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,11 @@ public class RegisteActivity extends BaseTwoActivity{
 					String url0 = HttpUtil.BASE_URL + "/user/isregister.do?mobile=" + mobile;
 					try {
 						String request = HttpUtil.getRequest(url0);
-						if(request == null){
+						if(request != null && "true".equals(request)){
 							mMobileView.setError("手机号码已被注册！");
+						}
+						if(request == null){
+							CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");
 						}
 					} catch (InterruptedException e) {
 						LOGGER.error(">>> 判断手机号码是否被注册失败", e);
@@ -76,6 +82,8 @@ public class RegisteActivity extends BaseTwoActivity{
 				}
 			}
 		});
+		
+		register_agree = (CheckBox)findViewById(R.id.register_agree);
 	}
 	
 	private void initData() {
@@ -114,14 +122,23 @@ public class RegisteActivity extends BaseTwoActivity{
 			mPasswordView.setError(getString(R.string.error_length_password));
 			focusView = mPasswordView;
 			cancel = true;
-		}else if(!Validator.isPassword(password)){
+		}
+		/*else if(!Validator.isPassword(password)){
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
-		}else if(!password.equals(comfirmPassword)){
+		}*/
+		else if(!password.equals(comfirmPassword)){
 			mComfirmPasswordView.setError(getString(R.string.error_comfirm_password));
 			focusView = mComfirmPasswordView;
 			cancel = true;
+		}
+		
+		//检查是否勾选协议
+		if(!register_agree.isChecked()){
+			focusView = register_agree;
+			cancel = true;
+			CommonsUtil.showLongToast(getApplicationContext(), "请勾选注册协议!");
 		}
 		
 		if (cancel) {

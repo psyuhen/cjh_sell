@@ -15,8 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * HTTP 工具类
@@ -24,6 +28,8 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 public class HttpUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
+	
 //	public static final String IP = "192.168.1.104";
 	public static final String IP = "203.195.245.171";
 //	public static final String IP = "192.168.43.191";
@@ -40,12 +46,16 @@ public class HttpUtil {
 		FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-				factory.setConnectTimeout(300);
-				RestTemplate restTemplate = new RestTemplate(factory);
-				ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-				if(HttpStatus.OK.equals(response.getStatusCode())){
-					return response.getBody();
+				try{
+					RestTemplate restTemplate = new RestTemplate();
+					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
+					requestFactory.setConnectTimeout(300);
+					ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+					if(HttpStatus.OK.equals(response.getStatusCode())){
+						return response.getBody();
+					}
+				}catch (Exception e) {
+					LOGGER.error("getForEntity 请求失败", e);
 				}
 				return null;
 			}
@@ -66,17 +76,21 @@ public class HttpUtil {
 		FutureTask<byte[]> task = new FutureTask<byte[]>(new Callable<byte[]>() {
 			@Override
 			public byte[] call() throws Exception {
-				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-				factory.setConnectTimeout(300);
-				RestTemplate restTemplate = new RestTemplate(factory);
-				restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());    
-				HttpHeaders headers = new HttpHeaders();
-				headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
-				HttpEntity<String> entity = new HttpEntity<String>(headers);
-				
-				ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, byte[].class);
-				if(HttpStatus.OK.equals(response.getStatusCode())){
-					return response.getBody();
+				try{
+					HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+					factory.setConnectTimeout(300);
+					RestTemplate restTemplate = new RestTemplate(factory);
+					restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());    
+					HttpHeaders headers = new HttpHeaders();
+					headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+					HttpEntity<String> entity = new HttpEntity<String>(headers);
+					
+					ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, byte[].class);
+					if(HttpStatus.OK.equals(response.getStatusCode())){
+						return response.getBody();
+					}
+				}catch (Exception e) {
+					LOGGER.error("exchange 请求失败", e);
 				}
 				return null;
 			}
@@ -97,12 +111,16 @@ public class HttpUtil {
 		FutureTask<String> task = new FutureTask<String>(new Callable<String>() {
 			@Override
 			public String call() throws Exception {
-				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-				factory.setConnectTimeout(300);
-				RestTemplate restTemplate = new RestTemplate(factory);
-				ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
-				if(HttpStatus.OK.equals(response.getStatusCode())){
-					return response.getBody();
+				try{
+					RestTemplate restTemplate = new RestTemplate();
+					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
+					requestFactory.setConnectTimeout(300);
+					ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
+					if(HttpStatus.OK.equals(response.getStatusCode())){
+						return response.getBody();
+					}
+				}catch (Exception e) {
+					LOGGER.error("post 请求失败", e);
 				}
 				return null;
 			}
@@ -123,11 +141,16 @@ public class HttpUtil {
 		FutureTask<ResponseEntity<String>> task = new FutureTask<ResponseEntity<String>>(new Callable<ResponseEntity<String>>() {
 			@Override
 			public ResponseEntity<String> call() throws Exception {
-				HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-				factory.setConnectTimeout(300);
-				RestTemplate restTemplate = new RestTemplate(factory);
-				ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
-				return response;
+				try{
+					RestTemplate restTemplate = new RestTemplate();
+					SimpleClientHttpRequestFactory requestFactory = (SimpleClientHttpRequestFactory)restTemplate.getRequestFactory();
+					requestFactory.setConnectTimeout(300);
+					ResponseEntity<String> response = restTemplate.postForEntity(url, params, String.class);
+					return response;
+				}catch (Exception e) {
+					LOGGER.error("post 请求失败", e);
+				}
+			return null;
 			}
 		});
 		
