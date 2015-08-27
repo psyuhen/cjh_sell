@@ -39,7 +39,10 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 	private EditText mMobileView;
 	private EditText mPasswordView;
 	
-	private SwitchButton login_show_password;
+	private SwitchButton login_show_password;//显示密码的按钮
+	
+	private String tmpMobile;
+	private String tmpPwd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,16 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 	private void initData() {
 		right_imgbtn.setVisibility(View.GONE);
 		title.setText("登录");
+		
+		//从注册跳转过来的，自动登录
+		Intent intent = getIntent();
+		tmpMobile = intent.getStringExtra("mobile");
+		tmpPwd = intent.getStringExtra("password");
+		if(!TextUtils.isEmpty(tmpMobile) && !TextUtils.isEmpty(tmpPwd)){
+			mMobileView.setText(tmpMobile);
+			mPasswordView.setText(tmpPwd);
+			attemptLogin();
+		}
 	}
 
 	@Override
@@ -158,6 +171,11 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				String url = HttpUtil.BASE_URL + "/user/isregister.do?mobile="+mobile;
 				String json = HttpUtil.getRequest(url);
 				if(json == null){
+					CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");
+					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
+					return ;
+				}
+				if("false".equals(json)){
 					CommonsUtil.showLongToast(getApplicationContext(), "手机号码不存在");
 					sessionManager.putBoolean(SessionManager.IS_LOGIN, false);
 					return ;

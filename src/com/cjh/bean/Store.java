@@ -20,6 +20,7 @@ public class Store {
 	private String last_modify_time;
 	private String create_time;
 	private int classify_id;
+	private int sales_volume; 
 	public int getStore_id() {
 		return store_id;
 	}
@@ -80,5 +81,10 @@ public class Store {
 	public void setClassify_id(int classify_id) {
 		this.classify_id = classify_id;
 	}
-	
+	public int getSales_volume() {
+		return sales_volume;
+	}
+	public void setSales_volume(int sales_volume) {
+		this.sales_volume = sales_volume;
+	}
 }
