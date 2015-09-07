@@ -36,6 +36,7 @@ import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
@@ -293,32 +294,25 @@ public class ShopEditActivity extends BaseTwoActivity {
 	}
 	
 	/**
-	 * 获取网络图片
-	 * @param url
+	 * 先从本地中获取，如果获取不到再获取网络图片
+	 * @param fileName
 	 */
-	private void getImageToView(String url){
+	private void getImageToView(String fileName){
 		Bitmap bitmap = null;
-		try {
-			bitmap = QiNiuUtil.getQiNiu(url);
-			AddImage addImage = new AddImage();
-			addImage.setBitmap(bitmap);
-			
-			//添加图片控件消失
-			content_add_image.setVisibility(View.GONE);//添加图标隐藏
-			File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
-			if(image != null){
-				addImage.setFile(image);
-				addImage.setFileName(image.getName());
-			}
-			
-			lists.add(addImage);
-			adapter.notifyDataSetChanged();
-		} catch (InterruptedException e1) {
-			LOGGER.error(">>> 获取7牛上的文件失败",e1);
-		} catch (ExecutionException e1) {
-			LOGGER.error(">>> 获取7牛上的文件失败",e1);
+		bitmap = FileUtil.getCacheFile(fileName);
+		AddImage addImage = new AddImage();
+		addImage.setBitmap(bitmap);
+		
+		//添加图片控件消失
+		content_add_image.setVisibility(View.GONE);//添加图标隐藏
+		File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
+		if(image != null){
+			addImage.setFile(image);
+			addImage.setFileName(image.getName());
 		}
 		
+		lists.add(addImage);
+		adapter.notifyDataSetChanged();
 	}
 	
 	private void querybyuserid(){
@@ -335,10 +329,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 				shop_edit_detail_tel.setText(store.getPhone());
 				
 				String fileName = store.getLogo();
-				String imageUrl = QiNiuUtil.getImageUrl(fileName);
-				if(!"".equals(imageUrl)){
-					getImageToView(imageUrl);
-				}
+				getImageToView(fileName);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 根据用户获取商家信息失败",e);

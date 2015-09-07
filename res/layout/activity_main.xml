@@ -34,39 +34,35 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="7.5dip"
+                android:layout_marginBottom="5.5dip"
                 android:layout_marginLeft="12.5dip"
                 android:layout_marginRight="12.5dip"
-                android:orientation="horizontal"
                 android:gravity="center_horizontal"
-                 >
+                android:orientation="horizontal" >
 
                 <RadioButton
-                android:id="@+id/rbHome"
-                style="@style/footbar"
-                android:drawableTop="@drawable/main_bottom_home"
-                android:paddingTop="8dp"
-                android:layout_marginRight="60.0dip"
-                />
-
-
-                <RadioButton
-                android:id="@+id/rbnav"
-                style="@style/footbar"
-                android:drawableTop="@drawable/main_bottom_nav"
-                android:paddingTop="8dp"
-                android:checked="true"
-                 />
-
+                    android:id="@+id/rbHome"
+                    style="@style/footbar"
+                    android:layout_marginRight="60.0dip"
+                    android:drawableTop="@drawable/main_bottom_nav"
+                    android:paddingTop="8dp"
+                    android:text="@string/main_order" />
 
                 <RadioButton
-                android:id="@+id/rbMe"
-                style="@style/footbar"
-                android:layout_marginLeft="60.0dip"
-                android:drawableTop="@drawable/main_bottom_me"
-                android:paddingTop="8dp"
-                />
-                
+                    android:id="@+id/rbnav"
+                    style="@style/footbar"
+                    android:checked="true"
+                     android:drawableTop="@drawable/main_bottom_home"
+                    android:paddingTop="8dp"
+                    android:text="@string/main_home" />
+
+                <RadioButton
+                    android:id="@+id/rbMe"
+                    style="@style/footbar"
+                    android:layout_marginLeft="60.0dip"
+                    android:drawableTop="@drawable/main_bottom_me"
+                    android:paddingTop="8dp"
+                    android:text="@string/main_myshop" />
             </RadioGroup>
 
             <!-- <LinearLayout -->

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/free_ship_rl_height" >
+
+            <TextView
+                android:id="@+id/item_free_ship_enoughtext"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15.0dip"
+                android:text="@string/item_free_ship_enoughtext" />
+
+            <EditText
+                android:id="@+id/item_free_ship_edit"
+                style="@style/gray_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8.0dip"
+                android:layout_toRightOf="@+id/item_free_ship_enoughtext"
+                android:background="@drawable/goods_detail_edit"
+                android:hint="@string/item_free_ship_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15.0dip"
+                android:text="@string/item_free_ship_unit" />
+        </RelativeLayout>
+
+        <ImageView style="@style/gray_style_vertical_line" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/free_ship_rl_height2" >
+
+            <CheckBox
+                android:id="@+id/item_free_ship_check"
+                style="@style/CustomBlackRadioBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip" />
+
+            <TextView
+                android:id="@+id/item_free_ship_check_text"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/item_free_ship_check"
+                android:text="@string/item_free_ship_check_text" />
+
+            <TextView
+                style="@style/gray_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/item_free_ship_check_text"
+                android:layout_marginTop="5.0dip"
+                android:layout_toRightOf="@+id/item_free_ship_check"
+                android:text="@string/item_free_ship_check_text_details" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/confirm_free_ship_btn"
+        style="@style/white_normal_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5.0dip"
+        android:background="@drawable/orange_btn"
+        android:text="@string/confirm_free_ship_btn" />
+
+    <Button
+        android:id="@+id/cancel_freeship_btn"
+        style="@style/red_normal_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5.0dip"
+        android:background="@drawable/white_btn"
+        android:text="@string/cancel_freeship_btn" />
+
+</LinearLayout>

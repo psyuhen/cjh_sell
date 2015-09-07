@@ -29,6 +29,7 @@ import com.cjh.bean.Gallery;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
@@ -122,10 +123,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			gallery = queryByClassifyId();
 			if(gallery != null){
 				//再从7牛上获取图片
-				String imageUrl = QiNiuUtil.getImageUrl(gallery.getFile_name());
-				if(!"".equals(imageUrl)){
-					getImageToView(imageUrl);
-				}
+				getImageToView(gallery.getFile_name());
 			}
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 查询分类信息失败", e);
@@ -292,21 +290,16 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	/**
-	 * 获取网络图片
+	 * 先从本地获取图片，如果获取不到再从网络中获取网络图片
 	 * @param url
 	 */
-	private void getImageToView(String url){
-		try {
-			Bitmap bitmap = QiNiuUtil.getQiNiu(url);
-			category_detail_image1.setImageBitmap(bitmap);//已成功添加的图标
-			category_detail_image.setVisibility(View.GONE);//添加图标隐藏
-			category_detail_deleteimage1.setVisibility(View.VISIBLE);//删除图标显示
-			category_detail_image1.setVisibility(View.VISIBLE);//显示已添加的图标
-		} catch (InterruptedException e1) {
-			LOGGER.error(">>> 程序出错", e1);
-		} catch (ExecutionException e1) {
-			LOGGER.error(">>> 程序出错", e1);
-		}
+	private void getImageToView(String fileName){
+		Bitmap bitmap = FileUtil.getCacheFile(fileName);
+//		Bitmap bitmap = QiNiuUtil.getQiNiu(url);
+		category_detail_image1.setImageBitmap(bitmap);//已成功添加的图标
+		category_detail_image.setVisibility(View.GONE);//添加图标隐藏
+		category_detail_deleteimage1.setVisibility(View.VISIBLE);//删除图标显示
+		category_detail_image1.setVisibility(View.VISIBLE);//显示已添加的图标
 	}
 	/**
 	 * 保存裁剪之后的图片数据

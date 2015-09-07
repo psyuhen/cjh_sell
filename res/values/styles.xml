@@ -31,7 +31,7 @@
     <style name="footbar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
@@ -39,6 +39,19 @@
         <item name="android:background">@color/transparent</item>
         <item name="android:gravity">bottom|center_horizontal</item>
         <item name="android:paddingBottom">2dp</item>
+    </style>
+
+    <style name="order_rbtn_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@drawable/ic_order_color</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">14.0dip</item>
     </style>
 
     <style name="main_bottom_item">
@@ -305,6 +318,18 @@
         <item name="android:layout_gravity">right</item>
     </style>
 
+    <style name="coupon_horizontal_line">
+        <item name="android:background">@color/gray_bg</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2.0dip</item>
+    </style>
+
+    <style name="coupon_vertical_line">
+        <item name="android:background">@color/gray_bg</item>
+        <item name="android:layout_width">2.0dip</item>
+        <item name="android:layout_height">fill_parent</item>
+    </style>
+
     <style name="defaultSwitchButton">
         <item name="select_bg">@color/default_switch_button_select_bg</item>
         <item name="unselect_bg">@color/default_switch_button_unselect_bg</item>
@@ -367,7 +392,7 @@
     </style>
 
     <style name="pop_state">
-        <item name="android:textSize">20.0dip</item>
+        <item name="android:textSize">18.0sp</item>
         <item name="android:textColor">@color/gray_text</item>
     </style>
 
@@ -377,7 +402,7 @@
     </style>
 
     <style name="pop_publish">
-        <item name="android:textSize">16.0dip</item>
+        <item name="android:textSize">16.0sp</item>
         <item name="android:textColor">@color/gray_text</item>
     </style>
 
@@ -387,7 +412,7 @@
     </style>
 
     <style name="pop_title_text_style">
-        <item name="android:textSize">20.0dip</item>
+        <item name="android:textSize">16.0sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
@@ -459,7 +484,7 @@
     </style>
 
     <style name="pop_edit_hint_style">
-        <item name="android:textSize">20.0dip</item>
+        <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/gray_text</item>
     </style>
 
@@ -563,8 +588,86 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
-	<style name="white_normal_style">
-          <item name="android:textSize">22.0sp</item>
+
+    <style name="white_normal_style">
+        <item name="android:textSize">14.0sp</item>
         <item name="android:textColor">@color/whitebg</item>
     </style>
+
+    <style name="red_small_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="red_normal_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="black_normal_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="black_small_style">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="orange_normal_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
+    <style name="order_search_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="orange_giant_style">
+        <item name="android:textSize">30.0sp</item>
+        <item name="android:textColor">@color/orange</item>
+    </style>
+
+    <style name="gray_normal_style">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="gray_big_style">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="black_big_style">
+        <item name="android:textSize">20.0sp</item>
+        <item name="android:textColor">@color/black_text</item>
+    </style>
+
+    <style name="gray_small_style">
+        <item name="android:textSize">12.0sp</item>
+        <item name="android:textColor">@color/gray_text</item>
+    </style>
+
+    <style name="red_big_style">
+        <item name="android:textSize">24.0sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="CustomBlackRadioBtn">
+        <item name="android:button">@null</item>
+        <item name="android:drawableLeft">@drawable/search_radio_1</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="gray_style_vertical_line">
+        <item name="android:background">@color/gray_hint</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">1.0dip</item>
+        <item name="android:layout_marginLeft">20.0dip</item>
+        <item name="android:layout_marginRight">20.0dip</item>
+    </style>
+    <style name="search_order_text">查询</style>
+
 </resources>

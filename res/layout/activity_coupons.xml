@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_bar"
+        android:layout_marginBottom="60.0dip"
+        android:orientation="horizontal" >
+
+        <org.kymjs.aframe.ui.widget.KJListView
+            android:id="@+id/coupons_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#f4f4f4"
+            android:cacheColorHint="#ff0000"
+            android:clickable="true"
+            android:divider="#fff4f4f4"
+            android:dividerHeight="2dp"
+            android:scrollbars="none" >
+        </org.kymjs.aframe.ui.widget.KJListView>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/add_coupons_btn"
+            style="@style/white_normal_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5.0dip"
+            android:background="@drawable/orange_btn"
+            android:text="@string/add_ticket_btn_text" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -46,6 +46,7 @@ import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.DateUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
@@ -445,11 +446,10 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			if(json != null){
 				List<Gallery> galleries = JsonUtil.parse2ListObject(json, new TypeReference<List<Gallery>>() {});
 				if(galleries != null && !galleries.isEmpty()){
-					for (Gallery gallery : galleries) {
-						String imageUrl = QiNiuUtil.getImageUrl(gallery.getFile_name());
-						if(!"".equals(imageUrl)){
-							getImageToView(gallery.getGallery_id(),imageUrl,gallery.getFile_name());
-						}
+					int length = galleries.size();
+					for (int i = 0; i < length; i++) {
+						Gallery gallery = galleries.get(i);
+						getImageToView(gallery.getGallery_id(),gallery.getFile_name());
 					}
 				}
 			}
@@ -634,22 +634,15 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	 * 
 	 * @param picdata
 	 */
-	private void getImageToView(int gallery_id,String url,String fileName) {
+	private void getImageToView(int gallery_id,String fileName) {
 		Bitmap photo;
-		try {
-			photo = QiNiuUtil.getQiNiu(url);
-			AddImage addImage = new AddImage();
-			addImage.setId(gallery_id);
-			addImage.setBitmap(photo);
-			addImage.setFileName(fileName);
-			lists.add(addImage);
-			old_lists.add(addImage);
-			adapter.notifyDataSetChanged();
-			
-		} catch (InterruptedException e1) {
-			LOGGER.error(">>> 程序出错",e1);
-		} catch (ExecutionException e1) {
-			LOGGER.error(">>> 程序出错",e1);
-		}
+		photo = FileUtil.getCacheFile(fileName);
+		AddImage addImage = new AddImage();
+		addImage.setId(gallery_id);
+		addImage.setBitmap(photo);
+		addImage.setFileName(fileName);
+		lists.add(addImage);
+		old_lists.add(addImage);
+		adapter.notifyDataSetChanged();
 	}
 }

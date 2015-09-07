@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include 
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar"/>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/black_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12.0dip"
+            android:text="@string/free_ship_text1" />
+
+        <TextView
+            style="@style/gray_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_marginLeft="15.0dip"
+            android:text="@string/free_ship_text2" />
+
+        <TextView
+            style="@style/gray_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15.0dip"
+            android:text="@string/free_ship_text3" />
+
+        <TextView
+            style="@style/gray_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15.0dip"
+            android:text="@string/free_ship_text4" />
+
+        <TextView
+            style="@style/gray_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15.0dip"
+            android:text="@string/free_ship_text5" />
+
+        <TextView
+            style="@style/gray_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15.0dip"
+            android:layout_marginBottom="10.0dip"
+            android:text="@string/free_ship_text6" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/gray_small_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12.0dip"
+        android:text="@string/free_ship_text7" />
+
+    <Button
+        android:id="@+id/add_freeship_btn"
+        style="@style/white_normal_style"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5.0dip"
+        android:background="@drawable/orange_btn"
+        android:text="@string/add_freeship_btn_text" />
+
+</LinearLayout>

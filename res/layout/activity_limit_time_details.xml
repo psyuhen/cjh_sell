@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15.0dip"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="80.0dip" >
+
+            <ImageView
+                android:id="@+id/limit_time_image"
+                android:layout_width="70.0dip"
+                android:layout_height="70.0dip"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.0dip"
+                android:background="@drawable/fruit3" />
+
+            <TextView
+                android:id="@+id/limit_time_title"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginTop="14.0dip"
+                android:layout_toRightOf="@+id/limit_time_image" />
+
+            <TextView
+                android:id="@+id/limit_time_price"
+                style="@style/red_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/limit_time_title"
+                android:layout_marginLeft="10.0dip"
+                android:layout_marginTop="10.0dip"
+                android:layout_toRightOf="@+id/limit_time_image" />
+        </RelativeLayout>
+
+        <ImageView
+            style="@style/coupon_horizontal_line"
+            android:layout_marginTop="5.0dip" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/limit_time_add_rl_height"
+            android:background="@color/white" >
+
+            <RelativeLayout
+                android:id="@+id/limit_time_text_rl"
+                android:layout_width="@dimen/limit_time_add_rl_width"
+                android:layout_height="fill_parent"
+                android:background="@color/white" >
+
+                <TextView
+                    android:id="@+id/limit_time_discount_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_marginRight="5.0dip"
+                    android:text="@string/limit_time_discount_text" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/limit_time_line"
+                style="@style/coupon_vertical_line"
+                android:layout_toRightOf="@+id/limit_time_text_rl" />
+
+            <EditText
+                android:id="@+id/limit_time_discount_edit"
+                style="@style/gray_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5.0dip"
+                android:layout_toRightOf="@+id/limit_time_line"
+                android:background="@drawable/goods_detail_edit"
+                android:hint="@string/limit_time_discount_hint" />
+        </RelativeLayout>
+
+        <ImageView style="@style/coupon_horizontal_line" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/limit_time_add_rl_height"
+            android:background="@color/white" >
+
+            <RelativeLayout
+                android:id="@+id/limit_time_starttime_text_rl"
+                android:layout_width="@dimen/limit_time_add_rl_width"
+                android:layout_height="fill_parent"
+                android:background="@color/white" >
+
+                <TextView
+                    android:id="@+id/limit_time_starttime_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_marginRight="5.0dip"
+                    android:text="@string/limit_time_starttime" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/limit_time_starttime_line"
+                style="@style/coupon_vertical_line"
+                android:layout_toRightOf="@+id/limit_time_starttime_text_rl" />
+
+            <EditText
+                android:id="@+id/limit_time_starttime_edit"
+                style="@style/gray_big_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5.0dip"
+                android:layout_toRightOf="@+id/limit_time_starttime_line"
+                android:background="@drawable/goods_detail_edit"
+                android:focusable="false"
+                android:hint="@string/limit_time_starttime_hint"
+                android:inputType="none" />
+        </RelativeLayout>
+
+        <ImageView style="@style/coupon_horizontal_line" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/limit_time_add_rl_height"
+            android:background="@color/white" >
+
+            <RelativeLayout
+                android:id="@+id/limit_time_endtime_text_rl"
+                android:layout_width="@dimen/limit_time_add_rl_width"
+                android:layout_height="fill_parent"
+                android:background="@color/white" >
+
+                <TextView
+                    android:id="@+id/limit_time_endtime_text"
+                    style="@style/black_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_marginRight="5.0dip"
+                    android:text="@string/limit_time_endtime_text" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/limit_time_endtime_line"
+                style="@style/coupon_vertical_line"
+                android:layout_toRightOf="@+id/limit_time_endtime_text_rl" />
+
+            <EditText
+                android:id="@+id/limit_time_enddate_edit"
+                style="@style/gray_big_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5.0dip"
+                android:layout_toRightOf="@+id/limit_time_endtime_line"
+                android:background="@drawable/goods_detail_edit"
+                android:focusable="false"
+                android:hint="@string/limit_time_endtime_hint"
+                android:inputType="none" />
+        </RelativeLayout>
+
+        <ImageView style="@style/coupon_horizontal_line" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -30,15 +30,15 @@
 
     <!-- 我的详情 -->
     <string name="me_order_text">我的订单</string>
-    <string name="me_marketing_text">营销中心</string>
+    <string name="me_marketing_text">统计中心</string>
     <string name="me_shop_text">店铺管理</string>
     <string name="me_goods_text">商品管理</string>
-    <string name="me_help_text">帮助中心</string>
-    <string name="me_customerservice_text">联系客服</string>
+    <string name="me_help_text">关于我们</string>
+    <string name="me_customerservice_text">客户管理</string>
     <string name="me_remind_text">客户提醒</string>
     <string name="order_serial_text">订单号:</string>
     <string name="order_buyer_text">收货人:</string>
-    <string name="commication_text">再次联系</string>
+    <string name="commication_text">联系买家</string>
     <string name="order_item_price_text">实收款:</string>
     <string name="order_item_time_text">完成时间：</string>
     <string name="order_number_text">数量:</string>
@@ -223,7 +223,7 @@
     <string name="goods_detail_stock_text">库存</string>
     <string name="goods_detail_stock">999</string>
     <string name="goods_detail_category_text">分类至</string>
-    <string name="goods_detail_category">未分类</string>
+    <string name="goods_detail_category">水果</string>
     <string name="publish_goods_text">发布</string>
     <string name="delete_goods_text">删除商品</string>
     <string name="goods_details_offshelft_btn">下架商品</string>
@@ -240,7 +240,7 @@
     <string name="category_detail_title">果蔬生鲜</string>
     <string name="category_detail_content_text">详情</string>
     <string name="category_detail_content">蔬菜水果 肉蛋海鲜 速冻包装 西点面包...</string>
-    <string name="delete_category_text">删除类别</string>
+    <string name="delete_category_text">完成</string>
     <string name="decorate_name">小飞侠科比</string>
     <string name="title_orcode">超家伙二维码</string>
     <!-- 店铺装修 -->
@@ -324,4 +324,74 @@
     <string name="pop_category">请点击选择</string>
     <string name="choose_category">请选择类别</string>
     <string name="default_category">瓜果蔬菜</string>
+    <string name="main_order">我的订单</string>
+    <string name="main_home">主页</string>
+    <string name="main_myshop">我的店铺</string>
+    <string name="order_delete">删除订单</string>
+    <!-- 商品 -->
+    <string name="btn_selling_text">出售中</string>
+    <string name="find_new_tag_text">已下架</string>
+    <string name="btn_category_text">分类</string>
+    <string name="goods_add_time_text">添加时间</string>
+    <string name="goods_sale_num_text">销售数量</string>
+    <string name="goods_stock_text">库存</string>
+    <string name="good_share_text">分享</string>
+    <string name="goods_see_text">查看</string>
+    <string name="goods_bind_text">复制</string>
+    <string name="add_category_text">新建分类</string>
+    <string name="edit_category_text">编辑分类</string>
+    <string name="order_search_edit">商品名、订单号、手机、姓名等</string>
+    <!-- 订单 -->
+    <string name="order_running_rbtn_text">进行中</string>
+    <string name="order_complete_rbtn_text">已完成</string>
+    <string name="order_close_rbtn_text">已关闭</string>
+    <!-- 营销推广 -->
+    <string name="me_ad_text">营销推广</string>
+    <string name="add_ticket_btn_text">添加优惠券</string>
+    <string name="coupons_money">优惠券面额</string>
+    <string name="coupons_money_hint">请输入优惠券的金额</string>
+    <string name="coupons_enoughmoney">订单下限</string>
+    <string name="coupons_enoughmoney_hint">可以用券的最低订单金额</string>
+    <string name="coupons_add_basic_info">基本信息</string>
+    <string name="coupons_surplusnum_text">优惠券库存</string>
+    <string name="coupons_surplusnum_hint">可被领取的总券数</string>
+    <string name="coupons_limitsnum_text">领券限制</string>
+    <string name="coupons_limitsnum_hint">没人限领张数</string>
+    <string name="coupons_startdate_hint">点击添加开始时间</string>
+    <string name="coupons_date_text_info">-</string>
+    <string name="coupons_enddate_hint">点击添加结束时间</string>
+    <string name="coupons_date_text">有效期</string>
+    <string name="add_coupons_btn_text">完成</string>
+    <string name="secret_discount_discount_hint">9</string>
+    <string name="secret_discount_discount">折扣</string>
+    <string name="secret_discount_starttime">开始时间</string>
+    <string name="secret_discount_starttime_hint">请输入开始时间</string>
+    <string name="secret_discount_endtime_text">结束时间</string>
+    <string name="secret_discount_endtime_hint">请输入结束时间</string>
+    <string name="free_ship_text1">满包邮活动规则</string>
+    <string name="free_ship_text2">1、买家给满足你设置的金额，则订单包邮</string>
+    <string name="free_ship_text3">2、如果你同时设置了一下或送，买家购买时刻同时享受优惠，包括</string>
+    <string name="free_ship_text4">3、限时优惠</string>
+    <string name="free_ship_text5">4、私密折扣</string>
+    <string name="free_ship_text6">5、使用购物券</string>
+    <string name="free_ship_text7">包邮只对自营商品有效！</string>
+    <string name="add_freeship_btn_text">创建</string>
+    <string name="item_free_ship_enoughtext">满包邮</string>
+    <string name="item_free_ship_hint">请输入金额</string>
+    <string name="item_free_ship_unit">元</string>
+    <string name="item_free_ship_check_text">偏远地区不包邮</string>
+    <string name="item_free_ship_check_text_details">海外，港澳台，新疆，内蒙古，西藏，甘肃，宁夏，海南</string>
+    <string name="confirm_free_ship_btn">确定</string>
+    <string name="cancel_freeship_btn">取消</string>
+    <string name="limit_time_discount_text">折后价格</string>
+    <string name="limit_time_discount_hint">请输入折后价格</string>
+    <string name="limit_time_starttime">开始时间</string>
+    <string name="limit_time_starttime_hint">请点击添加开始时间</string>
+    <string name="limit_time_endtime_text">结束时间</string>
+    <string name="limit_time_endtime_hint">请点击添加结束时间</string>
+    <string name="finish_category_text">完成</string>
+    <string name="order_view">查看订单</string>
+    <string name="goods_delete">删除</string>
+    <string name="search_order_text">查询</string>
+
 </resources>

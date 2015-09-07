@@ -9,6 +9,7 @@ import android.os.Message;
 
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
+import com.cjh.utils.FileUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 import com.google.code.microlog4android.config.PropertyConfigurator;
@@ -67,6 +68,9 @@ public class SplashActivity extends Activity {
 		logger.info(">>> starting cjh sell app");
 		
 		init();
+		
+		//创建app目录
+		FileUtil.createAppFolder();
 	}
 
 	private void init() {

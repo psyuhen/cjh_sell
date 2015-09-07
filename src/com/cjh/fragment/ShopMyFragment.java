@@ -25,9 +25,9 @@ import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
-import com.cjh.utils.QiNiuUtil;
 
 /**
  * 店铺名片展示
@@ -118,11 +118,8 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				
 				String logo = store.getLogo();
 				if(logo != null && !"".equals(logo)){
-					String imageUrl = QiNiuUtil.getImageUrl(logo);
-					if(!"".equals(imageUrl)){
-						Bitmap bitmap = QiNiuUtil.getQiNiu(imageUrl);
-						shop_my_image.setImageBitmap(bitmap);
-					}
+					Bitmap bitmap = FileUtil.getCacheFile(logo);
+					shop_my_image.setImageBitmap(bitmap);
 				}
 			}
 		} catch (InterruptedException e) {

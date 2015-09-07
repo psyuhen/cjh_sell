@@ -1,6 +1,7 @@
 package com.cjh.bean;
 
 import java.util.Date;
+import java.util.List;
 /**
  * 订单javabean
  * @author zkq
@@ -63,6 +64,15 @@ public class OrderItem {
 	 * 商品价格
 	 */
 	private float price;
+	/**
+	 * 商品状态
+	 */
+	private char status;
+	/**
+	 * 临时本地图片
+	 */
+	private List<Integer> imgList; 
+	private int tempImage;
 	public int getId() {
 		return id;
 	}
@@ -148,4 +158,23 @@ public class OrderItem {
 	public void setSeller_user_moblie(String seller_user_moblie) {
 		this.seller_user_moblie = seller_user_moblie;
 	}
+	public char getStatus() {
+		return status;
+	}
+	public void setStatus(char status) {
+		this.status = status;
+	}
+	public List<Integer> getImgList() {
+		return imgList;
+	}
+	public void setImgList(List<Integer> imgList) {
+		this.imgList = imgList;
+	}
+	public int getTempImage() {
+		return tempImage;
+	}
+	public void setTempImage(int tempImage) {
+		this.tempImage = tempImage;
+	}
+	
 }

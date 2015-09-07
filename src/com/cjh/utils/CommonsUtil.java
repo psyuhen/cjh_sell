@@ -37,10 +37,8 @@ public class CommonsUtil {
 	 *打开照相机
 	 * @param activity
 	 */
-	public static void openCamera(Activity activity)
-	{
-		Intent intentFromCapture = new Intent(
-				MediaStore.ACTION_IMAGE_CAPTURE);
+	public static void openCamera(Activity activity) {
+		Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// 判断存储卡是否可以用，可用进行存储
 		if (hasSdcard()) {
 			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri
@@ -58,5 +56,38 @@ public class CommonsUtil {
 
 	public static void showShortToast(Context context, String msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+	}
+	
+	public static String getOrderStatus(char type) {
+		switch (type) {
+		case '1':
+			return "卖方确认订单";
+		case '2':
+			return "等待买方付款";
+		case '3':
+			return "卖方发货";
+		case '4':
+			return "交易完成";
+		case '5':
+			return "交易取消";
+		case '6':
+			return "交易关闭";
+		default:
+			return "";
+		}
+	}
+	public static String getCouponsStatus(char type) {
+		switch (type) {
+		case '1':
+			return "可领用";
+		case '2':
+			return "未开始";
+		case '3':
+			return "已领完";
+		case '4':
+			return "已过期";
+		default:
+			return "";
+		}
 	}
 }
