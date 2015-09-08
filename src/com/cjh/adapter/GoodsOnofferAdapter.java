@@ -2,14 +2,9 @@ package com.cjh.adapter;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.cjh.activity.GoodsViewActivity;
-import com.cjh.bean.GoodsItem;
-import com.cjh.cjh_sell.R;
-
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +12,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cjh.activity.GoodsViewActivity;
+import com.cjh.activity.LimitTimeActivity;
+import com.cjh.activity.LimitTimeAddActivity;
+import com.cjh.bean.GoodsItem;
+import com.cjh.cjh_sell.R;
 
 public class GoodsOnofferAdapter extends BaseAdapter {
 	private List<GoodsItem> goodsList;
@@ -69,19 +71,48 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 					.findViewById(R.id.good_bind_imagebtn);
 			viewHolder.goods_share = (ImageButton) convertView
 					.findViewById(R.id.good_share_imagebtn);
-			
+			viewHolder.bottm_rl = (LinearLayout) convertView
+					.findViewById(R.id.bottm_rl);
+			viewHolder.goods_discount = (TextView) convertView
+					.findViewById(R.id.goods_discount);
+			viewHolder.original_price = (TextView) convertView
+					.findViewById(R.id.goods_orignal_price);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		/**
+		 * 如果为选择商品，则隐藏下方选择按钮
+		 */
+		if (context instanceof LimitTimeAddActivity) {
+			viewHolder.bottm_rl.setVisibility(View.GONE);
+		}
+		/**
+		 * 限时折扣则显示折扣和原始价格
+		 */
+		if (context instanceof LimitTimeActivity) {
+			viewHolder.goods_discount.setVisibility(View.VISIBLE);
+			viewHolder.goods_discount.setText("8.0折");
+			viewHolder.original_price.setText("￥"
+					+ goodsList.get(position).getPrice());
+			viewHolder.original_price.setVisibility(View.VISIBLE);
+			viewHolder.original_price.getPaint().setFlags(
+					Paint.STRIKE_THRU_TEXT_FLAG);
+			viewHolder.price_text.setText("￥"
+					+ (goodsList.get(position).getPrice() - 10));
+		} else {
+			viewHolder.price_text.setText("￥"
+					+ goodsList.get(position).getPrice());
+		}
 
-		GoodsItem goodsItem = goodsList.get(position);
-		
-		viewHolder.title_text.setText(StringUtils.trimToEmpty(goodsItem.getTitle()));
-		viewHolder.price_text.setText("￥" + goodsItem.getPrice());
-		viewHolder.sellmount_text.setText("总销量"+ goodsItem.getSellmount() + "件");
-		viewHolder.stock_text.setText("库存" + goodsItem.getStock() + "件");
-		viewHolder.standard_text.setText("规格:" + StringUtils.trimToEmpty(goodsItem.getStandard()));
+		viewHolder.title_text.setText(goodsList.get(position).getTitle());
+
+		viewHolder.sellmount_text.setText("总销量"
+				+ goodsList.get(position).getSellmount() + "件");
+		viewHolder.stock_text.setText("库存" + goodsList.get(position).getStock()
+				+ "件");
+		viewHolder.standard_text.setText("规格:"
+				+ goodsList.get(position).getStandard());
 		if (position % 3 == 1) {
 			viewHolder.img_image.setImageResource(R.drawable.c1);
 		}
@@ -122,6 +153,9 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		private ImageButton goods_see;
 		private ImageButton goods_bind;
 		private ImageButton goods_share;
+		private LinearLayout bottm_rl;
+		private TextView goods_discount;
+		private TextView original_price;
 	}
 
 }

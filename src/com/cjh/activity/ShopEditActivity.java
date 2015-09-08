@@ -300,19 +300,21 @@ public class ShopEditActivity extends BaseTwoActivity {
 	private void getImageToView(String fileName){
 		Bitmap bitmap = null;
 		bitmap = FileUtil.getCacheFile(fileName);
-		AddImage addImage = new AddImage();
-		addImage.setBitmap(bitmap);
 		
-		//添加图片控件消失
-		content_add_image.setVisibility(View.GONE);//添加图标隐藏
-		File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
-		if(image != null){
-			addImage.setFile(image);
-			addImage.setFileName(image.getName());
+		if(bitmap != null){//防止没有图片的时候，报错
+			AddImage addImage = new AddImage();
+			addImage.setBitmap(bitmap);
+			//添加图片控件消失
+			content_add_image.setVisibility(View.GONE);//添加图标隐藏
+			File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
+			if(image != null){
+				addImage.setFile(image);
+				addImage.setFileName(image.getName());
+			}
+			
+			lists.add(addImage);
+			adapter.notifyDataSetChanged();
 		}
-		
-		lists.add(addImage);
-		adapter.notifyDataSetChanged();
 	}
 	
 	private void querybyuserid(){

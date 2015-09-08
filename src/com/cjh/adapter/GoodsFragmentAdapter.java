@@ -1,13 +1,14 @@
 package com.cjh.adapter;
 
 
-import com.cjh.fragment.GoodsOnOfferFragment;
-import com.cjh.fragment.GoodsSoldOutFragment;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.cjh.fragment.GoodsCategoryFragment;
+import com.cjh.fragment.GoodsOnOfferFragment;
+import com.cjh.fragment.GoodsSoldOutFragment;
 /**
  * 商品列表适配器
  * @author ps
@@ -15,7 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class GoodsFragmentAdapter extends FragmentPagerAdapter{
 
-	private int pageCount=2;
+	private int pageCount = 3;
 	private Context context;
 	
 	public GoodsFragmentAdapter(FragmentManager fm) {
@@ -30,10 +31,11 @@ public class GoodsFragmentAdapter extends FragmentPagerAdapter{
 	public Fragment getItem(int position) {
 		switch (position) {
 		case 0:
-			return new GoodsOnOfferFragment(context);
+			return new GoodsOnOfferFragment(context);//出售中
 		case 1:
-			return new GoodsSoldOutFragment(context);
-		
+			return new GoodsSoldOutFragment(context);//已下架
+		case 2:
+			return new GoodsCategoryFragment(context);//分类
 		}
 		return null;
 	}

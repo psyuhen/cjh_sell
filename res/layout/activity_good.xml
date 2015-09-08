@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/goods_top_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/headcolor"
+        android:paddingBottom="10.0dip"
+        android:paddingTop="15.0dip" >
+
+        <TextView
+            android:id="@+id/back"
+            style="@style/back_view" />
+
+        <RadioGroup
+            android:id="@+id/goods_radioGroup"
+            android:layout_width="fill_parent"
+            android:layout_height="35.0dip"
+            android:layout_marginBottom="7.5dip"
+            android:layout_marginLeft="55dip"
+            android:layout_marginRight="55dip"
+            android:background="@drawable/tab_bg"
+            android:orientation="horizontal" >
+
+            <!-- 出售中 -->
+            <RadioButton
+                android:id="@+id/btn_selling"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/radio_left_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/btn_selling_text"
+                android:textColor="@drawable/wp_text_selector"
+                android:textSize="15.0sp" />
+
+            <!-- 已下架 -->
+            <RadioButton
+                android:id="@+id/btn_offsheld"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/radio_center_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/find_new_tag_text"
+                android:textColor="@drawable/wp_text_selector"
+                android:textSize="15.0sp" />
+
+            <!-- 分类 -->
+            <RadioButton
+                android:id="@+id/btn_category"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:background="@drawable/radio_right_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/btn_category_text"
+                android:textColor="@drawable/wp_text_selector"
+                android:textSize="15.0sp" />
+        </RadioGroup>
+    </RelativeLayout>
+
+   
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/goods_viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+</LinearLayout>

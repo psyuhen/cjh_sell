@@ -34,7 +34,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginBottom="5.5dip"
+                android:layout_marginBottom="2.5dip"
                 android:layout_marginLeft="12.5dip"
                 android:layout_marginRight="12.5dip"
                 android:gravity="center_horizontal"
@@ -45,15 +45,15 @@
                     style="@style/footbar"
                     android:layout_marginRight="60.0dip"
                     android:drawableTop="@drawable/main_bottom_nav"
-                    android:paddingTop="8dp"
-                    android:text="@string/main_order" />
+                    android:paddingTop="2dp"
+                    android:text="@string/main_statistics" />
 
                 <RadioButton
                     android:id="@+id/rbnav"
                     style="@style/footbar"
                     android:checked="true"
-                     android:drawableTop="@drawable/main_bottom_home"
-                    android:paddingTop="8dp"
+                    android:drawableTop="@drawable/main_bottom_home"
+                    android:paddingTop="2dp"
                     android:text="@string/main_home" />
 
                 <RadioButton
@@ -61,50 +61,9 @@
                     style="@style/footbar"
                     android:layout_marginLeft="60.0dip"
                     android:drawableTop="@drawable/main_bottom_me"
-                    android:paddingTop="8dp"
+                    android:paddingTop="2dp"
                     android:text="@string/main_myshop" />
             </RadioGroup>
-
-            <!-- <LinearLayout -->
-            <!-- android:id="@+id/bottomItemCurrentBg1" -->
-            <!-- style="@style/main_bottom_item" > -->
-
-
-            <!-- <RadioButton -->
-            <!-- android:id="@+id/rbHome" -->
-            <!-- style="@style/footbar" -->
-            <!-- android:drawableTop="@drawable/main_bottom_home" -->
-            <!-- android:paddingTop="8dp" -->
-            <!-- android:text="主页" /> -->
-            <!-- </LinearLayout> -->
-
-
-            <!-- <LinearLayout -->
-            <!-- android:id="@+id/bottomItemCurrentBg2" -->
-            <!-- style="@style/main_bottom_item" > -->
-
-
-            <!-- <RadioButton -->
-            <!-- android:id="@+id/rbGoods" -->
-            <!-- style="@style/footbar" -->
-            <!-- android:drawableTop="@drawable/main_bottom_nav" -->
-            <!-- android:paddingTop="8dp" -->
-            <!-- android:text="商品" /> -->
-            <!-- </LinearLayout> -->
-
-
-            <!-- <LinearLayout -->
-            <!-- android:id="@+id/bottomItemCurrentBg3" -->
-            <!-- style="@style/main_bottom_item" > -->
-
-
-            <!-- <RadioButton -->
-            <!-- android:id="@+id/rbOrder" -->
-            <!-- style="@style/footbar" -->
-            <!-- android:drawableTop="@drawable/main_bottom_me" -->
-            <!-- android:paddingTop="8dp" -->
-            <!-- android:text="订单" /> -->
-            <!-- </LinearLayout> -->
         </RelativeLayout>
     </RelativeLayout>
 

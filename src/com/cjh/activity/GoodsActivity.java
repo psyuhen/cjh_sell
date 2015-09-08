@@ -1,34 +1,46 @@
 package com.cjh.activity;
 
-import com.cjh.adapter.GoodsFragmentAdapter;
-import com.cjh.cjh_sell.R;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.kymjs.aframe.ui.widget.KJListView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cjh.adapter.GoodsFragmentAdapter;
+import com.cjh.adapter.GoodsOnofferAdapter;
+import com.cjh.auth.SessionManager;
+import com.cjh.bean.GoodsItem;
+import com.cjh.bean.MerchInfo;
+import com.cjh.bean.Store;
+import com.cjh.bean.User;
+import com.cjh.cjh_sell.R;
+import com.cjh.utils.HttpUtil;
+import com.cjh.utils.JsonUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 商品管理
  * @author ps
  *
  */
-public class GoodsActivity extends BaseActivity implements OnClickListener {
-	private ViewPager mViewPager;
-	private GoodsFragmentAdapter mFragmentAdapter;
+public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
-	private RelativeLayout goods_left_rl;
-	private RelativeLayout goods_right_rl;
-
-	private View goods_left_line;
-	private View goods_right_line;
-
-	private ImageButton edit_imaggbtn;
 	private TextView order_title;
+	
+	//优化改动的
+	private KJListView goods_listview;
+	private GoodsOnofferAdapter adapter;
+	private List<GoodsItem> goodsList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,79 +50,60 @@ public class GoodsActivity extends BaseActivity implements OnClickListener {
 		
 		initView();
 		initData();
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageSelected(int position) {
-				
-				switch (position) {
-				case 0:
-					goods_left_line.setVisibility(View.VISIBLE);
-					goods_right_line.setVisibility(View.INVISIBLE);
-					break;
-				case 1:
-					goods_left_line.setVisibility(View.INVISIBLE);
-					goods_right_line.setVisibility(View.VISIBLE);
-					break;
-				}
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-		});
-		
 	}
 
 	private void initData() {
 		title.setText("商品管理");
-		mViewPager.setAdapter(mFragmentAdapter);
+
+		queryMerch();
+		
+		adapter=new GoodsOnofferAdapter(goodsList, GoodsActivity.this);
+		goods_listview.setAdapter(adapter);
 		
 		String storeName = sessionManager.get("store_name");
-		order_title.setText(storeName);
+		//order_title.setText(storeName);
 	}
 
 	@Override
 	public void initView() {
 		super.initView();
-		mViewPager = (ViewPager) findViewById(R.id.goods_viewpager);
-		mFragmentAdapter = new GoodsFragmentAdapter(
-				getSupportFragmentManager(), this);
-		goods_left_rl = (RelativeLayout) findViewById(R.id.goods_left_rl);
-		goods_left_rl.setOnClickListener(this);
-		goods_right_rl = (RelativeLayout) findViewById(R.id.goods_right_rl);
-		goods_right_rl.setOnClickListener(this);
-		goods_left_line = findViewById(R.id.goods_left_line);
-		goods_right_line = findViewById(R.id.goods_right_line);
-		edit_imaggbtn = (ImageButton) findViewById(R.id.right_imgbtn);
-		edit_imaggbtn.setOnClickListener(this);
+//		title.setText("果蔬生鲜");
+		goodsList = new ArrayList<GoodsItem>();
+		right_imgbtn.setVisibility(View.GONE);
+		goods_listview=(KJListView) findViewById(R.id.goods_listview);
 		
-		order_title = (TextView)findViewById(R.id.order_title);
 	}
 
-	@Override
-	public void onClick(View v) {
-		super.onClick(v);
-		switch (v.getId()) {
-		case R.id.goods_left_rl:
-			goods_left_line.setVisibility(View.VISIBLE);
-			goods_right_line.setVisibility(View.INVISIBLE);
-			mViewPager.setCurrentItem(0);
-			break;
-		case R.id.goods_right_rl:
-			goods_left_line.setVisibility(View.INVISIBLE);
-			goods_right_line.setVisibility(View.VISIBLE);
-			mViewPager.setCurrentItem(2);
-			break;
-		case R.id.right_imgbtn:
-			startActivity(new Intent(GoodsActivity.this, GoodsAddActivity.class));
-			finish();
-			break;
-
+	//查询商品信息
+	private void queryMerch(){
+		int store_id = sessionManager.getInt("store_id");
+		//根据商家ID查询商品信息
+		String url = HttpUtil.BASE_URL + "/merch/querybystoreid.do?store_id="+store_id;
+		try {
+			String json = HttpUtil.getRequest(url);
+			if(json != null){
+				List<MerchInfo> list = JsonUtil.parse2ListMerchInfo(json);
+				int length = list.size();
+				
+				for (int i = 0; i < length; i++) {
+					MerchInfo merchInfo = list.get(i);
+					
+					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setId(merchInfo.getMerch_id());
+					goodsItem.setImg("image");
+					goodsItem.setPrice(merchInfo.getPrice());
+					goodsItem.setSellmount(merchInfo.getSales_volume());//销量
+					goodsItem.setStandard(merchInfo.getUnit());
+					goodsItem.setStock(merchInfo.getIn_stock());
+					goodsItem.setTitle(merchInfo.getName());
+					
+					goodsList.add(goodsItem);
+				}
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(">>> 根据商家ID查询商品信息失败",e);
+		} catch (ExecutionException e) {
+			LOGGER.error(">>> 根据商家ID查询商品信息失败",e);
 		}
 	}
-
 }

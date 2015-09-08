@@ -10,6 +10,7 @@ package com.cjh.bean;
  */
 public class ClassifyInfo {
 	private int classify_id;
+	private int user_id;
     private String name;
     private String classify_type;
     private String desc;
@@ -43,5 +44,11 @@ public class ClassifyInfo {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public int getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
 }

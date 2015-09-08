@@ -182,7 +182,8 @@
 
                     <RelativeLayout
                         android:id="@+id/me_category_rl"
-                        style="@style/me_item_rl" >
+                        style="@style/me_item_rl"
+                        android:visibility="gone" >
 
                         <ImageView
                             android:id="@+id/me_category_image"
@@ -246,6 +247,41 @@
                         style="@style/left_drawer_item_line" />
 
                     <RelativeLayout
+                        android:id="@+id/me_ad_rl"
+                        style="@style/me_item_rl" >
+
+                        <ImageView
+                            android:id="@+id/me_ad_image"
+                            style="@style/me_item_imaga_style"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/me_remind_icon" />
+
+                        <TextView
+                            android:id="@+id/me_ad_textview"
+                            style="@style/me_ll_style"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/me_ad_image"
+                            android:text="@string/me_ad_text" />
+
+                        <ImageView
+                            android:id="@+id/me_remind_image_arrow"
+                            style="@style/me_item_arrow"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="30.0dip"
+                            android:background="@drawable/arrow_right" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/goods_bottom_ll3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/goods_bottom_ll2"
+                    android:layout_marginTop="30.0dip"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
                         android:id="@+id/me_shop_rl"
                         style="@style/me_item_rl" >
 
@@ -264,42 +300,6 @@
 
                         <ImageView
                             android:id="@+id/me_shop_image_arrow"
-                            style="@style/me_item_arrow"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="30.0dip"
-                            android:background="@drawable/arrow_right" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/goods_bottom_ll3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/goods_bottom_ll2"
-                    android:layout_marginTop="30.0dip"
-                    android:orientation="vertical" >
-
-                    <RelativeLayout
-                        android:id="@+id/me_remind_ll"
-                        style="@style/me_item_rl" 
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:id="@+id/me_remind_image"
-                            style="@style/me_item_imaga_style"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/me_remind_icon" />
-
-                        <TextView
-                            android:id="@+id/me_remind_textview"
-                            style="@style/me_ll_style"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/me_remind_image"
-                            android:text="@string/me_remind_text" />
-
-                        <ImageView
-                            android:id="@+id/me_remind_image_arrow"
                             style="@style/me_item_arrow"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"

@@ -49,7 +49,31 @@
                 android:layout_below="@+id/goods_title"
                 android:layout_toRightOf="@+id/goods_price"
                 android:paddingLeft="30.0dip"
-                android:paddingTop="5.0dip" />
+                android:paddingTop="5.0dip"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/goods_orignal_price"
+                style="@style/gray_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/goods_title"
+                android:layout_toRightOf="@+id/goods_price"
+                android:paddingLeft="30.0dip"
+                android:paddingTop="5.0dip"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/goods_discount"
+                style="@style/white_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/goods_title"
+                android:layout_marginRight="25.0dip"
+                android:background="@drawable/discount_btn"
+                android:paddingTop="5.0dip"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/goods_arrow"
@@ -88,11 +112,45 @@
     <LinearLayout
         android:id="@+id/bottm_rl"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/see_bind_share_height"
         android:layout_marginTop="5.0dip"
         android:descendantFocusability="blocksDescendants"
         android:focusable="false"
         android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/good_delete_image_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:clickable="true" >
+
+            <ImageButton
+                android:id="@+id/good_delete_imagebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
+                android:background="@drawable/good_delete_btn"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/goods_see_textview"
+                style="@style/black_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/good_delete_imagebtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
+                android:text="@string/goods_delete" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10.0dip"
+            android:src="@drawable/goods_layout_divider" />
 
         <RelativeLayout
             android:id="@+id/good_see_image_rl"
@@ -103,18 +161,29 @@
 
             <ImageButton
                 android:id="@+id/good_see_imagebtn"
-                android:layout_width="@dimen/goods_imagebtn_width"
-                android:layout_height="@dimen/goods_imagebtn_height"
-                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
                 android:background="@drawable/good_see_btn"
                 android:focusable="false" />
+
+            <TextView
+                android:id="@+id/goods_see_textview"
+                style="@style/black_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/good_see_imagebtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
+                android:text="@string/goods_see_text" />
         </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5.0dip"
-            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10.0dip"
             android:src="@drawable/goods_layout_divider" />
 
         <RelativeLayout
@@ -122,25 +191,35 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_weight="4"
-            android:clickable="true"
-            android:visibility="gone" >
+            android:clickable="true" >
 
             <ImageButton
                 android:id="@+id/good_bind_imagebtn"
-                android:layout_width="@dimen/goods_imagebtn_width"
-                android:layout_height="@dimen/goods_imagebtn_height"
-                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
                 android:background="@drawable/good_bind_btn"
                 android:focusable="false" />
+
+            <TextView
+                android:id="@+id/goods_bind_textview"
+                style="@style/black_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/good_bind_imagebtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
+                android:text="@string/goods_bind_text" />
         </RelativeLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_margin="5.0dip"
             android:layout_weight="1"
-            android:src="@drawable/goods_layout_divider"
-            android:visibility="gone" />
+            android:src="@drawable/goods_layout_divider" />
 
         <RelativeLayout
             android:id="@+id/good_share_image_rl"
@@ -151,11 +230,22 @@
 
             <ImageButton
                 android:id="@+id/good_share_imagebtn"
-                android:layout_width="@dimen/goods_imagebtn_width"
-                android:layout_height="@dimen/goods_imagebtn_height"
-                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
                 android:background="@drawable/good_share_btn"
                 android:focusable="false" />
+
+            <TextView
+                android:id="@+id/good_share_text"
+                style="@style/black_small_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/good_share_imagebtn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dip"
+                android:text="@string/good_share_text" />
         </RelativeLayout>
     </LinearLayout>
 

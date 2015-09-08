@@ -19,20 +19,22 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
-import com.cjh.activity.GoodsActivity;
+import com.cjh.activity.GoodActivity;
 import com.cjh.activity.GoodsDetailsActivity;
 import com.cjh.adapter.GoodsOnofferAdapter;
 import com.cjh.auth.SessionManager;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
-import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 public class GoodsSoldOutFragment extends Fragment {
-	public static final String TAG = "GoodsSoldOutFragment";
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsSoldOutFragment.class);
+
 	
 	private KJListView kjListView;
 	private List<GoodsItem> goodsList;
@@ -103,11 +105,11 @@ public class GoodsSoldOutFragment extends Fragment {
 	}
 	
 	private List<MerchInfo> querybyuserid(){
-		GoodsActivity activity = (GoodsActivity)context;
+		GoodActivity activity = (GoodActivity)context;
 		SessionManager sessionManager = activity.sessionManager;
-		User user = sessionManager.getUserDetails();
+		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
 		
-		String url = HttpUtil.BASE_URL + "/merch/querybyuserid.do?user_id="+user.getUser_id();
+		String url = HttpUtil.BASE_URL + "/merch/querybyuserid.do?user_id="+user_id;
 		
 		try {
 			String listJson = HttpUtil.getRequest(url);
@@ -119,10 +121,10 @@ public class GoodsSoldOutFragment extends Fragment {
 			List<MerchInfo> list = JsonUtil.parse2ListMerchInfo(listJson);
 			return list;
 		} catch (InterruptedException e) {
-			Log.e(TAG, "查询商品列表失败", e);
+			LOGGER.error("查询商品列表失败", e);
 			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 		} catch (ExecutionException e) {
-			Log.e(TAG, "查询商品列表失败", e);
+			LOGGER.error("查询商品列表失败", e);
 			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 		}
 		

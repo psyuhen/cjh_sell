@@ -324,7 +324,7 @@
     <string name="pop_category">请点击选择</string>
     <string name="choose_category">请选择类别</string>
     <string name="default_category">瓜果蔬菜</string>
-    <string name="main_order">我的订单</string>
+    <string name="main_statistics">统计中心</string>
     <string name="main_home">主页</string>
     <string name="main_myshop">我的店铺</string>
     <string name="order_delete">删除订单</string>
@@ -393,5 +393,8 @@
     <string name="order_view">查看订单</string>
     <string name="goods_delete">删除</string>
     <string name="search_order_text">查询</string>
+    <string name="goods_view_weight_text">重量</string>
+    <string name="goods_view_standard_text">规格</string>
+    <string name="goods_view_details_text">图文详情</string>
 
 </resources>

@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cjh.activity.AboutUsActivity;
+import com.cjh.activity.AdActivity;
 import com.cjh.activity.CategoryActivity;
-import com.cjh.activity.GoodsActivity;
+import com.cjh.activity.GoodActivity;
 import com.cjh.activity.MainActivity;
 import com.cjh.activity.MarketingActivity;
-import com.cjh.activity.OrderActivity;
+import com.cjh.activity.OrdersActivity;
 import com.cjh.activity.ShopActivity;
 import com.cjh.cjh_sell.R;
 /**
@@ -24,10 +26,10 @@ import com.cjh.cjh_sell.R;
  *
  */
 public class MeFragment extends Fragment implements OnClickListener {
-	private RelativeLayout[] relativeLayouts = new RelativeLayout[5];
-	//订单、商品、类别、营销、商家
+	private RelativeLayout[] relativeLayouts = new RelativeLayout[7];
 	private int ids[] = { R.id.me_order_rl, R.id.me_goods_rl,
-			R.id.me_category_rl, R.id.me_marketing_rl, R.id.me_shop_rl };
+			R.id.me_category_rl, R.id.me_marketing_rl, R.id.me_ad_rl,
+			R.id.me_shop_rl, R.id.me_help_ll };
 //	private Button login_btn;
 	
 	private TextView order_title;
@@ -73,10 +75,10 @@ public class MeFragment extends Fragment implements OnClickListener {
 		
 		switch (v.getId()) {
 		case R.id.me_order_rl:
-			startActivity(new Intent(getActivity(), OrderActivity.class));
+			startActivity(new Intent(getActivity(), OrdersActivity.class));
 			break;
 		case R.id.me_goods_rl:
-			startActivity(new Intent(getActivity(), GoodsActivity.class));
+			startActivity(new Intent(getActivity(), GoodActivity.class));
 			break;
 		case R.id.me_category_rl:
 			startActivity(new Intent(getActivity(), CategoryActivity.class));
@@ -90,6 +92,12 @@ public class MeFragment extends Fragment implements OnClickListener {
 		/*case R.id.me_login_btn:
 			startActivity(new Intent(getActivity(), LoginActivity.class));
 			break;*/
+		case R.id.me_ad_rl:
+			startActivity(new Intent(getActivity(), AdActivity.class));
+			break;
+		case R.id.me_help_ll:
+			startActivity(new Intent(getActivity(), AboutUsActivity.class));
+			break;
 		default:
 			break;
 		}
