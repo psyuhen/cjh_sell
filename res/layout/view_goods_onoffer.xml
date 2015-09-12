@@ -1,15 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/kjlibrary_bg"
     android:orientation="vertical" >
 
+    <LinearLayout
+        android:id="@+id/onofferll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/whitebg"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/goods_add_time_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/goods_top_nav_height"
+            android:layout_weight="1" >
+
+            <CheckBox
+                android:id="@+id/goods_add_time"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="5.0dip"
+                android:button="@null"
+                android:drawableRight="@drawable/sort_selector"
+                android:paddingRight="3.0dip"
+                android:text="@string/goods_add_time_text" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/goods_sale_num_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/goods_top_nav_height"
+            android:layout_weight="1" >
+
+            <CheckBox
+                android:id="@+id/goods_sale_num"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="5.0dip"
+                android:button="@null"
+                android:drawableRight="@drawable/sort_selector"
+                android:paddingRight="3.0dip"
+                android:text="@string/goods_sale_num_text" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/goods_stock_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/goods_top_nav_height"
+            android:layout_weight="1" >
+
+            <CheckBox
+                android:id="@+id/goods_stock"
+                style="@style/black_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toRightOf="@+id/goods_stock"
+                android:button="@null"
+                android:drawableRight="@drawable/sort_selector"
+                android:paddingRight="3.0dip"
+                android:text="@string/goods_stock_text" />
+        </RelativeLayout>
+    </LinearLayout>
+
     <org.kymjs.aframe.ui.widget.KJListView
         android:id="@+id/onoffer_goods_listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-8.0dip"
+        android:layout_below="@+id/onofferll"
+        android:layout_marginBottom="50.0dip"
         android:background="#f4f4f4"
         android:cacheColorHint="#ff0000"
         android:divider="@color/gray"
@@ -17,4 +83,21 @@
         android:scrollbars="none" >
     </org.kymjs.aframe.ui.widget.KJListView>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/goods_add_rl"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="#fffef9" >
+
+        <TextView
+            android:id="@+id/goods_add_text"
+            style="@style/black_normal_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/ic_add_category"
+            android:text="@string/goods_add_text" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -475,7 +475,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			
 			CommonsUtil.showLongToast(getApplicationContext(), json);
-			startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+			finish();
 		} catch (InterruptedException e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
 			LOGGER.error(">>> 删除商品失败",e);
@@ -494,10 +494,13 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		String url = HttpUtil.BASE_URL + "/merch/modify.do";
 		try {
 			String json = HttpUtil.postRequest(url, merchInfo);
-			if(json != null){
-				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "下架商品成功");
-				startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+			
+			if(json == null || "更新商品失败!".equals(json)){
+				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "下架商品失败");
+				return ;
 			}
+			CommonsUtil.showShortToast(GoodsDetailsActivity.this, "下架商品成功");
+			finish();
 		} catch (InterruptedException e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "下架商品失败");
 			LOGGER.error(">>> 下架商品失败",e);
@@ -517,10 +520,13 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		String url = HttpUtil.BASE_URL + "/merch/modify.do";
 		try {
 			String json = HttpUtil.postRequest(url, merchInfo);
-			if(json != null){
-				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "发布商品成功");
-				startActivity(new Intent(GoodsDetailsActivity.this, GoodsActivity.class));
+			
+			if(json == null || "更新商品失败!".equals(json)){
+				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "发布商品失败");
+				return ;
 			}
+			CommonsUtil.showShortToast(GoodsDetailsActivity.this, "发布商品成功");
+			finish();
 		} catch (InterruptedException e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "发布商品失败");
 			LOGGER.error(">>> 发布商品失败",e);

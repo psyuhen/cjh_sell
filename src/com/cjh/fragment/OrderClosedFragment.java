@@ -37,13 +37,9 @@ import com.cjh.utils.JsonUtil;
 import com.cjh.utils.PageUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
-/**
- * 已完成订单
- * @author ps
- *
- */
-public class OrderCompletedFragment extends Fragment implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderCompletedFragment.class);
+
+public class OrderClosedFragment extends Fragment implements OnClickListener {
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderClosedFragment.class);
 
 	private KJListView kjListView;
 	private OrderItemAdapter orderItemAdapter;
@@ -59,12 +55,15 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 	private int start = PageUtil.START;//分页的开始
 	
 	private Context context;
-	public OrderCompletedFragment(Context context) {
+	public OrderClosedFragment(Context context) {
 		this.context = context;
 	}
+	
+	public OrderClosedFragment() {
+	}
 
-	/*public static OrderCompletedFragment newInstance() {
-		OrderCompletedFragment fragment = new OrderCompletedFragment();
+/*	public static OrderClosedFragment newInstance() {
+		OrderClosedFragment fragment = new OrderClosedFragment();
 		Bundle bundle = new Bundle();
 		fragment.setArguments(bundle);
 		return fragment;
@@ -73,8 +72,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View contentView = inflater.inflate(R.layout.view_completed_order,
-				container, false);
+		View contentView = inflater.inflate(R.layout.view_completed_order,container, false);
 		initView();
 		kjListView = (KJListView) contentView.findViewById(R.id.completed_order_listview);
 		orderlist = new ArrayList<OrderItem>();
@@ -90,33 +88,35 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 			}
 		});
 		kjListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				
 				Toast.makeText(getActivity(), "删除", Toast.LENGTH_SHORT).show();
 				return false;
 			}
 		});
+		
 		
 		//上下拉刷新
 		kjListView.setPullLoadEnable(true);
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
-				getCompletedOrderInfo(PageUtil.START);
+				getClosedOrderInfo(PageUtil.START);
 			}
 
 			@Override
 			public void onLoadMore() {
-				getCompletedOrderInfo(OrderCompletedFragment.this.start);
+				getClosedOrderInfo(OrderClosedFragment.this.start);
 			}
 		});
 		
 		initData();
 		return contentView;
+
 	}
-	
+
 	private void initView() {
 		view = LayoutInflater.from(getActivity()).inflate(
 				R.layout.item_order_headview, null);
@@ -131,12 +131,12 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 		order_right_line = view.findViewById(R.id.order_right_line);
 	}
 
-	private void initData() {
-		getCompletedOrderInfo(PageUtil.START);
+	public void initData() {
+		getClosedOrderInfo(PageUtil.START);
 	}
 	
 	//查询已完成的订单
-	private void getCompletedOrderInfo(int start){
+	private void getClosedOrderInfo(int start){
 		int user_id = 0;
 		if(context instanceof OrderActivity){
 			OrderActivity activity = (OrderActivity)context;
@@ -149,7 +149,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 			user_id = activity.sessionManager.getUserId();
 		}
 		
-		String url = HttpUtil.BASE_URL + "/order/getCompletedOrderInfoPage.do?start="+start+"&limit="+PageUtil.LIMIT;
+		String url = HttpUtil.BASE_URL + "/order/getClosedOrderInfoPage.do?start="+start+"&limit="+PageUtil.LIMIT;
 		Order order1 = new Order();
 		order1.setSeller_user_id(user_id);
 		
@@ -189,7 +189,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 				orderItem.setSeller_user_id(order.getSeller_user_id()+"");
 				orderItem.setOrdertime(new Date());
 				orderItem.setSerialnum(order.getOrder_id());
-//				orderItem.setAddress("aaaa");
+//					orderItem.setAddress("aaaa");
 				orderItem.setGoodtitle(order.getOrderDetails().get(0).getMerch_name());
 				orderItem.setBuyer(order.getBuyer_user_name());
 				orderItem.setNum(order.getOrderDetails().get(0).getAmount());
@@ -210,7 +210,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 			CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
 		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

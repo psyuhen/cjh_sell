@@ -144,7 +144,22 @@ public class SessionManager {
 	public int getInt(String key){
 		return pref.getInt(key, 0);
 	}
+	
+	/**
+	 * 获取用户ID
+	 * @return
+	 */
+	public int getUserId(){
+		return getInt(KEY_USER_ID);
+	}
 
+	/**
+	 * 获取用户名称
+	 * @return
+	 */
+	public String getUserName(){
+		return get(KEY_NAME);
+	}
 	/**
 	 * Create login session
 	 * */
@@ -160,6 +175,10 @@ public class SessionManager {
 		createLoginSession(user);
 	}
 
+	/**
+	 * 登录时长
+	 * @return
+	 */
 	public int loginLongTime(){
 		Date startday = DateUtil.parseDate(get(LOGIN_TIME), new String[]{"yyyyMMddHHmmss"});
 		if(startday == null){

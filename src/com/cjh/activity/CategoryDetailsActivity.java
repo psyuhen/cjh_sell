@@ -163,8 +163,9 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		case R.id.right_text:
 			attempFinish();
 			break;
-		case R.id.category_details_delete_category_btn:
-			deleteClassify();
+		case R.id.category_details_delete_category_btn://完成
+//			deleteClassify();
+			attempFinish();
 			break;
 		default:
 			break;

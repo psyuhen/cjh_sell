@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.cjh.common.Constants;
 
 public class CommonsUtil {
-
+	
 	public static boolean hasSdcard() {
 		String state = Environment.getExternalStorageState();
 		if (state.equals(Environment.MEDIA_MOUNTED)) {

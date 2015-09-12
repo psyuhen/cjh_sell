@@ -1,11 +1,14 @@
 package com.cjh.bean;
 
+import android.graphics.Bitmap;
+
 public class CategoryItem {
 	private int id;
 	private String title;
 	private int num;
-	private String img;
+	private int img;
 	private String detail;
+	private Bitmap bitmap;
 
 	public int getId() {
 		return id;
@@ -30,12 +33,12 @@ public class CategoryItem {
 	public void setNum(int num) {
 		this.num = num;
 	}
-
-	public String getImg() {
+	
+	public int getImg() {
 		return img;
 	}
 
-	public void setImg(String img) {
+	public void setImg(int img) {
 		this.img = img;
 	}
 
@@ -46,7 +49,13 @@ public class CategoryItem {
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
-	
-	
 
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(Bitmap bitmap) {
+		this.bitmap = bitmap;
+	}
+	
 }

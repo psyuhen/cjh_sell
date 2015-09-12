@@ -27,9 +27,9 @@ public class CategoryFragmentAdapter extends FragmentPagerAdapter {
 		
 		switch (position) {
 		case 0:
-			return GoodsCategoryFragment.newInstance();
+			return new GoodsCategoryFragment(context);
 		case 1:
-			return ADCategoryFragment.newInstance();
+			return new ADCategoryFragment(context);
 		}
 		return null;
 	}

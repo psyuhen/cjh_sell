@@ -13,6 +13,11 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.cjh.adapter.OrderFragmentAdapter;
 import com.cjh.cjh_sell.R;
 
+/**
+ * 我的订单
+ * @author pansen
+ *
+ */
 public class OrdersActivity extends BaseTwoActivity {
 	private RadioGroup radioGroup;
 	private ViewPager mViewPager;

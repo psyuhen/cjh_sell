@@ -10,6 +10,8 @@ public class GoodsItem {
 	private String img;
 	private String tag;
 
+	private String create_time;
+	
 	public int getId() {
 		return id;
 	}
@@ -75,4 +77,11 @@ public class GoodsItem {
 		this.tag = tag;
 	}
 
+	public String getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
 }

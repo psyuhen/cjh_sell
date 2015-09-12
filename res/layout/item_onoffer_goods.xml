@@ -135,7 +135,7 @@
                 android:focusable="false" />
 
             <TextView
-                android:id="@+id/goods_see_textview"
+                android:id="@+id/goods_delete_textview"
                 style="@style/black_small_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

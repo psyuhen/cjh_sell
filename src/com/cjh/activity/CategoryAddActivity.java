@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cjh.adapter.AddImageAdapter;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.ClassifyInfo;
 import com.cjh.cjh_sell.R;
@@ -116,6 +117,9 @@ public class CategoryAddActivity extends BaseTwoActivity{
 			classifyInfo.setName(title);
 			classifyInfo.setDesc(content);
 			classifyInfo.setClassify_type("1");//1为商品
+			
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			classifyInfo.setUser_id(user_id);
 			
 			String url = HttpUtil.BASE_URL + "/classify/add.do";
 			try {

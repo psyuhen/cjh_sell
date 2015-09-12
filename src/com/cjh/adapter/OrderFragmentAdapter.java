@@ -2,20 +2,21 @@ package com.cjh.adapter;
 
 
 
-import com.cjh.fragment.OrderCompletedFragment;
-import com.cjh.fragment.OrderInFragment;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.cjh.fragment.OrderClosedFragment;
+import com.cjh.fragment.OrderCompletedFragment;
+import com.cjh.fragment.OrderInFragment;
 /**
  * 订单适配器
  * @author ps
  *
  */
 public class OrderFragmentAdapter extends FragmentStatePagerAdapter{
-	private int pageCount=2;  //页面数
+	private int pageCount = 3; // 页面数
 	private Context context;
 	/*
 	 * 构造函数
@@ -41,6 +42,9 @@ public class OrderFragmentAdapter extends FragmentStatePagerAdapter{
 		//已完成的订单
 		case 1:
 			return new OrderCompletedFragment(context);
+		//已关闭的订单
+		case 2:
+			return new OrderClosedFragment(context);
 		}
 		return null;
 	}

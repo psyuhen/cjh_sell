@@ -89,7 +89,7 @@
                 <EditText
                     android:id="@+id/goods_detail_title"
                     style="@style/goods_detail_black_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
                     android:background="@drawable/goods_detail_edit"
@@ -108,7 +108,7 @@
                 <EditText
                     android:id="@+id/goods_detail_content"
                     style="@style/goods_detail_black_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
                     android:background="@drawable/goods_detail_edit"
@@ -139,7 +139,7 @@
                     <EditText
                         android:id="@+id/goods_detail_price"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
@@ -165,7 +165,7 @@
                     <EditText
                         android:id="@+id/goods_detail_stock"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
@@ -192,7 +192,7 @@
                     <EditText
                         android:id="@+id/goods_detail_type"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
@@ -255,37 +255,37 @@
 
                 <Button
                     android:id="@+id/goods_details_pubilsh_goods_btn"
-                    style="@style/goods_detail_red_style"
+                    style="@style/white_normal_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20.0dip"
                     android:layout_marginTop="5.0dip"
                     android:layout_toLeftOf="@+id/goods_details_delete_goods_btn"
-                    android:background="@drawable/btn_order_details"
+                    android:background="@drawable/orange_btn"
                     android:padding="10.0dip"
                     android:text="@string/publish_goods_text" />
                 
                 <Button
                     android:id="@+id/goods_details_delete_goods_btn"
-                    style="@style/goods_detail_red_style"
+                    style="@style/white_normal_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20.0dip"
                     android:layout_marginTop="5.0dip"
                     android:layout_toLeftOf="@+id/goods_details_offshelf_btn"
-                    android:background="@drawable/btn_order_details"
+                    android:background="@drawable/orange_btn"
                     android:padding="10.0dip"
                     android:text="@string/delete_goods_text" />
 
                 <Button
                     android:id="@+id/goods_details_offshelf_btn"
-                    style="@style/goods_detail_red_style"
+                    style="@style/white_normal_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20.0dip"
                     android:layout_marginTop="5.0dip"
-                    android:background="@drawable/btn_order_details"
+                    android:background="@drawable/orange_btn"
                     android:padding="10.0dip"
                     android:text="@string/goods_details_offshelft_btn" />
             </RelativeLayout>

@@ -90,28 +90,32 @@ public class OrderItemAdapter extends BaseAdapter {
 		viewHolder.title_text.setText(orderItem.getGoodtitle());
 		viewHolder.img_image.setImageResource(orderItem.getTempImage());
 		viewHolder.order_status.setText(CommonsUtil.getOrderStatus(orderItem.getStatus()));
+		
+		
 		/**
 		 * 长度若大于4.后面不显示
 		 */
-		if (orderItem.getImgList().size() > 4) {
-			Vector<Integer> temp=new Vector<Integer>();
-			for (int i = 0; i < 4; i++) {
-				temp.add(orderItem.getImgList().get(i));
+		List<Integer> imgList = orderItem.getImgList();
+		if(imgList != null){
+			if (imgList.size() > 4) {
+				Vector<Integer> temp=new Vector<Integer>();
+				for (int i = 0; i < 4; i++) {
+					temp.add(imgList.get(i));
+				}
+				temp.add(R.drawable.ic_more);
+				orderImageAdapter = new OrderImageAdapter(context, temp);
+			} else {
+				orderImageAdapter = new OrderImageAdapter(context,imgList);
 			}
-			temp.add(R.drawable.ic_more);
-			orderImageAdapter = new OrderImageAdapter(context, temp);
-		} else {
-			orderImageAdapter = new OrderImageAdapter(context,
-					orderItem.getImgList());
+			viewHolder.order_image.setAdapter(orderImageAdapter);
 		}
-		viewHolder.order_image.setAdapter(orderImageAdapter);
-
+		
 		viewHolder.order_delete_btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(context, "订单已完成", Toast.LENGTH_SHORT).show();
-				context.startActivity(new Intent(context,OrderDetailsActivity.class));
-				
+				Intent intent = new Intent(context, OrderDetailsActivity.class);
+				intent.putExtra("order_id", orderItem.getSerialnum());
+				context.startActivity(intent);
 			}
 		});
 		viewHolder.order_communication_btn

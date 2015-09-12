@@ -89,7 +89,7 @@
                 <EditText
                     android:id="@+id/shop_edit_detail_title"
                     style="@style/goods_detail_black_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
                     android:background="@drawable/goods_detail_edit"
@@ -108,7 +108,7 @@
                 <EditText
                     android:id="@+id/shop_edit_detail_content"
                     style="@style/goods_detail_black_style"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
                     android:background="@drawable/goods_detail_edit"
@@ -126,7 +126,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
-                    android:orientation="horizontal" android:visibility="gone">
+                    android:orientation="horizontal" >
 
                     <TextView
                         android:id="@+id/shop_edit_detail_person_text"
@@ -139,14 +139,14 @@
                     <EditText
                         android:id="@+id/shop_edit_detail_person"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
                         android:text="@string/shop_edit_detail_person" />
                 </LinearLayout>
 
-                <ImageView style="@style/goods_detail_line" android:visibility="gone" />
+                <ImageView style="@style/goods_detail_line" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -165,7 +165,7 @@
                     <EditText
                         android:id="@+id/shop_edit_detail_address"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
@@ -192,7 +192,7 @@
                     <EditText
                         android:id="@+id/shop_edit_detail_tel"
                         style="@style/goods_detail_black_style"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
                         android:background="@drawable/goods_detail_edit"
@@ -200,26 +200,17 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/shop_edit_detail_bottom_rl"
+            <Button
+                android:id="@+id/shop_edit_details_complete_btn"
+                style="@style/white_normal_style"
                 android:layout_width="fill_parent"
-                android:layout_height="50.0dip"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="10.0dip"
-                android:background="@color/whitebg" >
-
-                <Button
-                    android:id="@+id/shop_edit_details_complete_btn"
-                    style="@style/goods_detail_red_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="20.0dip"
-                    android:layout_marginTop="5.0dip"
-                    android:background="@drawable/btn_order_details"
-                    android:padding="10.0dip"
-                    android:text="@string/shop_edit_details_complete_btn" />
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30.0dip"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginRight="5.0dip"
+                android:layout_marginTop="20.0dip"
+                android:background="@drawable/orange_btn"
+                android:text="@string/shop_edit_details_complete_btn" />
         </LinearLayout>
     </ScrollView>
 

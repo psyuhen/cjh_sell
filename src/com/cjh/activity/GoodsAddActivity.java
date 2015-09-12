@@ -269,6 +269,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		merchInfo.setStore_id(store_id);
 		merchInfo.setClassify_id(classify_id);
 		merchInfo.setUnit(type);
+		merchInfo.setOut_published("0");
 		if(!TextUtils.isEmpty(price)){
 			if(Validator.isNumber(price)){
 				merchInfo.setPrice(Float.valueOf(price));

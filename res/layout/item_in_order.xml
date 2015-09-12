@@ -192,6 +192,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
+            <!-- 联系买家 -->
             <Button
                 android:id="@+id/order_communication_btn"
                 style="@style/order_commication_btn_style"
@@ -206,6 +207,7 @@
                 android:focusable="false"
                 android:text="@string/commication_text" />
 
+            <!-- 查看订单 -->
             <Button
                 android:id="@+id/order_delete_btn"
                 style="@style/btn_completed_style"

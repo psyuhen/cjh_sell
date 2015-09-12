@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -9,10 +9,109 @@
         android:id="@+id/good_category_listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="50.0dip"
+        android:background="#f4f4f4"
+        android:cacheColorHint="#ff0000"
         android:divider="@color/gray"
-        android:dividerHeight="8dp"
-        android:layout_marginTop="-8.0dip"
+        android:dividerHeight="2dp"
         android:scrollbars="none" >
     </org.kymjs.aframe.ui.widget.KJListView>
-    
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/edit_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/category_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:background="#fffef9" >
+
+        <RelativeLayout
+            android:id="@+id/add_category_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/add_category_text"
+                style="@style/orange_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/add_category_text" />
+
+            <ImageView
+                android:id="@+id/add_category_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:layout_toLeftOf="@+id/add_category_text"
+                android:background="@drawable/ic_add_category" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5.0dip"
+            android:src="@drawable/goods_layout_divider" />
+
+        <RelativeLayout
+            android:id="@+id/edit_category_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/edit_category_text"
+                style="@style/orange_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/edit_category_text" />
+
+            <ImageView
+                android:id="@+id/edit_category_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:layout_toLeftOf="@+id/edit_category_text"
+                android:background="@drawable/ic_edit_category" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/finish_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/category_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_bg"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/finish_category_rl"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/finish_category_text"
+                style="@style/orange_normal_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/finish_category_text" />
+
+            <ImageView
+                android:id="@+id/finish_category_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5.0dip"
+                android:layout_toLeftOf="@+id/finish_category_text"
+                android:background="@drawable/ic_edit_category" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
