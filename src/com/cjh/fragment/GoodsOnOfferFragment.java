@@ -33,6 +33,7 @@ import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.PageUtil;
@@ -241,13 +242,15 @@ public class GoodsOnOfferFragment extends Fragment {
 				MerchInfo merchInfo = list.get(i);
 				GoodsItem goodsItem = new GoodsItem();
 				goodsItem.setId(merchInfo.getMerch_id());
-				goodsItem.setImg("image");
 				goodsItem.setPrice(merchInfo.getPrice());
 				goodsItem.setSellmount(merchInfo.getSales_volume());
 				goodsItem.setStandard(merchInfo.getUnit());
 				goodsItem.setStock(merchInfo.getIn_stock());
 				goodsItem.setTitle(merchInfo.getName());
 				goodsItem.setCreate_time(merchInfo.getCreate_time());
+				
+				//goodsItem.setImg("image");
+				goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
 				goodsList.add(goodsItem);
 			}
 			

@@ -1,4 +1,4 @@
-package com.cjh.activity;
+package com.cjh.fragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,13 +7,20 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cjh.activity.MainActivity;
+import com.cjh.activity.OrderSourceActivity;
+import com.cjh.auth.SessionManager;
 import com.cjh.bean.FavoriteStat;
 import com.cjh.bean.OrderStat;
 import com.cjh.bean.VisitStat;
@@ -25,12 +32,15 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
-
-public class MarketingActivity extends BaseTwoActivity implements
-		OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarketingActivity.class);
+/**
+ * 统计中心
+ * @author pansen
+ *
+ */
+public class StatisticsFragment extends Fragment implements OnClickListener{
+	private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsFragment.class);
 	private Button order_completed_source_btn;
-	
+
 	//成交订单的今日与昨日
 	private TextView market_today_count;
 	private TextView market_yesterday_count;
@@ -44,42 +54,47 @@ public class MarketingActivity extends BaseTwoActivity implements
 	private TextView market_everyday_collect_today_count;
 	private TextView market_everyday_collect_yesterday_count;
 	
-	//
 	private LineView lineView;
 	private LineView today_mnoney_lineview;
 	private LineView today_customer_lineview;
 	private LineView everyday_collect_lineview;
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_marketing);
-		initView();
-		initData();
+	
+	private SessionManager sessionManager;
+	
+	private Context context;
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 	@Override
-	public void initView() {
-		super.initView();
-		order_completed_source_btn = (Button) findViewById(R.id.order_completed_source_btn);
-		order_completed_source_btn.setOnClickListener(this);
-		right_imgbtn.setVisibility(View.GONE);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View contentView = inflater.inflate(R.layout.fragment_statistics,container, false);
+		sessionManager = ((MainActivity)this.context).sessionManager;
 		
-		market_today_count = (TextView)findViewById(R.id.market_today_count);
-		market_yesterday_count = (TextView)findViewById(R.id.market_yesterday_count);
-		market_money_today_count = (TextView)findViewById(R.id.market_money_today_count);
-		market_money_yesterday_count = (TextView)findViewById(R.id.market_money_yesterday_count);
-		market_customer_today_count = (TextView)findViewById(R.id.market_customer_today_count);
-		market_customer_yesterday_count = (TextView)findViewById(R.id.market_customer_yesterday_count);
-		market_everyday_collect_today_count = (TextView)findViewById(R.id.market_everyday_collect_today_count);
-		market_everyday_collect_yesterday_count = (TextView)findViewById(R.id.market_everyday_collect_yesterday_count);
+		initView(contentView);
+		
+		initData();
+		return contentView;
+	}
 	
-		zouni();
+	public void initView(View contentView) {
+		order_completed_source_btn = (Button)contentView.findViewById(R.id.order_completed_source_btn);
+		order_completed_source_btn.setOnClickListener(this);
+		
+		market_today_count = (TextView)contentView.findViewById(R.id.market_today_count);
+		market_yesterday_count = (TextView)contentView.findViewById(R.id.market_yesterday_count);
+		market_money_today_count = (TextView)contentView.findViewById(R.id.market_money_today_count);
+		market_money_yesterday_count = (TextView)contentView.findViewById(R.id.market_money_yesterday_count);
+		market_customer_today_count = (TextView)contentView.findViewById(R.id.market_customer_today_count);
+		market_customer_yesterday_count = (TextView)contentView.findViewById(R.id.market_customer_yesterday_count);
+		market_everyday_collect_today_count = (TextView)contentView.findViewById(R.id.market_everyday_collect_today_count);
+		market_everyday_collect_yesterday_count = (TextView)contentView.findViewById(R.id.market_everyday_collect_yesterday_count);
+	
+		zouni(contentView);
 	}
 
 	private void initData() {
-		title.setText("统计中心");
-
 		//成交订单
 		String today = DateUtil.today();
 		String yesterday = DateUtil.yesterday();
@@ -150,11 +165,11 @@ public class MarketingActivity extends BaseTwoActivity implements
 	}
 
 	@SuppressLint("ResourceAsColor")
-	public void zouni() {
-		lineView = (LineView) findViewById(R.id.line_view);
-		today_mnoney_lineview = (LineView) findViewById(R.id.today_mnoney_lineview);
-		today_customer_lineview = (LineView) findViewById(R.id.today_customer_lineview);
-		everyday_collect_lineview = (LineView) findViewById(R.id.everyday_collect_lineview);
+	public void zouni(View contentView) {
+		lineView = (LineView) contentView.findViewById(R.id.line_view);
+		today_mnoney_lineview = (LineView) contentView.findViewById(R.id.today_mnoney_lineview);
+		today_customer_lineview = (LineView) contentView.findViewById(R.id.today_customer_lineview);
+		everyday_collect_lineview = (LineView) contentView.findViewById(R.id.everyday_collect_lineview);
 		
 		fillBom(lineView);
 		fillBom(today_mnoney_lineview);
@@ -251,11 +266,9 @@ public class MarketingActivity extends BaseTwoActivity implements
 
 	@Override
 	public void onClick(View v) {
-		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.order_completed_source_btn:
-			startActivity(new Intent(MarketingActivity.this,
-					OrderSourceActivity.class));
+			startActivity(new Intent(context, OrderSourceActivity.class));
 			break;
 
 		default:
@@ -267,7 +280,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -275,10 +288,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return orderStat;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}
@@ -286,7 +299,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -294,10 +307,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}
@@ -347,7 +360,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,favoriteStat);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -355,10 +368,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}
@@ -367,7 +380,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,favoriteStat);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -375,10 +388,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return fStat;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}
@@ -397,7 +410,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,visitStat);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -405,10 +418,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return vStat;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}
@@ -416,7 +429,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,visitStat);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				CommonsUtil.showLongToast(context, "统计失败");
 				return null;
 			}
 			
@@ -424,10 +437,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (InterruptedException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		} catch (ExecutionException e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+			CommonsUtil.showLongToast(context, "统计失败");
 		}
 		return null;
 	}

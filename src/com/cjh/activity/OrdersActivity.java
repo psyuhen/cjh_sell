@@ -85,6 +85,7 @@ public class OrdersActivity extends BaseTwoActivity {
 
 			}
 		});
+		//订单搜索框
 		order_search_edit = (EditText) findViewById(R.id.order_search_edit);
 		order_search_edit.setOnClickListener(new OnClickListener() {
 

@@ -152,6 +152,13 @@ public class SessionManager {
 	public int getUserId(){
 		return getInt(KEY_USER_ID);
 	}
+	/**
+	 * 获取商家ID
+	 * @return
+	 */
+	public int getStoreId(){
+		return getInt("store_id");
+	}
 
 	/**
 	 * 获取用户名称

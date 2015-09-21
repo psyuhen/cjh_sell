@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +27,8 @@ import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 店铺名片展示
@@ -35,7 +36,7 @@ import com.cjh.utils.JsonUtil;
  *
  */
 public class ShopMyFragment extends Fragment implements OnClickListener {
-	public static final String TAG = "ShopMyFragment"; 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShopMyFragment.class);
 	private Context context;
 	
 	private LinearLayout view_in_shop_content_ll;
@@ -123,9 +124,9 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				}
 			}
 		} catch (InterruptedException e) {
-			Log.e(TAG, "根据用户获取商家信息失败", e);
+			LOGGER.error("根据用户获取商家信息失败", e);
 		} catch (ExecutionException e) {
-			Log.e(TAG, "根据用户获取商家信息失败", e);
+			LOGGER.error("根据用户获取商家信息失败", e);
 		}
 		
 	}

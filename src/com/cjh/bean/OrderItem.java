@@ -2,6 +2,8 @@ package com.cjh.bean;
 
 import java.util.Date;
 import java.util.List;
+
+import android.graphics.Bitmap;
 /**
  * 订单javabean
  * @author zkq
@@ -72,6 +74,10 @@ public class OrderItem {
 	 * 临时本地图片
 	 */
 	private List<Integer> imgList; 
+	/**
+	 * 临时本地图片
+	 */
+	private List<Bitmap> bitmapList; 
 	private int tempImage;
 	public int getId() {
 		return id;
@@ -175,6 +181,12 @@ public class OrderItem {
 	}
 	public void setTempImage(int tempImage) {
 		this.tempImage = tempImage;
+	}
+	public List<Bitmap> getBitmapList() {
+		return bitmapList;
+	}
+	public void setBitmapList(List<Bitmap> bitmapList) {
+		this.bitmapList = bitmapList;
 	}
 	
 }

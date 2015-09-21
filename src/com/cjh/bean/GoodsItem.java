@@ -1,5 +1,9 @@
 package com.cjh.bean;
 
+import java.util.List;
+
+import android.graphics.Bitmap;
+
 public class GoodsItem {
 	private int id;
 	private String title;
@@ -9,9 +13,10 @@ public class GoodsItem {
 	private String standard;
 	private String img;
 	private String tag;
-
+	private Bitmap bitmap;
 	private String create_time;
 	
+	private List<MerchDisacount> merchDisacounts;
 	public int getId() {
 		return id;
 	}
@@ -84,4 +89,21 @@ public class GoodsItem {
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
+
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+
+	public void setBitmap(Bitmap bitmap) {
+		this.bitmap = bitmap;
+	}
+
+	public List<MerchDisacount> getMerchDisacounts() {
+		return merchDisacounts;
+	}
+
+	public void setMerchDisacounts(List<MerchDisacount> merchDisacounts) {
+		this.merchDisacounts = merchDisacounts;
+	}
+	
 }

@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.cjh.bean.ClassifyInfo;
+import com.cjh.bean.Coupon;
 import com.cjh.bean.FavoriteStat;
+import com.cjh.bean.MerchDisacount;
 import com.cjh.bean.MerchInfo;
 import com.cjh.bean.Order;
 import com.cjh.bean.OrderStat;
@@ -19,6 +21,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * json工具类
@@ -27,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  */
 public class JsonUtil {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 	/**
 	 * 把json字符串转换为一个Map
 	 * @param json json字符串
@@ -41,11 +45,11 @@ public class JsonUtil {
 		try {
 			map = mapper.readValue(json, typeRef);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("io出错", e);
 		}
 
 		return map;
@@ -73,12 +77,13 @@ public class JsonUtil {
 		try {
 			list = mapper.readValue(json, typeRef);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("io出错", e);
 		}
+
 
 		return list;
 	}
@@ -96,12 +101,13 @@ public class JsonUtil {
 		try {
 			t = mapper.readValue(json, valueType);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			LOGGER.error("json转换出错", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("io出错", e);
 		}
+
 
 		return t;
 	}
@@ -153,5 +159,21 @@ public class JsonUtil {
 	 */
 	public static List<VisitStat> parse2ListVisitStat(String json) {
 		return parse2ListObject(json, new TypeReference<List<VisitStat>>() {});
+	} 
+	/**
+	 * 把json字符串转换为一个List&lt;MerchDisacount&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<MerchDisacount> parse2ListMerchDisacount(String json) {
+		return parse2ListObject(json, new TypeReference<List<MerchDisacount>>() {});
+	} 
+	/**
+	 * 把json字符串转换为一个List&lt;Coupon&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<Coupon> parse2ListCoupon(String json) {
+		return parse2ListObject(json, new TypeReference<List<Coupon>>() {});
 	} 
 }

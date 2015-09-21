@@ -10,6 +10,7 @@ import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,10 +29,13 @@ import com.cjh.activity.OrderDetailsActivity;
 import com.cjh.activity.OrdersActivity;
 import com.cjh.activity.SettingActivity;
 import com.cjh.adapter.OrderItemAdapter;
+import com.cjh.bean.MerchGallery;
 import com.cjh.bean.Order;
+import com.cjh.bean.OrderDetail;
 import com.cjh.bean.OrderItem;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.PageUtil;
@@ -182,6 +186,7 @@ public class OrderClosedFragment extends Fragment implements OnClickListener {
 			
 			for (int i = 0; i < length; i++) {
 				Order order = list.get(i);
+				List<OrderDetail> orderDetails = order.getOrderDetails();
 				
 				OrderItem orderItem = new OrderItem();
 				orderItem.setId(i);
@@ -190,12 +195,38 @@ public class OrderClosedFragment extends Fragment implements OnClickListener {
 				orderItem.setOrdertime(new Date());
 				orderItem.setSerialnum(order.getOrder_id());
 //					orderItem.setAddress("aaaa");
-				orderItem.setGoodtitle(order.getOrderDetails().get(0).getMerch_name());
 				orderItem.setBuyer(order.getBuyer_user_name());
-				orderItem.setNum(order.getOrderDetails().get(0).getAmount());
 				orderItem.setOrdertime(new Date());
 				orderItem.setPrice(order.getAmount_money());
 				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
+				
+				String status = order.getStatus();
+				if(status != null && !"".equals(status)){
+					char[] statusChars = status.toCharArray();
+					orderItem.setStatus(statusChars[0]);
+				}
+				
+				if(orderDetails != null && !orderDetails.isEmpty()){
+					OrderDetail orderDetail = orderDetails.get(0);
+					
+					orderItem.setNum(orderDetail.getAmount());//默认显示第一个商品的数量
+					orderItem.setGoodtitle(orderDetail.getMerch_name());//默认为第一个商品的名称
+					//默认显示第一个商品的图片
+					List<MerchGallery> merchGallerys = orderDetail.getMerchGallerys();
+					if(merchGallerys != null && !merchGallerys.isEmpty()){
+						int gallerySize = merchGallerys.size();
+						List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+						for (int j = 0; j < gallerySize; j++) {
+							Bitmap cacheFile = FileUtil.getCacheFile(merchGallerys.get(j).getName());
+							if(cacheFile == null){
+								continue;
+							}
+							bitmapList.add(cacheFile);
+						}
+						orderItem.setBitmapList(bitmapList);
+					}
+				}
+				
 				orderlist.add(orderItem);
 			}
 			

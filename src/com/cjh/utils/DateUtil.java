@@ -10,12 +10,17 @@ import java.util.Date;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
+
 /**
  * 日期处理工具类
  * @author ps
  * 
  */
 public class DateUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DateUtil.class);
+
 	/**
 	 * 获取当前日期，默认格式为yyyyMMdd
 	 * 
@@ -68,7 +73,7 @@ public class DateUtil {
 		try {
 			date = DateUtils.parseDate(str, parsePatterns);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("转换格式出错", e);
 		}
 
 		return date;

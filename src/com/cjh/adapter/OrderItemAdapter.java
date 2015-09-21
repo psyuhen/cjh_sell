@@ -1,10 +1,10 @@
 package com.cjh.adapter;
 
 import java.util.List;
-import java.util.Vector;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cjh.activity.ChatActivity;
 import com.cjh.activity.OrderDetailsActivity;
@@ -95,7 +94,7 @@ public class OrderItemAdapter extends BaseAdapter {
 		/**
 		 * 长度若大于4.后面不显示
 		 */
-		List<Integer> imgList = orderItem.getImgList();
+		/*List<Integer> imgList = orderItem.getImgList();
 		if(imgList != null){
 			if (imgList.size() > 4) {
 				Vector<Integer> temp=new Vector<Integer>();
@@ -106,6 +105,15 @@ public class OrderItemAdapter extends BaseAdapter {
 				orderImageAdapter = new OrderImageAdapter(context, temp);
 			} else {
 				orderImageAdapter = new OrderImageAdapter(context,imgList);
+			}
+			viewHolder.order_image.setAdapter(orderImageAdapter);
+		}*/
+		List<Bitmap> bitmapList = orderItem.getBitmapList();
+		if(bitmapList != null){
+			if(bitmapList.size() > 4){
+				orderImageAdapter = new OrderImageAdapter(context, bitmapList.subList(0, 4));
+			}else{
+				orderImageAdapter = new OrderImageAdapter(context,bitmapList);
 			}
 			viewHolder.order_image.setAdapter(orderImageAdapter);
 		}

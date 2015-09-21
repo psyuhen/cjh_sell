@@ -383,8 +383,8 @@
     <string name="item_free_ship_check_text_details">海外，港澳台，新疆，内蒙古，西藏，甘肃，宁夏，海南</string>
     <string name="confirm_free_ship_btn">确定</string>
     <string name="cancel_freeship_btn">取消</string>
-    <string name="limit_time_discount_text">折后价格</string>
-    <string name="limit_time_discount_hint">请输入折后价格</string>
+    <string name="limit_time_discount_text">优惠价格</string>
+    <string name="limit_time_discount_hint">请输入优惠价格</string>
     <string name="limit_time_starttime">开始时间</string>
     <string name="limit_time_starttime_hint">请点击添加开始时间</string>
     <string name="limit_time_endtime_text">结束时间</string>

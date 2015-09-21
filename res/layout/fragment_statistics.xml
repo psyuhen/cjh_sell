@@ -5,15 +5,6 @@
     android:layout_marginBottom="50.0dip"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/title_bar"
-        layout="@layout/title_bar" />
-
-    <include
-        android:id="@+id/content_head"
-        layout="@layout/content_head"
-        android:visibility="gone" />
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
@@ -483,8 +474,8 @@
                         android:id="@+id/market_customer_today_rl"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1" 
-                        android:visibility="gone">
+                        android:layout_weight="1"
+                        android:visibility="gone" >
 
                         <ImageView
                             android:id="@+id/market_customer_today_image"
@@ -695,100 +686,6 @@
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/market_bottom_rl"
-                android:layout_width="fill_parent"
-                android:layout_height="70.0dip"
-                android:orientation="horizontal"
-                android:visibility="gone" >
-
-                <RelativeLayout
-                    android:id="@+id/market_yessales_rl"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1" >
-
-                    <ImageView
-                        android:id="@+id/market_yessales_image"
-                        android:layout_width="40.0dip"
-                        android:layout_height="40.0dip"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:background="@drawable/marketing_left_yessales_icon" />
-
-                    <TextView
-                        android:id="@+id/market_yessales_text"
-                        style="@style/market_data_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_toRightOf="@+id/market_yessales_image"
-                        android:text="@string/market_yessales_text" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/market_historysales_rl"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1" >
-
-                    <ImageView
-                        android:id="@+id/market_historysales_image"
-                        android:layout_width="40.0dip"
-                        android:layout_height="40.0dip"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:background="@drawable/marketing_center_historysales_icon" />
-
-                    <TextView
-                        android:id="@+id/market_historysales_text"
-                        style="@style/market_data_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_toRightOf="@+id/market_historysales_image"
-                        android:text="@string/market_historysales_text" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/market_goodsscannum_rl"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1" >
-
-                    <ImageView
-                        android:id="@+id/market_goodsscannum_image"
-                        android:layout_width="40.0dip"
-                        android:layout_height="40.0dip"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:background="@drawable/marketing_right_goodsscannum_icon" />
-
-                    <TextView
-                        android:id="@+id/market_goodsscannum_text"
-                        style="@style/market_data_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10.0dip"
-                        android:layout_toRightOf="@+id/market_goodsscannum_image"
-                        android:text="@string/market_goodsscannum_text" />
-
-                    <ImageView
-                        android:id="@+id/market_special_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10.0dip"
-                        android:background="@drawable/arrow_icon" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <ImageView style="@style/market_item_line" />
 
             <Button
                 android:id="@+id/order_completed_source_btn"

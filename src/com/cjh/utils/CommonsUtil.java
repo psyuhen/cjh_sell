@@ -1,6 +1,7 @@
 package com.cjh.utils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.cjh.common.Constants;
+import com.cjh.common.LineView;
 
 public class CommonsUtil {
 	
@@ -90,4 +92,19 @@ public class CommonsUtil {
 			return "";
 		}
 	}
+
+	public static void fillData(LineView lineView) {
+		ArrayList<String> bottomlist = new ArrayList<String>();
+		for (int i = 0; i < 12; i++) {
+			bottomlist.add((i * 2) + ":00");
+		}
+		lineView.setBottomTextList(bottomlist);
+		ArrayList<Integer> dataslist = new ArrayList<Integer>();
+		int random = (int) (Math.random() * 100 + 1);
+		for (int i = 0; i < 12; i++) {
+			dataslist.add((int) (Math.random() * random));
+		}
+		lineView.setDataList(dataslist);
+	}
+
 }

@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
 import com.cjh.fragment.MeFragment;
-import com.cjh.fragment.OrderFragment;
 import com.cjh.fragment.ShopFragment;
+import com.cjh.fragment.StatisticsFragment;
 /**
  * 首页
  * @author ps
@@ -113,10 +113,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				popAllFragmentsExceptTheBottomOne();
 				FragmentTransaction ft = fMgr.beginTransaction();
 				ft.hide(fMgr.findFragmentByTag("navFragment"));
-				OrderFragment gf = new OrderFragment();
-				gf.setContext(MainActivity.this);
-				ft.add(R.id.fragmentRoot, gf, "OrderFragment");
-				ft.addToBackStack("OrderFragment");
+				StatisticsFragment sf = new StatisticsFragment();
+				sf.setContext(MainActivity.this);
+				ft.add(R.id.fragmentRoot, sf, "StatisticsFragment");
+				ft.addToBackStack("StatisticsFragment");
 				ft.commit();
 				initTopRightIcon();
 			}

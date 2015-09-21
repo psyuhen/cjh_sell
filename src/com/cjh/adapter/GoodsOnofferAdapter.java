@@ -23,9 +23,12 @@ import com.cjh.activity.GoodsViewActivity;
 import com.cjh.activity.LimitTimeActivity;
 import com.cjh.activity.LimitTimeAddActivity;
 import com.cjh.bean.GoodsItem;
+import com.cjh.bean.MerchDisacount;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
+import com.cjh.utils.JsonUtil;
+import com.cjh.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -90,15 +93,32 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		 */
 		final GoodsItem goodsItem = goodsList.get(position);
 		
+		float price = goodsItem.getPrice();
 		if (context instanceof LimitTimeActivity) {
-			viewHolder.goods_discount.setVisibility(View.VISIBLE);
-			viewHolder.goods_discount.setText("8.0折");
-			viewHolder.original_price.setText("￥"+ goodsItem.getPrice());
-			viewHolder.original_price.setVisibility(View.VISIBLE);
-			viewHolder.original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-			viewHolder.price_text.setText("￥" + (goodsItem.getPrice() - 10));
+//			MerchDisacount disacount = queryFirst(goodsItem.getId()+"");//TODO 这个地方不合理，待优化，应该从sql里面一次性查询出来而不是每次都要查询
+			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
+			
+			if(merchDisacounts == null || merchDisacounts.isEmpty()){//当没有优惠信息的时候
+				viewHolder.price_text.setText("￥" + StringUtil.format2string(price));
+			}else{
+				MerchDisacount disacount  = merchDisacounts.get(0);
+				
+				float disacount_money = disacount.getDisacount_money();
+				disacount_money = (disacount_money < 0.0f) ? 0.0f : disacount_money;
+				
+				if(disacount_money > 0){
+					float dis = disacount_money / price * 10;
+					viewHolder.goods_discount.setVisibility(View.VISIBLE);
+					viewHolder.goods_discount.setText(StringUtil.format2string(dis) + "折");
+				}
+				viewHolder.original_price.setText("￥"+ StringUtil.format2string(price));
+				viewHolder.original_price.setVisibility(View.VISIBLE);
+				viewHolder.original_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+				viewHolder.price_text.setText("￥" + StringUtil.format2string(price - disacount_money));
+			}
+			
 		} else {
-			viewHolder.price_text.setText("￥" + goodsItem.getPrice());
+			viewHolder.price_text.setText("￥" + StringUtil.format2string(price));
 		}
 
 		viewHolder.title_text.setText(goodsItem.getTitle());
@@ -106,7 +126,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		viewHolder.stock_text.setText("库存" + goodsItem.getStock()+ "件");
 		viewHolder.standard_text.setText("规格:" + goodsItem.getStandard());
 		
-		if (position % 3 == 1) {
+		/*if (position % 3 == 1) {
 			viewHolder.img_image.setImageResource(R.drawable.c1);
 		}
 		if (position % 3 == 2) {
@@ -114,7 +134,10 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		}
 		if (position % 3 == 0) {
 			viewHolder.img_image.setImageResource(R.drawable.c3);
-		}
+		}*/
+		
+		viewHolder.img_image.setImageBitmap(goodsItem.getBitmap());
+		
 		//删除
 		viewHolder.good_delete_image_rl.setOnClickListener(new OnClickListener() {
 			@Override
@@ -195,5 +218,29 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			CommonsUtil.showLongToast(context, "删除商品失败");
 			LOGGER.error(">>> 删除商品失败",e);
 		}
+	}
+	
+	/**
+	 * 根据商品ID查询优惠信息
+	 * @param merch_id
+	 * @return
+	 */
+	private MerchDisacount queryFirst(String merch_id){
+		String url = HttpUtil.BASE_URL + "/disacount/queryFirstByMerchId.do?merch_id="+merch_id;
+		try {
+			String listJson = HttpUtil.getRequest(url);
+			if(listJson == null){
+				return null;
+			}
+			
+			MerchDisacount disacount = JsonUtil.parse2Object(listJson, MerchDisacount.class);
+			return disacount;
+		} catch (InterruptedException e) {
+			LOGGER.error("查询优惠信息失败", e);
+		} catch (ExecutionException e) {
+			LOGGER.error("查询优惠信息失败", e);
+		}
+		
+		return null;
 	}
 }

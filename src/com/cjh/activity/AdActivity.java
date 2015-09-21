@@ -14,13 +14,17 @@ import android.widget.SimpleAdapter;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.MyGridView;
 
+/**
+ * 营销中心
+ * @author pansen
+ *
+ */
 public class AdActivity extends BaseTwoActivity {
 	private MyGridView mGridView;
 	private List<HashMap<String, Object>> maps;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ad);
 		initView();
@@ -29,14 +33,14 @@ public class AdActivity extends BaseTwoActivity {
 
 	@Override
 	public void initView() {
-		// TODO Auto-generated method stub
+		
 		super.initView();
 		mGridView = (MyGridView) findViewById(R.id.ad_gridview);
 		maps = new ArrayList<HashMap<String, Object>>();
 	}
 
 	private void initData() {
-		// TODO Auto-generated method stub
+		
 		right_imgbtn.setVisibility(View.GONE);
 		title.setText("营销推广");
 		loadLocalData();
@@ -53,9 +57,9 @@ public class AdActivity extends BaseTwoActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long len) {
-			// TODO Auto-generated method stub
-			HashMap<String, Object> map = maps.get(position);
-			String title = (String) map.get("title");
+			
+//			HashMap<String, Object> map = maps.get(position);
+//			String title = (String) map.get("title");
 			switch (position) {
 			case 0:
 				startActivity(new Intent(AdActivity.this, CouponsActivity.class));
@@ -64,12 +68,10 @@ public class AdActivity extends BaseTwoActivity {
 				startActivity(new Intent(AdActivity.this, LimitTimeActivity.class));
 				break;
 			case 2:
-				startActivity(new Intent(AdActivity.this,
-						SecretDiscountActivity.class));
+				startActivity(new Intent(AdActivity.this, SecretDiscountActivity.class));
 				break;
 			case 3:
-				startActivity(new Intent(AdActivity.this,
-						FreeShippingActivity.class));
+				startActivity(new Intent(AdActivity.this, FreeShippingActivity.class));
 				break;
 			default:
 				break;
@@ -79,7 +81,7 @@ public class AdActivity extends BaseTwoActivity {
 	}
 
 	private void loadLocalData() {
-		// TODO Auto-generated method stub
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "店铺优惠券");
 		map.put("image", R.drawable.ic_ad_ticket);

@@ -23,6 +23,7 @@ import com.cjh.bean.MerchInfo;
 import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
@@ -100,13 +101,14 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					
 					GoodsItem goodsItem = new GoodsItem();
 					goodsItem.setId(merchInfo.getMerch_id());
-					goodsItem.setImg("image");
+//					goodsItem.setImg("image");
 					goodsItem.setPrice(merchInfo.getPrice());
 					goodsItem.setSellmount(merchInfo.getSales_volume());//销量
 					goodsItem.setStandard(merchInfo.getUnit());
 					goodsItem.setStock(merchInfo.getIn_stock());
 					goodsItem.setTitle(merchInfo.getName());
 					
+					goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
 					goodsList.add(goodsItem);
 				}
 			}
@@ -135,13 +137,14 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					
 					GoodsItem goodsItem = new GoodsItem();
 					goodsItem.setId(merchInfo.getMerch_id());
-					goodsItem.setImg("image");
+//					goodsItem.setImg("image");
 					goodsItem.setPrice(merchInfo.getPrice());
 					goodsItem.setSellmount(merchInfo.getSales_volume());//销量
 					goodsItem.setStandard(merchInfo.getUnit());
 					goodsItem.setStock(merchInfo.getIn_stock());
 					goodsItem.setTitle(merchInfo.getName());
 					
+					goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
 					goodsList.add(goodsItem);
 				}
 			}

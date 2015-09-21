@@ -8,13 +8,22 @@
         android:id="@+id/title_bar"
         layout="@layout/title_bar" />
 
-    <ListView
+   <!--  <ListView
         android:id="@+id/mListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@color/gray"
         android:dividerHeight="5dp"
         android:scrollbars="none" >
-    </ListView>
-
+    </ListView> -->
+    <org.kymjs.aframe.ui.widget.KJListView
+        android:id="@+id/mListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f4f4f4"
+        android:cacheColorHint="#ff0000"
+        android:divider="@color/gray"
+        android:dividerHeight="5dp"
+        android:scrollbars="none" >
+    </org.kymjs.aframe.ui.widget.KJListView>
 </LinearLayout>

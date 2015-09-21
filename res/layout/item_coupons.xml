@@ -24,7 +24,7 @@
                 android:layout_centerHorizontal="true" />
 
             <TextView
-                android:id="@+id/item_coupons_eenoughmoney"
+                android:id="@+id/item_coupons_enoughmoney"
                 style="@style/black_normal_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
