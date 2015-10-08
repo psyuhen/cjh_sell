@@ -1,7 +1,5 @@
 package com.cjh.activity;
 
-import java.util.concurrent.ExecutionException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -74,9 +72,7 @@ public class RegisteActivity extends BaseTwoActivity{
 						if(request == null){
 							CommonsUtil.showLongToast(getApplicationContext(), "网络或者服务器异常");
 						}
-					} catch (InterruptedException e) {
-						LOGGER.error(">>> 判断手机号码是否被注册失败", e);
-					} catch (ExecutionException e) {
+					} catch (Exception e) {
 						LOGGER.error(">>> 判断手机号码是否被注册失败", e);
 					}
 				}

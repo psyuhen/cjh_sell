@@ -29,6 +29,11 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 	@Override
 	public void initView() {
 		super.initView();
+		right_text.setVisibility(View.VISIBLE);
+		right_text.setText("完成");
+		right_imgbtn.setVisibility(View.GONE);
+		title.setText("个人信息");
+		
 		setting_item_about_rl=(RelativeLayout) findViewById(R.id.setting_item_about_rl);
 		setting_item_about_rl.setOnClickListener(this);
 		setting_name_text_details = (TextView)findViewById(R.id.setting_name_text_details);
@@ -36,8 +41,7 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 	}
 
 	private void initData() {
-		right_imgbtn.setVisibility(View.GONE);
-		title.setText("设置");
+		
 	}
 	
 	@Override

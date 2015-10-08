@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -15,14 +14,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 
 import com.cjh.activity.GoodActivity;
 import com.cjh.activity.GoodsAddActivity;
@@ -115,6 +114,7 @@ public class GoodsSoldOutFragment extends Fragment {
 				GoodsItem item = (GoodsItem)parent.getItemAtPosition(position);
 				Intent intent = new Intent(getActivity(), GoodsDetailsActivity.class);
 				intent.putExtra("merch_id", item.getId());
+				intent.putExtra("out_published", "1");//是否下架，1为下架
 				startActivity(intent);
 			}
 		});
@@ -236,7 +236,7 @@ public class GoodsSoldOutFragment extends Fragment {
 				MerchInfo merchInfo = list.get(i);
 				GoodsItem goodsItem = new GoodsItem();
 				goodsItem.setId(merchInfo.getMerch_id());
-//				goodsItem.setImg("image");
+				goodsItem.setDesc(merchInfo.getDesc());
 				goodsItem.setPrice(merchInfo.getPrice());
 				goodsItem.setSellmount(merchInfo.getSales_volume());
 				goodsItem.setStandard(merchInfo.getUnit());
@@ -251,10 +251,7 @@ public class GoodsSoldOutFragment extends Fragment {
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsOnsoldoutAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询商品列表失败", e);
-			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询商品列表失败", e);
 			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 		}

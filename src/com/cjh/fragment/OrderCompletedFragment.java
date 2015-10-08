@@ -1,9 +1,7 @@
 package com.cjh.fragment;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -35,6 +33,7 @@ import com.cjh.bean.OrderDetail;
 import com.cjh.bean.OrderItem;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.DateUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
@@ -192,11 +191,10 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 				orderItem.setId(i);
 				orderItem.setBuyer_user_id(order.getBuyer_user_id()+"");
 				orderItem.setSeller_user_id(order.getSeller_user_id()+"");
-				orderItem.setOrdertime(new Date());
 				orderItem.setSerialnum(order.getOrder_id());
 //				orderItem.setAddress("aaaa");
 				orderItem.setBuyer(order.getBuyer_user_name());
-				orderItem.setOrdertime(new Date());
+				orderItem.setOrdertime(DateUtil.parseDate(order.getTrad_time(), new String[]{"yyyyMMddHHmmss"}));//订单时间
 				orderItem.setPrice(order.getAmount_money());
 				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
 				
@@ -232,10 +230,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			orderItemAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询订单列表失败", e);
-			CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询订单列表失败", e);
 			CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
 		}

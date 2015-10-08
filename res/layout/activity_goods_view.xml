@@ -35,6 +35,7 @@
                     android:text="@string/goods_view_title" />
 
                 <ImageView
+                    android:id="@+id/goods_view_iv01"
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/goods_view_image_height"
                     android:background="@drawable/pg1" />
@@ -127,6 +128,7 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/me_category_icon" />
 
+                        <!-- 查看商品分类 -->
                         <TextView
                             android:id="@+id/goods_view_show_category_text"
                             style="@style/decorate_small_black_style"
@@ -157,6 +159,7 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/me_shop_icon" />
 
+                        <!-- 进入店铺 -->
                         <TextView
                             android:id="@+id/goods_view_enter_shop_text"
                             style="@style/decorate_small_black_style"
@@ -188,7 +191,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20.0dip"
                     android:background="@drawable/btn_common"
-                    android:text="@string/goods_view_btn_joinus_text" />
+                    android:text="@string/goods_view_btn_joinus_text" 
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -65,7 +65,7 @@ public class QiNiuUtil {
 			if(json != null){
 				Boolean isDel = Boolean.valueOf(json);
 				if(isDel){
-					LOGGER.error(">>> 删除文件["+key+"]成功");
+					LOGGER.info(">>> 删除文件["+key+"]成功");
 				}
 				return isDel;
 			}
@@ -89,9 +89,7 @@ public class QiNiuUtil {
 			if(json != null){
 				return json;
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 获取token失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 获取token失败",e);
 		}
 		
@@ -113,9 +111,7 @@ public class QiNiuUtil {
 			if(json != null){
 				return json;
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 获取文件URL失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 获取文件URL失败",e);
 		}
 		

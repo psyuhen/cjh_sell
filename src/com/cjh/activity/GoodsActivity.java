@@ -2,26 +2,18 @@ package com.cjh.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.cjh.adapter.GoodsFragmentAdapter;
 import com.cjh.adapter.GoodsOnofferAdapter;
-import com.cjh.auth.SessionManager;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
-import com.cjh.bean.Store;
-import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
@@ -101,7 +93,7 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					
 					GoodsItem goodsItem = new GoodsItem();
 					goodsItem.setId(merchInfo.getMerch_id());
-//					goodsItem.setImg("image");
+					goodsItem.setDesc(merchInfo.getDesc());
 					goodsItem.setPrice(merchInfo.getPrice());
 					goodsItem.setSellmount(merchInfo.getSales_volume());//销量
 					goodsItem.setStandard(merchInfo.getUnit());
@@ -112,9 +104,7 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					goodsList.add(goodsItem);
 				}
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 根据商家ID查询商品信息失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 根据商家ID查询商品信息失败",e);
 		}
 	}
@@ -137,7 +127,7 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					
 					GoodsItem goodsItem = new GoodsItem();
 					goodsItem.setId(merchInfo.getMerch_id());
-//					goodsItem.setImg("image");
+					goodsItem.setDesc(merchInfo.getDesc());
 					goodsItem.setPrice(merchInfo.getPrice());
 					goodsItem.setSellmount(merchInfo.getSales_volume());//销量
 					goodsItem.setStandard(merchInfo.getUnit());
@@ -148,9 +138,7 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					goodsList.add(goodsItem);
 				}
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 根据分类ID查询商品信息失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 根据分类ID查询商品信息失败",e);
 		}
 	}

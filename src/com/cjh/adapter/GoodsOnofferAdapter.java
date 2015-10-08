@@ -1,7 +1,6 @@
 package com.cjh.adapter;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -63,8 +62,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_onoffer_goods, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.item_onoffer_goods, null);
 			viewHolder.title_text = (TextView) convertView.findViewById(R.id.goods_title);
 			viewHolder.price_text = (TextView) convertView.findViewById(R.id.goods_price);
 			viewHolder.sellmount_text = (TextView) convertView.findViewById(R.id.goods_sell_mount);
@@ -94,20 +92,19 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		final GoodsItem goodsItem = goodsList.get(position);
 		
 		float price = goodsItem.getPrice();
+		boolean isSetNull = true;
 		if (context instanceof LimitTimeActivity) {
-//			MerchDisacount disacount = queryFirst(goodsItem.getId()+"");//TODO 这个地方不合理，待优化，应该从sql里面一次性查询出来而不是每次都要查询
 			List<MerchDisacount> merchDisacounts = goodsItem.getMerchDisacounts();
 			
-			if(merchDisacounts == null || merchDisacounts.isEmpty()){//当没有优惠信息的时候
-				viewHolder.price_text.setText("￥" + StringUtil.format2string(price));
-			}else{
+			if(merchDisacounts != null && !merchDisacounts.isEmpty()){
+				isSetNull = false;
 				MerchDisacount disacount  = merchDisacounts.get(0);
 				
 				float disacount_money = disacount.getDisacount_money();
 				disacount_money = (disacount_money < 0.0f) ? 0.0f : disacount_money;
 				
 				if(disacount_money > 0){
-					float dis = disacount_money / price * 10;
+					float dis = (1 - disacount_money / price) * 10;
 					viewHolder.goods_discount.setVisibility(View.VISIBLE);
 					viewHolder.goods_discount.setText(StringUtil.format2string(dis) + "折");
 				}
@@ -117,8 +114,15 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 				viewHolder.price_text.setText("￥" + StringUtil.format2string(price - disacount_money));
 			}
 			
-		} else {
+		}
+		
+		if(isSetNull){
 			viewHolder.price_text.setText("￥" + StringUtil.format2string(price));
+			viewHolder.original_price.setText(null);
+			viewHolder.original_price.setVisibility(View.GONE);
+			viewHolder.original_price.getPaint().setFlags(0);
+			viewHolder.goods_discount.setText(null);
+			viewHolder.goods_discount.setVisibility(View.GONE);
 		}
 
 		viewHolder.title_text.setText(goodsItem.getTitle());
@@ -157,7 +161,9 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		viewHolder.good_see_image_rl.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				context.startActivity(new Intent(context, GoodsViewActivity.class));
+				Intent intent = new Intent(context, GoodsViewActivity.class);
+				intent.putExtra("merch_id", goodsItem.getId());
+				context.startActivity(intent);
 			}
 		});
 		//复制
@@ -171,7 +177,11 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		viewHolder.good_share_image_rl.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Toast.makeText(context, "分享商品", Toast.LENGTH_SHORT).show();
+				Intent intent=new Intent(Intent.ACTION_SEND);  
+                intent.setType("text/plain");  
+                intent.putExtra(Intent.EXTRA_SUBJECT, "分享");  
+                intent.putExtra(Intent.EXTRA_TEXT, "["+goodsItem.getTitle()+"]:"+goodsItem.getDesc());  
+                context.startActivity(Intent.createChooser(intent, "分享到")); 
 			}
 		});
 		return convertView;
@@ -211,10 +221,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 				this.notifyDataSetChanged();
 			}
 			
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(context, "删除商品失败");
-			LOGGER.error(">>> 删除商品失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showLongToast(context, "删除商品失败");
 			LOGGER.error(">>> 删除商品失败",e);
 		}
@@ -235,9 +242,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			
 			MerchDisacount disacount = JsonUtil.parse2Object(listJson, MerchDisacount.class);
 			return disacount;
-		} catch (InterruptedException e) {
-			LOGGER.error("查询优惠信息失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询优惠信息失败", e);
 		}
 		

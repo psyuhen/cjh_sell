@@ -1,7 +1,6 @@
 package com.cjh.activity;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -115,10 +114,7 @@ public class LimitTimeDetailsAddActivity extends BaseTwoActivity{
 		try {
 			String listJson = HttpUtil.postRequest(url,merchDisacount);
 			CommonsUtil.showLongToast(getApplicationContext(), listJson);
-		} catch (InterruptedException e) {
-			LOGGER.error("新增优惠信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "新增优惠信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("新增优惠信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "新增优惠信息失败");
 		}
@@ -170,10 +166,7 @@ public class LimitTimeDetailsAddActivity extends BaseTwoActivity{
 		try {
 			String listJson = HttpUtil.postRequest(url,merchDisacount);
 			CommonsUtil.showLongToast(getApplicationContext(), listJson);
-		} catch (InterruptedException e) {
-			LOGGER.error("修改优惠信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "修改优惠信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("修改优惠信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "修改优惠信息失败");
 		}
@@ -197,10 +190,7 @@ public class LimitTimeDetailsAddActivity extends BaseTwoActivity{
 				
 				disacount_id = merchDisacount.getDisacount_id();
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error("查询优惠信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询优惠信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠信息失败");
 		}

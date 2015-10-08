@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -144,7 +143,9 @@ public class GoodsAddActivity extends BaseTwoActivity {
 	private void queryclassify() {
 		categoryList=new ArrayList<CategoryItem>();
 		
-		String url = HttpUtil.BASE_URL + "/classify/querybytype.do?classify_type="+1;
+//		String url = HttpUtil.BASE_URL + "/classify/querybytype.do?classify_type="+1;
+		int user_id = sessionManager.getUserId();
+		String url = HttpUtil.BASE_URL + "/classify/querybyuserid.do?user_id="+user_id;
 		try {
 			String jsons = HttpUtil.getRequest(url);
 			if(jsons == null){
@@ -164,10 +165,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				
 				categoryList.add(categoryItem);
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询分类列表失败",e);
-			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询分类列表失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 		}
@@ -338,10 +336,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			
 			//startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
 			GoodsAddActivity.this.finish();
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 添加商品失败",e);
-			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 添加商品失败",e);
 			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
 		}
@@ -359,10 +354,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 更新图片失败",e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 更新图片失败",e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		}
@@ -455,7 +447,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				lists.add(addImage);
 				adapter.notifyDataSetChanged();
 				
-				File image = ImageUtil.bitmap2file(GoodsAddActivity.this, photo);
+				File image = ImageUtil.bitmap2file(photo);
 				if(image != null){
 					addImage.setFile(image);
 					addImage.setFileName(image.getName());

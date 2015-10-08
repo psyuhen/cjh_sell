@@ -195,7 +195,7 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 				int store_id = user.getStore_id();
 				if(store_id > 0){
 					sessionManager.putInt("store_id", store_id);
-					sessionManager.put("store_name", user.getName());
+					sessionManager.put("store_name", user.getStore_name());
 					
 					startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				}else{

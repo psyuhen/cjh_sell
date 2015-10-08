@@ -2,7 +2,6 @@ package com.cjh.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -174,10 +173,7 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsCategoryAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询分类列表失败", e);
-			CommonsUtil.showShortToast(getActivity(), "查询分类列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询分类列表失败", e);
 			CommonsUtil.showShortToast(getActivity(), "查询分类列表失败");
 		}

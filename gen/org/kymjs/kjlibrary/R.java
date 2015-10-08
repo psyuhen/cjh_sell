@@ -54,54 +54,54 @@ public final class R {
 		public static final int indicator_right_padding = 0x7f060000;
 	}
 	public static final class drawable {
-		public static final int color_progressbar = 0x7f020022;
-		public static final int default_indicator_arrow = 0x7f02002a;
-		public static final int default_indicator_rotate = 0x7f02002b;
-		public static final int ic_launcher = 0x7f020056;
-		public static final int image_progress = 0x7f020057;
-		public static final int indicator_bg_bottom = 0x7f020058;
-		public static final int indicator_bg_top = 0x7f020059;
+		public static final int color_progressbar = 0x7f020023;
+		public static final int default_indicator_arrow = 0x7f02002b;
+		public static final int default_indicator_rotate = 0x7f02002c;
+		public static final int ic_launcher = 0x7f020066;
+		public static final int image_progress = 0x7f020074;
+		public static final int indicator_bg_bottom = 0x7f020075;
+		public static final int indicator_bg_top = 0x7f020076;
 	}
 	public static final class id {
 		public static final int both = 0x7f070003;
 		public static final int disabled = 0x7f070004;
-		public static final int fl_inner = 0x7f070250;
+		public static final int fl_inner = 0x7f0702c4;
 		public static final int flip = 0x7f07000a;
 		public static final int gridview = 0x7f070000;
 		public static final int manualOnly = 0x7f070005;
-		public static final int pagination_footer_content = 0x7f07023f;
-		public static final int pagination_footer_hint_textview = 0x7f070240;
-		public static final int pagination_footer_progressbar = 0x7f070241;
-		public static final int pagination_header_arrow = 0x7f070246;
-		public static final int pagination_header_content = 0x7f070242;
-		public static final int pagination_header_hint_textview = 0x7f070244;
-		public static final int pagination_header_progressbar = 0x7f070247;
-		public static final int pagination_header_text = 0x7f070243;
-		public static final int pagination_header_time = 0x7f070245;
+		public static final int pagination_footer_content = 0x7f0702b2;
+		public static final int pagination_footer_hint_textview = 0x7f0702b3;
+		public static final int pagination_footer_progressbar = 0x7f0702b4;
+		public static final int pagination_header_arrow = 0x7f0702b9;
+		public static final int pagination_header_content = 0x7f0702b5;
+		public static final int pagination_header_hint_textview = 0x7f0702b7;
+		public static final int pagination_header_progressbar = 0x7f0702ba;
+		public static final int pagination_header_text = 0x7f0702b6;
+		public static final int pagination_header_time = 0x7f0702b8;
 		public static final int pullDownFromTop = 0x7f070006;
 		public static final int pullFromEnd = 0x7f070007;
 		public static final int pullFromStart = 0x7f070008;
 		public static final int pullUpFromBottom = 0x7f070009;
-		public static final int pull_to_refresh_image = 0x7f07024c;
-		public static final int pull_to_refresh_progress = 0x7f07024d;
-		public static final int pull_to_refresh_sub_text = 0x7f07024f;
-		public static final int pull_to_refresh_text = 0x7f07024e;
+		public static final int pull_to_refresh_image = 0x7f0702c0;
+		public static final int pull_to_refresh_progress = 0x7f0702c1;
+		public static final int pull_to_refresh_sub_text = 0x7f0702c3;
+		public static final int pull_to_refresh_text = 0x7f0702c2;
 		public static final int rotate = 0x7f07000b;
 		public static final int scrollview = 0x7f070002;
-		public static final int splash = 0x7f0701b6;
-		public static final int splash_ad = 0x7f0701b8;
-		public static final int splash_back = 0x7f0701b7;
-		public static final int splash_logo = 0x7f0701b9;
+		public static final int splash = 0x7f07020d;
+		public static final int splash_ad = 0x7f07020f;
+		public static final int splash_back = 0x7f07020e;
+		public static final int splash_logo = 0x7f070210;
 		public static final int webview = 0x7f070001;
 	}
 	public static final class layout {
-		public static final int app_msg = 0x7f030015;
-		public static final int base_splash = 0x7f030016;
-		public static final int pagination_listview_footer = 0x7f03002a;
-		public static final int pagination_listview_header = 0x7f03002b;
-		public static final int pull_to_refresh_header = 0x7f03002f;
-		public static final int pull_to_refresh_header_horizontal = 0x7f030030;
-		public static final int pull_to_refresh_header_vertical = 0x7f030031;
+		public static final int app_msg = 0x7f030022;
+		public static final int base_splash = 0x7f030023;
+		public static final int pagination_listview_footer = 0x7f03003f;
+		public static final int pagination_listview_header = 0x7f030040;
+		public static final int pull_to_refresh_header = 0x7f030045;
+		public static final int pull_to_refresh_header_horizontal = 0x7f030046;
+		public static final int pull_to_refresh_header_vertical = 0x7f030047;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f080000;

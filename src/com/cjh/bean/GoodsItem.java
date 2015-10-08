@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 public class GoodsItem {
 	private int id;
 	private String title;
+	private String desc;
 	private int stock;
 	private int sellmount;
 	private float price;
@@ -31,6 +32,14 @@ public class GoodsItem {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 	public int getStock() {

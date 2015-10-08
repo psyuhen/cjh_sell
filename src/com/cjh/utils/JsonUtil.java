@@ -11,6 +11,7 @@ import java.util.Map;
 import com.cjh.bean.ClassifyInfo;
 import com.cjh.bean.Coupon;
 import com.cjh.bean.FavoriteStat;
+import com.cjh.bean.Gallery;
 import com.cjh.bean.MerchDisacount;
 import com.cjh.bean.MerchInfo;
 import com.cjh.bean.Order;
@@ -175,5 +176,13 @@ public class JsonUtil {
 	 */
 	public static List<Coupon> parse2ListCoupon(String json) {
 		return parse2ListObject(json, new TypeReference<List<Coupon>>() {});
+	} 
+	/**
+	 * 把json字符串转换为一个List&lt;Gallery&gt;
+	 * @param json json字符串
+	 * @return
+	 */
+	public static List<Gallery> parse2ListGallery(String json) {
+		return parse2ListObject(json, new TypeReference<List<Gallery>>() {});
 	} 
 }

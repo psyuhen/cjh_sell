@@ -3,7 +3,6 @@ package com.cjh.activity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -145,10 +144,7 @@ public class CouponsActivity extends BaseTwoActivity {
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			commonAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询优惠券失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询优惠券失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券失败");
 		}

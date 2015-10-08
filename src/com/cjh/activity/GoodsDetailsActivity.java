@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -31,12 +29,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cjh.adapter.AddImageAdapter;
 import com.cjh.adapter.CommonAdapter;
 import com.cjh.adapter.ViewHolder;
-import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.CategoryItem;
 import com.cjh.bean.ClassifyInfo;
@@ -52,7 +48,6 @@ import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.cjh.utils.QiNiuUtil;
 import com.cjh.utils.Validator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 import com.qiniu.android.http.ResponseInfo;
@@ -89,6 +84,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	
 	private int merch_id;
 	private int classify_id;
+	private String out_published;
 	
 	// 类别选择
 	private RelativeLayout goods_detail_category_rl;
@@ -138,7 +134,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	}
 
 	private void initData() {
-		title.setText("编辑物品");
+		title.setText("商品编辑");
 		right_imgbtn.setVisibility(View.GONE);
 		right_text.setVisibility(View.VISIBLE);
 		right_text.setText("完成");
@@ -166,23 +162,36 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		merch_id = extras.getInt("merch_id");
+		out_published = extras.getString("out_published");
+		
+		if("0".equals(out_published)){//未下架
+			goods_details_offshelf_btn.setText(getString(R.string.goods_details_offshelft_btn));
+			goods_details_pubilsh_goods_btn.setVisibility(View.VISIBLE);
+		}else if("1".equals(out_published)){//已下架
+			goods_details_pubilsh_goods_btn.setVisibility(View.GONE);
+			goods_details_offshelf_btn.setText(getString(R.string.goods_details_onshelft_btn));
+		}
 		
 		queryclassify();
 	}
 	
+	//查询分类信息
 	private void queryclassify() {
 		categoryList=new ArrayList<CategoryItem>();
 		
-		String url = HttpUtil.BASE_URL + "/classify/querybytype.do?classify_type="+1;
+		int user_id = sessionManager.getUserId();
+		String url = HttpUtil.BASE_URL + "/classify/querybyuserid.do?user_id="+user_id;
 		try {
 			String jsons = HttpUtil.getRequest(url);
 			if(jsons == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
+				queryGoods();
 				return;
 			}
 			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 			if(list == null){
 				LOGGER.error(">>> 转换分类列表信息失败");
+				queryGoods();
 				return;
 			}
 			for (ClassifyInfo classifyInfo : list) {
@@ -194,10 +203,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				categoryList.add(categoryItem);
 			}
 			queryGoods();
-		} catch (InterruptedException e) {
-			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
-			LOGGER.error(">>> 查询分类列表失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 			LOGGER.error(">>> 查询分类列表失败",e);
 		}
@@ -226,7 +232,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		case R.id.goods_details_delete_goods_btn://删除
 			deleteGoods();
 			break;
-		case R.id.goods_details_offshelf_btn://下架
+		case R.id.goods_details_offshelf_btn://下架或者上架
 			offshelfGoods();
 			break;
 		case R.id.goods_details_pubilsh_goods_btn://发布
@@ -329,9 +335,12 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 					for (AddImage addImage: old_lists) {
 						deleteGallery(addImage.getFileName(), addImage.getId()+"");
 					}
-					int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+					int user_id = sessionManager.getUserId();
 					for (AddImage addImage: lists) {
 						File image = addImage.getFile();
+						if(image == null){
+							continue;
+						}
 						QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
 							@Override
 							public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
@@ -356,10 +365,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}else{
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新失败");
 			}
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "更新商品失败");
-			LOGGER.error(">>> 更新商品失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "更新商品失败");
 			LOGGER.error(">>> 更新商品失败",e);
 		}
@@ -376,10 +382,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
-		} catch (InterruptedException e) {
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
-			LOGGER.error(">>> 更新图片失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 			LOGGER.error(">>> 更新图片失败",e);
 		}
@@ -398,10 +401,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 			QiNiuUtil.deleteFile(fileName);
-		} catch (InterruptedException e) {
-			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
-			LOGGER.error(">>> 删除图片失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 			LOGGER.error(">>> 删除图片失败",e);
 		}
@@ -444,7 +444,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			url = HttpUtil.BASE_URL + "/gallery/queryByMerchId.do?merch_id="+merch_id;
 			json = HttpUtil.getRequest(url);
 			if(json != null){
-				List<Gallery> galleries = JsonUtil.parse2ListObject(json, new TypeReference<List<Gallery>>() {});
+				List<Gallery> galleries = JsonUtil.parse2ListGallery(json);
 				if(galleries != null && !galleries.isEmpty()){
 					int length = galleries.size();
 					for (int i = 0; i < length; i++) {
@@ -454,10 +454,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				}
 			}
 			
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
-			LOGGER.error(">>> 查询商品信息失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品信息失败");
 			LOGGER.error(">>> 查询商品信息失败",e);
 		}
@@ -476,19 +473,25 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			
 			CommonsUtil.showLongToast(getApplicationContext(), json);
 			finish();
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
-			LOGGER.error(">>> 删除商品失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
 			LOGGER.error(">>> 删除商品失败",e);
 		}
 	}
 	
-	//下架商品
+	//下架或者上架商品
 	private void offshelfGoods(){
 		MerchInfo merchInfo = new MerchInfo();
-		merchInfo.setOut_published("1");
+		
+		String msg = "下架";
+		if("0".equals(out_published)){
+			merchInfo.setOut_published("1");
+			msg = "下架";
+		}else if("1".equals(out_published)){
+			merchInfo.setOut_published("0");
+			msg = "上架";
+		}
+		
 		merchInfo.setMerch_id(merch_id);
 		
 		String url = HttpUtil.BASE_URL + "/merch/modify.do";
@@ -496,16 +499,13 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			String json = HttpUtil.postRequest(url, merchInfo);
 			
 			if(json == null || "更新商品失败!".equals(json)){
-				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "下架商品失败");
+				CommonsUtil.showShortToast(GoodsDetailsActivity.this, msg + "商品失败");
 				return ;
 			}
-			CommonsUtil.showShortToast(GoodsDetailsActivity.this, "下架商品成功");
+			CommonsUtil.showShortToast(GoodsDetailsActivity.this, msg + "商品成功");
 			finish();
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "下架商品失败");
-			LOGGER.error(">>> 下架商品失败",e);
-		} catch (ExecutionException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "下架商品失败");
+		} catch (Exception e) {
+			CommonsUtil.showLongToast(getApplicationContext(), msg + "商品失败");
 			LOGGER.error(">>> 下架商品失败",e);
 		}
 		
@@ -527,74 +527,63 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(GoodsDetailsActivity.this, "发布商品成功");
 			finish();
-		} catch (InterruptedException e) {
-			CommonsUtil.showLongToast(getApplicationContext(), "发布商品失败");
-			LOGGER.error(">>> 发布商品失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "发布商品失败");
 			LOGGER.error(">>> 发布商品失败",e);
 		}
 		
 	}
 	private void showImageChoose() {
-		
-		imageChooseDialog = new AlertDialog.Builder(GoodsDetailsActivity.this)
-				.create();
+		/*imageChooseDialog = new AlertDialog.Builder(GoodsDetailsActivity.this).create();
 		imageChooseDialog.show();
-		imageChooseDialog.getWindow().setContentView(
-				R.layout.image_choose_dialog);
-		Button dialog_album = (Button) imageChooseDialog
-				.findViewById(R.id.dialog_album);
+		imageChooseDialog.getWindow().setContentView(R.layout.image_choose_dialog);
+		Button dialog_album = (Button) imageChooseDialog.findViewById(R.id.dialog_album);
 		dialog_album.setOnClickListener(this);
-		Button dialog_camera = (Button) imageChooseDialog
-				.findViewById(R.id.dialog_camera);
+		Button dialog_camera = (Button) imageChooseDialog.findViewById(R.id.dialog_camera);
 		dialog_camera.setOnClickListener(this);
-		Button dialog_cancel = (Button) imageChooseDialog
-				.findViewById(R.id.dialog_cancel);
-		dialog_cancel.setOnClickListener(this);
+		Button dialog_cancel = (Button) imageChooseDialog.findViewById(R.id.dialog_cancel);
+		dialog_cancel.setOnClickListener(this);*/
+		
+		if(imageChooseDialog == null){
+			imageChooseDialog = ImageUtil.showImageChoose(GoodsDetailsActivity.this);
+		}else {
+			imageChooseDialog.show();
+		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+		if(data == null){
+			return;
+		}
 		switch (requestCode) {
-		case Constants.IMAGE_REQUEST_CODE:
-			if(data != null){
-				Uri selectImage = data.getData();
-				if (selectImage != null) {
-					String uriStr = selectImage.toString();
-					String path = uriStr.substring(10, uriStr.length());
-					if (path.startsWith("com.sec.android.gallery3d")) {
-						Toast.makeText(
-								this,
-								"It's auto backup pic path:"
-										+ selectImage.toString(),
-								Toast.LENGTH_SHORT).show();
-					}
+		case Constants.IMAGE_REQUEST_CODE://相册 
+			Uri selectImage = data.getData();
+			if (selectImage != null) {
+				String uriStr = selectImage.toString();
+				String path = uriStr.substring(10, uriStr.length());
+				if (path.startsWith("com.sec.android.gallery3d")) {
+					CommonsUtil.showLongToast(getApplicationContext(), "It's auto backup pic path:" + selectImage.toString());
 				}
-				String[] filePathColumn = { MediaStore.Images.Media.DATA };
-				Cursor cursor = GoodsDetailsActivity.this.getContentResolver()
-						.query(selectImage, filePathColumn, null, null, null);
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				picturePath = cursor.getString(columnIndex);
-				ImageName = picturePath.substring(picturePath.lastIndexOf("."),
-						picturePath.length());
-				ImageName = "test123" + ImageName;
-				cursor.close();
-				ImageUtil.startPhotoZoom(data.getData(), GoodsDetailsActivity.this);
 			}
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			Cursor cursor = GoodsDetailsActivity.this.getContentResolver()
+					.query(selectImage, filePathColumn, null, null, null);
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			picturePath = cursor.getString(columnIndex);
+			ImageName = picturePath.substring(picturePath.lastIndexOf("."), picturePath.length());
+			ImageName = "test123" + ImageName;
+			cursor.close();
+			ImageUtil.startPhotoZoom(data.getData(), GoodsDetailsActivity.this);
 			break;
-		case Constants.CAMERA_REQUEST_CODE:
+		case Constants.CAMERA_REQUEST_CODE://相机
 			if (CommonsUtil.hasSdcard()) {
-				File tempFile = new File(
-						Environment.getExternalStorageDirectory()
-								+ Constants.IMAGE_FILE_NAME);
-				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile),
-						GoodsDetailsActivity.this);
+				LOGGER.info(">>>  相机到这了。。");
+				File tempFile = FileUtil.getAppFolderFile(Constants.IMAGE_FILE_NAME);
+				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile), GoodsDetailsActivity.this);
 			} else {
-				Toast.makeText(GoodsDetailsActivity.this, "未找到存储卡，无法存储照片！",
-						Toast.LENGTH_LONG).show();
+				CommonsUtil.showLongToast(getApplicationContext(), "未找到存储卡，无法存储照片！");
 			}
 
 			break;
@@ -622,13 +611,16 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				AddImage addImage = new AddImage();
 				addImage.setBitmap(photo);
 				
+				File image = ImageUtil.bitmap2file(photo);
+				if(image != null){
+					addImage.setFileName(image.getName());
+					addImage.setFile(image);
+				}
+				
 				lists.add(addImage);
 				adapter.notifyDataSetChanged();
 				
-				File image = ImageUtil.bitmap2file(GoodsDetailsActivity.this, photo);
-				if(image != null){
-					addImage.setFileName(image.getName());
-				}
+				
 			} else{
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "最多添加六张图片");
 			}
@@ -641,14 +633,10 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	 * @param picdata
 	 */
 	private void getImageToView(int gallery_id,String fileName) {
-		Bitmap photo;
-		photo = FileUtil.getCacheFile(fileName);
-		AddImage addImage = new AddImage();
-		addImage.setId(gallery_id);
-		addImage.setBitmap(photo);
-		addImage.setFileName(fileName);
-		lists.add(addImage);
-		old_lists.add(addImage);
+		Bitmap photo = FileUtil.getCacheFile(fileName);
+		lists.add(new AddImage(gallery_id, fileName, photo));
+		old_lists.clear();
+		old_lists.add(new AddImage(gallery_id, fileName, photo));
 		adapter.notifyDataSetChanged();
 	}
 }

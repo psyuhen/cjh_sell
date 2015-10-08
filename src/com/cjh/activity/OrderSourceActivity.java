@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 
@@ -125,10 +124,7 @@ public class OrderSourceActivity extends BaseTwoActivity {
 			
 			List<OrderStat> list = JsonUtil.parse2ListOrderStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}

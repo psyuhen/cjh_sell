@@ -3,7 +3,6 @@ package com.cjh.activity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -71,6 +70,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 	private EditText shop_edit_detail_content;//店铺内容
 	private EditText shop_edit_detail_address;//地址
 	private EditText shop_edit_detail_tel;//电话
+	private EditText shop_edit_detail_person;//负责人
 	
 	private Button shop_edit_details_complete_btn;//完成编辑
 	
@@ -96,6 +96,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 		shop_edit_detail_content = (EditText)findViewById(R.id.shop_edit_detail_content);
 		shop_edit_detail_address = (EditText)findViewById(R.id.shop_edit_detail_address);
 		shop_edit_detail_tel = (EditText)findViewById(R.id.shop_edit_detail_tel);
+		shop_edit_detail_person = (EditText)findViewById(R.id.shop_edit_detail_person);
 		
 		shop_edit_details_complete_btn = (Button)findViewById(R.id.shop_edit_details_complete_btn);
 		shop_edit_details_complete_btn.setOnClickListener(new OnClickListener() {
@@ -166,7 +167,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 	}
 
 	private void showImageChoose() {
-		imageChooseDialog = new AlertDialog.Builder(ShopEditActivity.this)
+		/*imageChooseDialog = new AlertDialog.Builder(ShopEditActivity.this)
 				.create();
 		imageChooseDialog.show();
 		imageChooseDialog.getWindow().setContentView(
@@ -179,7 +180,12 @@ public class ShopEditActivity extends BaseTwoActivity {
 		dialog_camera.setOnClickListener(this);
 		Button dialog_cancel = (Button) imageChooseDialog
 				.findViewById(R.id.dialog_cancel);
-		dialog_cancel.setOnClickListener(this);
+		dialog_cancel.setOnClickListener(this);*/
+		if(imageChooseDialog == null){
+			imageChooseDialog = ImageUtil.showImageChoose(ShopEditActivity.this);
+		}else{
+			imageChooseDialog.show();
+		}
 	}
 	
 	/**
@@ -187,11 +193,11 @@ public class ShopEditActivity extends BaseTwoActivity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(data == null){
+			return;
+		}
 		switch (requestCode) {
-		case Constants.IMAGE_REQUEST_CODE:
-			if(data == null){
-				break;
-			}
+		case Constants.IMAGE_REQUEST_CODE://打开相册后返回的数据
 			Uri selectImage = data.getData();
 			if (selectImage != null) {
 				String uriStr = selectImage.toString();
@@ -216,7 +222,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			cursor.close();
 			ImageUtil.startPhotoZoom(data.getData(), ShopEditActivity.this);
 			break;
-		case Constants.CAMERA_REQUEST_CODE:
+		case Constants.CAMERA_REQUEST_CODE://打开相机后返回来数据 
 			if (CommonsUtil.hasSdcard()) {
 				File tempFile = new File(
 						Environment.getExternalStorageDirectory()
@@ -248,7 +254,6 @@ public class ShopEditActivity extends BaseTwoActivity {
 	private void getImageToView(Intent data, Context context) {
 		Bundle extras = data.getExtras();
 		if (extras != null) {
-			LOGGER.info(">>> come in");
 			Bitmap photo = extras.getParcelable("data");
 			AddImage addImage = new AddImage();
 			addImage.setBitmap(photo);
@@ -257,14 +262,12 @@ public class ShopEditActivity extends BaseTwoActivity {
 			//添加图片控件消失
 			content_add_image.setVisibility(View.GONE);
 			
-			LOGGER.info(">>> come in 2");
 			//上传图片到7牛
-			File image = ImageUtil.bitmap2file(ShopEditActivity.this, photo);
+			File image = ImageUtil.bitmap2file(photo);
 			if(image == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
 			}
-			LOGGER.info(">>> come in 3");
 			addImage.setFile(image);
 			addImage.setFileName(image.getName());
 			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
@@ -306,7 +309,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			addImage.setBitmap(bitmap);
 			//添加图片控件消失
 			content_add_image.setVisibility(View.GONE);//添加图标隐藏
-			File image = ImageUtil.bitmap2file(ShopEditActivity.this, bitmap);
+			File image = ImageUtil.bitmap2file(bitmap);
 			if(image != null){
 				addImage.setFile(image);
 				addImage.setFileName(image.getName());
@@ -329,13 +332,12 @@ public class ShopEditActivity extends BaseTwoActivity {
 				shop_edit_detail_content.setText(store.getDesc());
 				shop_edit_detail_address.setText(store.getAddress());
 				shop_edit_detail_tel.setText(store.getPhone());
+				shop_edit_detail_person.setText(store.getPerson());
 				
 				String fileName = store.getLogo();
 				getImageToView(fileName);
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 根据用户获取商家信息失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 根据用户获取商家信息失败",e);
 		}
 		
@@ -347,6 +349,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 		String shopDesc = shop_edit_detail_content.getText().toString();
 		String address = shop_edit_detail_address.getText().toString();
 		String phone = shop_edit_detail_tel.getText().toString();
+		String person = shop_edit_detail_person.getText().toString();
 		
 		boolean cancel = false;
 		View focusView = null;
@@ -367,6 +370,10 @@ public class ShopEditActivity extends BaseTwoActivity {
 			shop_edit_detail_tel.setError(getString(R.string.error_field_required));
 			focusView = shop_edit_detail_tel;
 			cancel = true;
+		}else if (TextUtils.isEmpty(person)) {
+			shop_edit_detail_tel.setError(getString(R.string.error_field_required));
+			focusView = shop_edit_detail_person;
+			cancel = true;
 		}
 		
 		if (cancel) {
@@ -379,6 +386,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			Store storeInfo = new Store();
 			storeInfo.setUser_id(user_id);
 //			storeInfo.setClassify_id(Integer.parseInt(classify_id));
+			storeInfo.setPerson(person);
 			storeInfo.setDesc(shopDesc);
 			storeInfo.setAddress(address);
 			storeInfo.setPhone(phone);
@@ -405,17 +413,18 @@ public class ShopEditActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
-			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-			url =  HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
-			json = HttpUtil.getRequest(url);
-			if(json != null){
-				Store store = JsonUtil.parse2Object(json, Store.class);
-				sessionManager.putInt("store_id", store.getStore_id());
-				sessionManager.put("store_name", store.getName());
+			if("注册商店成功!".equals(json)){
+				int user_id = sessionManager.getUserId();
+				url =  HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
+				json = HttpUtil.getRequest(url);
+				if(json != null){
+					Store store = JsonUtil.parse2Object(json, Store.class);
+					sessionManager.putInt("store_id", store.getStore_id());
+					sessionManager.put("store_name", store.getName());
+				}
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 注册商家信息失败", e);
-		} catch (ExecutionException e) {
+			
+		} catch (Exception e) {
 			LOGGER.error(">>> 注册商家信息失败", e);
 		}
 	}
@@ -430,9 +439,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 更新商家信息失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 更新商家信息失败", e);
 		}
 	}

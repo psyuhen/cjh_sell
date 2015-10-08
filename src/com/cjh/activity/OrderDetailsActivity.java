@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -147,10 +146,7 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 			
 			Order order = JsonUtil.parse2Object(json, Order.class);
 			return order;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询订单信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询订单信息失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 		}

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -25,7 +24,11 @@ import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
-
+/**
+ * 统计中心
+ * @author pansen
+ *
+ */
 public class MarketingActivity extends BaseTwoActivity implements
 		OnClickListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MarketingActivity.class);
@@ -273,10 +276,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			OrderStat orderStat = JsonUtil.parse2Object(json, OrderStat.class);
 			return orderStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
@@ -292,10 +292,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			List<OrderStat> list = JsonUtil.parse2ListOrderStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
@@ -353,10 +350,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			List<FavoriteStat> list = JsonUtil.parse2ListFavoriteStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
@@ -373,10 +367,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			FavoriteStat fStat = JsonUtil.parse2Object(json, FavoriteStat.class);
 			return fStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
@@ -403,10 +394,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			VisitStat vStat = JsonUtil.parse2Object(json, VisitStat.class);
 			return vStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
@@ -422,10 +410,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 			
 			List<VisitStat> list = JsonUtil.parse2ListVisitStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}

@@ -4,6 +4,8 @@ import java.io.File;
 
 import android.graphics.Bitmap;
 
+import com.cjh.utils.ImageUtil;
+
 public class AddImage {
 
 	private int id;
@@ -48,6 +50,15 @@ public class AddImage {
 		super();
 		this.id = id;
 		this.bitmap = bitmap;
+	}
+	public AddImage(int id, String fileName,Bitmap bitmap) {
+		super();
+		this.id = id;
+		this.fileName = fileName;
+		this.bitmap = bitmap;
+		if(bitmap != null){
+			this.file = ImageUtil.bitmap2file(bitmap);
+		}
 	}
 
 	public AddImage() {

@@ -64,7 +64,7 @@ public class MeFragment extends Fragment implements OnClickListener {
 	private void initData(){
 		if(this.context != null){
 			MainActivity activity = (MainActivity)this.context;
-			String storeName = activity.sessionManager.get("store_name");
+			String storeName = activity.sessionManager.getStoreName();
 			order_title.setText(storeName);
 		}
 		

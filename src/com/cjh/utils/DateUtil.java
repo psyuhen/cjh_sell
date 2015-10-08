@@ -69,6 +69,9 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Date parseDate(String str, String[] parsePatterns) {
+		if(str == null){
+			return null;
+		}
 		Date date = null;
 		try {
 			date = DateUtils.parseDate(str, parsePatterns);
@@ -86,6 +89,9 @@ public class DateUtil {
 	 * @return
 	 */
 	public static String format(Date date,String pattern) {
+		if(date == null){
+			return "";
+		}
 		return DateFormatUtils.format(date, pattern);
 	}
 	

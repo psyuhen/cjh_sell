@@ -1,6 +1,5 @@
 package com.cjh.utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -13,9 +12,16 @@ import android.widget.Toast;
 
 import com.cjh.common.Constants;
 import com.cjh.common.LineView;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 
 public class CommonsUtil {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonsUtil.class);
+
+	/**
+	 * 判断是否有sdcard
+	 * @return
+	 */
 	public static boolean hasSdcard() {
 		String state = Environment.getExternalStorageState();
 		if (state.equals(Environment.MEDIA_MOUNTED)) {
@@ -32,8 +38,7 @@ public class CommonsUtil {
 		Intent intentFromGallery = new Intent();
 		intentFromGallery.setType("image/*"); // 设置文件类型
 		intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
-		activity.startActivityForResult(intentFromGallery,
-				Constants.IMAGE_REQUEST_CODE);
+		activity.startActivityForResult(intentFromGallery,Constants.IMAGE_REQUEST_CODE);
 	}
 	/**
 	 *打开照相机
@@ -43,13 +48,11 @@ public class CommonsUtil {
 		Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// 判断存储卡是否可以用，可用进行存储
 		if (hasSdcard()) {
-			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-					.fromFile(new File(Environment
-							.getExternalStorageDirectory(),
-							Constants.IMAGE_FILE_NAME)));
+			LOGGER.info(">>> i come here.");
+			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT, 
+					Uri.fromFile(FileUtil.getAppFolderFile(Constants.IMAGE_FILE_NAME)));
 		}
-		activity.startActivityForResult(intentFromCapture,
-				Constants.CAMERA_REQUEST_CODE);
+		activity.startActivityForResult(intentFromCapture, Constants.CAMERA_REQUEST_CODE);
 	}
 	
 	public static void showLongToast(Context context, String msg) {

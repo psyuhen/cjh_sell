@@ -129,7 +129,7 @@ public class LimitTimeAddActivity extends BaseTwoActivity {
 				MerchInfo merchInfo = list.get(i);
 				GoodsItem goodsItem = new GoodsItem();
 				goodsItem.setId(merchInfo.getMerch_id());
-//				goodsItem.setImg("image");
+				goodsItem.setDesc(merchInfo.getDesc());
 				goodsItem.setPrice(merchInfo.getPrice());
 				goodsItem.setSellmount(merchInfo.getSales_volume());
 				goodsItem.setStandard(merchInfo.getUnit());
@@ -144,10 +144,7 @@ public class LimitTimeAddActivity extends BaseTwoActivity {
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsOnofferAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询商品列表失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询商品列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询商品列表失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询商品列表失败");
 		}

@@ -286,10 +286,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			OrderStat orderStat = JsonUtil.parse2Object(json, OrderStat.class);
 			return orderStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}
@@ -305,10 +302,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			List<OrderStat> list = JsonUtil.parse2ListOrderStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}
@@ -366,10 +360,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			List<FavoriteStat> list = JsonUtil.parse2ListFavoriteStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}
@@ -386,10 +377,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			FavoriteStat fStat = JsonUtil.parse2Object(json, FavoriteStat.class);
 			return fStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}
@@ -416,10 +404,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			VisitStat vStat = JsonUtil.parse2Object(json, VisitStat.class);
 			return vStat;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}
@@ -435,10 +420,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 			
 			List<VisitStat> list = JsonUtil.parse2ListVisitStat(json);
 			return list;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(context, "统计失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
 			CommonsUtil.showLongToast(context, "统计失败");
 		}

@@ -113,7 +113,7 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				Store store = JsonUtil.parse2Object(json, Store.class);
 				
 				shop_my_title.setText(store.getName());
-				shop_my_name.setText(user.getName());
+				shop_my_name.setText(store.getPerson());
 				shop_my_address.setText(store.getAddress());
 				shop_my_tel.setText(store.getPhone());
 				
@@ -123,12 +123,9 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 					shop_my_image.setImageBitmap(bitmap);
 				}
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error("根据用户获取商家信息失败", e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("根据用户获取商家信息失败", e);
 		}
-		
 	}
 
 	@Override

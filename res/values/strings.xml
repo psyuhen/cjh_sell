@@ -225,8 +225,9 @@
     <string name="goods_detail_category_text">分类至</string>
     <string name="goods_detail_category">水果</string>
     <string name="publish_goods_text">发布</string>
-    <string name="delete_goods_text">删除商品</string>
-    <string name="goods_details_offshelft_btn">下架商品</string>
+    <string name="delete_goods_text">删除</string>
+    <string name="goods_details_offshelft_btn">下架</string>
+    <string name="goods_details_onshelft_btn">上架</string>
     <string name="pop_image_text">商品图片</string>
     <string name="categoryd_goods_publish_text">类别名称</string>
     <string name="categoryd_goods_category_text">请输入类别</string>
@@ -356,7 +357,7 @@
     <string name="coupons_surplusnum_text">优惠券库存</string>
     <string name="coupons_surplusnum_hint">可被领取的总券数</string>
     <string name="coupons_limitsnum_text">领券限制</string>
-    <string name="coupons_limitsnum_hint">没人限领张数</string>
+    <string name="coupons_limitsnum_hint">每人限领张数</string>
     <string name="coupons_startdate_hint">点击添加开始时间</string>
     <string name="coupons_date_text_info">-</string>
     <string name="coupons_enddate_hint">点击添加结束时间</string>

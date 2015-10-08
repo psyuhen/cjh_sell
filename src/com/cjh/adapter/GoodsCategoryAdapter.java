@@ -1,7 +1,6 @@
 package com.cjh.adapter;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -142,9 +141,7 @@ public class GoodsCategoryAdapter extends BaseAdapter{
 				categoryList.remove(categoryItem);
 				this.notifyDataSetChanged();
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 删除分类失败",e);
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 删除分类失败",e);
 		}
 	}

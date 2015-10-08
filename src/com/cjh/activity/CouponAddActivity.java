@@ -1,7 +1,5 @@
 package com.cjh.activity;
 
-import java.util.concurrent.ExecutionException;
-
 import org.apache.commons.lang.StringUtils;
 
 import android.content.Intent;
@@ -185,10 +183,7 @@ public class CouponAddActivity extends BaseTwoActivity {
 				startActivity(new Intent(CouponAddActivity.this, CouponsActivity.class));
 				CouponAddActivity.this.finish();
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error("查询优惠券失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询优惠券失败", e);
 			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券失败");
 		}

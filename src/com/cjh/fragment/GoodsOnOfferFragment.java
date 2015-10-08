@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
@@ -120,6 +119,7 @@ public class GoodsOnOfferFragment extends Fragment {
 				GoodsItem item = (GoodsItem)parent.getItemAtPosition(position);
 				Intent intent = new Intent(getActivity(), GoodsDetailsActivity.class);
 				intent.putExtra("merch_id", item.getId());
+				intent.putExtra("out_published", "0");//是否下架，0为未下架
 				startActivity(intent);
 			}
 		});
@@ -204,7 +204,7 @@ public class GoodsOnOfferFragment extends Fragment {
 	private void querybyuserid(int start){
 		GoodActivity activity = (GoodActivity)context;
 		SessionManager sessionManager = activity.sessionManager;
-		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+		int user_id = sessionManager.getUserId();
 		
 		MerchInfo info = new MerchInfo();
 		info.setUser_id(user_id);
@@ -247,6 +247,7 @@ public class GoodsOnOfferFragment extends Fragment {
 				goodsItem.setStandard(merchInfo.getUnit());
 				goodsItem.setStock(merchInfo.getIn_stock());
 				goodsItem.setTitle(merchInfo.getName());
+				goodsItem.setDesc(merchInfo.getDesc());
 				goodsItem.setCreate_time(merchInfo.getCreate_time());
 				
 				//goodsItem.setImg("image");
@@ -257,10 +258,7 @@ public class GoodsOnOfferFragment extends Fragment {
 			this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsOnofferAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (InterruptedException e) {
-			LOGGER.error("查询商品列表失败", e);
-			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error("查询商品列表失败", e);
 			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 		}

@@ -132,10 +132,7 @@ public class CategoryAddActivity extends BaseTwoActivity{
 				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类成功");
 //				startActivity(new Intent(CategoryAddActivity.this, CategoryActivity.class));
 				finish();
-			} catch (InterruptedException e) {
-				LOGGER.error(">>>添加商品分类失败", e);
-				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
-			} catch (ExecutionException e) {
+			} catch (Exception e) {
 				LOGGER.error(">>>添加商品分类失败", e);
 				CommonsUtil.showLongToast(getApplicationContext(), "添加商品分类失败");
 			}

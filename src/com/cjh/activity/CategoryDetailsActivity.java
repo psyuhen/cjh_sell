@@ -3,7 +3,6 @@ package com.cjh.activity;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -125,10 +124,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				//再从7牛上获取图片
 				getImageToView(gallery.getFile_name());
 			}
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 查询分类信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 查询分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
 		}
@@ -189,10 +185,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 //			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
 			finish();
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 更新分类信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 更新分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新分类信息失败");
 		}
@@ -209,10 +202,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 //			startActivity(new Intent(CategoryDetailsActivity.this, CategoryActivity.class));
 			finish();
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 删除分类信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 删除分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		}
@@ -320,7 +310,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				return;
 			}
 			//上传图片到7牛
-			File image = ImageUtil.bitmap2file(CategoryDetailsActivity.this, photo);
+			File image = ImageUtil.bitmap2file(photo);
 			if(image == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
 				return;
@@ -373,10 +363,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			}
 			
 			return gallery;
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 根据分类Id查询图片信息失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "根据分类Id查询图片信息失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 根据分类Id查询图片信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "根据分类Id查询图片信息失败");
 		}
@@ -394,10 +381,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 新增图片失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 新增图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
 		}
@@ -413,10 +397,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 更新图片失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 更新图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 		}
@@ -435,10 +416,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 			QiNiuUtil.deleteFile(gallery.getFile_name());
-		} catch (InterruptedException e) {
-			LOGGER.error(">>> 删除图片失败", e);
-			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
-		} catch (ExecutionException e) {
+		} catch (Exception e) {
 			LOGGER.error(">>> 删除图片失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 		}

@@ -159,6 +159,13 @@ public class SessionManager {
 	public int getStoreId(){
 		return getInt("store_id");
 	}
+	/**
+	 * 获取商家名称
+	 * @return
+	 */
+	public String getStoreName(){
+		return get("store_name");
+	}
 
 	/**
 	 * 获取用户名称
