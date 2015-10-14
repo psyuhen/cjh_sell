@@ -94,7 +94,7 @@
     <string name="login_password_edit_hint">请输入密码</string>
     <string name="login_password_text">密码:</string>
     <string name="login_btn_text">登录</string>
-    <string name="login_registe_text">手机快速注册</string>
+    <string name="login_registe_text">没有账号请注册</string>
     <string name="login_retrieve_text">找回密码</string>
     <string name="login_by_weixin_text">微信登录</string>
     <string name="login_by_qq_text">QQ登录</string>
@@ -315,11 +315,11 @@
     <string name="market_everyday_collect_yesterday_count">0</string>
     <string name="order_completed_source_btn_text">成交订单</string>
     <string name="market_order_completed">成交订单</string>
-    <string name="pop_price_text">商品价格</string>
+    <string name="pop_price_text">商品价格:</string>
     <string name="pop_price_edit">请输入价格</string>
-    <string name="pop_stock_text">商品库存</string>
+    <string name="pop_stock_text">商品库存:</string>
     <string name="pop_stock_edit">请输入库存</string>
-    <string name="pop_type_text">商品单位</string>
+    <string name="pop_type_text">商品单位:</string>
     <string name="pop_type_edit">请输入商品单位</string>
     <string name="pop_category_text">请选择商品类别</string>
     <string name="pop_category">请点击选择</string>
@@ -397,5 +397,6 @@
     <string name="goods_view_weight_text">重量</string>
     <string name="goods_view_standard_text">规格</string>
     <string name="goods_view_details_text">图文详情</string>
+    <string name="add_category_btn_text">新建类别</string>
 
 </resources>

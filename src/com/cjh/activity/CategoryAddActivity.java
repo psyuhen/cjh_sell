@@ -3,7 +3,6 @@ package com.cjh.activity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,6 +28,7 @@ import com.cjh.bean.ClassifyInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.google.code.microlog4android.Logger;
@@ -151,6 +150,7 @@ public class CategoryAddActivity extends BaseTwoActivity{
 			CommonsUtil.opengallry(CategoryAddActivity.this);
 			break;
 		case R.id.dialog_camera:
+			imageChooseDialog.dismiss();
 			CommonsUtil.openCamera(CategoryAddActivity.this);
 			break;
 		case R.id.dialog_cancel:
@@ -213,9 +213,7 @@ public class CategoryAddActivity extends BaseTwoActivity{
 			break;
 		case Constants.CAMERA_REQUEST_CODE:
 			if (CommonsUtil.hasSdcard()) {
-				File tempFile = new File(
-						Environment.getExternalStorageDirectory()
-								+ Constants.IMAGE_FILE_NAME);
+				File tempFile = FileUtil.getAppFolderFile(Constants.IMAGE_FILE_NAME);
 				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile),CategoryAddActivity.this);
 			} else {
 				Toast.makeText(CategoryAddActivity.this, "未找到存储卡，无法存储照片！",

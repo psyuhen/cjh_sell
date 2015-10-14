@@ -7,9 +7,14 @@ import java.util.List;
 import org.kymjs.aframe.ui.widget.KJListView;
 import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 
 import com.cjh.adapter.CommonAdapter;
@@ -58,7 +63,27 @@ public class CouponsActivity extends BaseTwoActivity {
 		couponsList = new ArrayList<CouponsItem>();
 		commonAdapter = showAdapter();
 		kjListView.setAdapter(commonAdapter);
-		//上下拉刷新
+
+		kjListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					final int position, long len) {
+				final CouponsItem item = (CouponsItem)parent.getItemAtPosition(position);
+
+				new AlertDialog.Builder(CouponsActivity.this)
+						.setTitle("是否删除选中的优惠券？")
+						.setIcon(android.R.drawable.ic_dialog_info)
+						.setPositiveButton("确定", new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								deleteCoupon(item);
+							}
+						}).setNegativeButton("取消", null).show();
+				return false;
+			}
+		});
+
+		// 上下拉刷新
 		kjListView.setPullLoadEnable(true);
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
@@ -112,6 +137,7 @@ public class CouponsActivity extends BaseTwoActivity {
 				Coupon coupon = list.get(i);
 				
 				CouponsItem couponsItem = new CouponsItem();
+				couponsItem.setId(coupon.getCoupon_id());
 				couponsItem.setTitle(coupon.getDesc());
 				String start_time = coupon.getStart_time();
 				Date startDate = DateUtil.parseDate(start_time, new String[]{"yyyyMMddHHmmss"});
@@ -177,6 +203,28 @@ public class CouponsActivity extends BaseTwoActivity {
 
 		default:
 			break;
+		}
+	}
+	
+	//删除优惠券
+	private void deleteCoupon(CouponsItem item){
+		String url = HttpUtil.BASE_URL + "/coupon/deleteCouponById.do?coupon_id="+item.getId();
+		
+		try {
+			
+			String listJson = HttpUtil.getRequest(url);
+			if(listJson == null){
+				return;
+			}
+			if("删除优惠券信息成功!".equals(listJson)){
+				couponsList.remove(item);
+				commonAdapter.notifyDataSetChanged();
+			}
+			
+			CommonsUtil.showLongToast(getApplicationContext(), listJson);
+		} catch (Exception e) {
+			LOGGER.error("查询优惠券失败", e);
+			CommonsUtil.showLongToast(getApplicationContext(), "查询优惠券失败");
 		}
 	}
 

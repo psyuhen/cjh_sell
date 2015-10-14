@@ -553,11 +553,11 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(data == null){
-			return;
-		}
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE://相册 
+			if(data == null){
+				break;
+			}
 			Uri selectImage = data.getData();
 			if (selectImage != null) {
 				String uriStr = selectImage.toString();
@@ -579,7 +579,6 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			break;
 		case Constants.CAMERA_REQUEST_CODE://相机
 			if (CommonsUtil.hasSdcard()) {
-				LOGGER.info(">>>  相机到这了。。");
 				File tempFile = FileUtil.getAppFolderFile(Constants.IMAGE_FILE_NAME);
 				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile), GoodsDetailsActivity.this);
 			} else {
@@ -590,6 +589,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		case Constants.RESULT_REQUEST_CODE:
 			if (data != null) {
 				getImageToView(data, GoodsDetailsActivity.this);
+				imageChooseDialog.hide();
 			}
 			break;
 		default:

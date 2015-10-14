@@ -6,14 +6,14 @@
             <!-- 填充颜色 -->
             <solid android:color="@color/orange_pop_add_btn"></solid>
             <!-- 矩形的圆角半径 -->
-            <corners android:radius="35.0dp" />
+            <corners android:radius="10.0dp" />
         </shape></item>
     <item android:state_pressed="true"><shape android:shape="rectangle">
 
             <!-- 填充颜色 -->
             <solid android:color="@color/blue_text"></solid>
             <!-- 矩形的圆角半径 -->
-            <corners android:radius="35.0dp" />
+            <corners android:radius="10.0dp" />
         </shape></item>
 
 </selector>

@@ -7,8 +7,7 @@
     <RelativeLayout
         android:id="@+id/order_top_rl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="35"
+        android:layout_height="120.0dip"
         android:background="@drawable/head_bg" >
 
         <com.cjh.common.CircleImageView
@@ -94,7 +93,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5.0dip"
-        android:layout_weight="10" >
+        >
 
         <LinearLayout
             android:id="@+id/shop_center_top_ll"

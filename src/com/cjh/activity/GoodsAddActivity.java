@@ -16,10 +16,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -43,6 +43,7 @@ import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
@@ -79,13 +80,12 @@ public class GoodsAddActivity extends BaseTwoActivity {
 	private EditText pop_type_edit;//单位
 	
 	// 添加类别对话框
-	private AlertDialog categoryChooseDialog = null;
 	private RelativeLayout goods_category_ll;
 	private Button goods_add_btn;
-	private ListView category_listview;
 	private TextView add_goods_category;
 	private List<CategoryItem> categoryList;
 	private int classify_id;
+	private CommonAdapter<CategoryItem> categoryAdapter;
 	
 
 	@Override
@@ -115,6 +115,8 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		goods_add_btn = (Button) findViewById(R.id.goods_add_btn);
 		goods_add_btn.setOnClickListener(this);
 		add_goods_category = (TextView) findViewById(R.id.add_goods_category);
+		
+		categoryList=new ArrayList<CategoryItem>();
 	}
 
 	private void initData() {
@@ -141,8 +143,6 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		queryclassify();
 	}
 	private void queryclassify() {
-		categoryList=new ArrayList<CategoryItem>();
-		
 //		String url = HttpUtil.BASE_URL + "/classify/querybytype.do?classify_type="+1;
 		int user_id = sessionManager.getUserId();
 		String url = HttpUtil.BASE_URL + "/classify/querybyuserid.do?user_id="+user_id;
@@ -184,6 +184,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			CommonsUtil.opengallry(GoodsAddActivity.this);
 			break;
 		case R.id.dialog_camera:
+			imageChooseDialog.dismiss();
 			CommonsUtil.openCamera(GoodsAddActivity.this);
 			break;
 		case R.id.dialog_cancel:
@@ -202,15 +203,24 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			break;
 		}
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(categoryAdapter != null){
+			queryclassify();
+			categoryAdapter.notifyDataSetChanged();
+		}
+	}
+
 	private void showCategoryList() {
-		categoryChooseDialog = new AlertDialog.Builder(GoodsAddActivity.this)
-				.create();
+		final AlertDialog categoryChooseDialog = new AlertDialog.Builder(GoodsAddActivity.this).create();
 		categoryChooseDialog.show();
 		categoryChooseDialog.getWindow().setContentView(R.layout.pop_category);
-		category_listview = (ListView) categoryChooseDialog
-				.findViewById(R.id.category_listview);
-
-		category_listview.setAdapter(showAdater());
+		ListView category_listview = (ListView) categoryChooseDialog.findViewById(R.id.category_listview);
+		Button add_category = (Button) categoryChooseDialog.findViewById(R.id.add_category_btn);
+		categoryAdapter = showAdater();
+		category_listview.setAdapter(categoryAdapter);
 		category_listview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -220,6 +230,13 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				CategoryItem item = (CategoryItem)parent.getItemAtPosition(position);
 				add_goods_category.setText(item.getTitle());
 				classify_id = item.getId();
+			}
+		});
+		add_category.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(GoodsAddActivity.this, CategoryAddActivity.class));
 			}
 		});
 
@@ -411,9 +428,8 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			break;
 		case Constants.CAMERA_REQUEST_CODE:
 			if (CommonsUtil.hasSdcard()) {
-				File tempFile = new File(
-						Environment.getExternalStorageDirectory()
-								+ Constants.IMAGE_FILE_NAME);
+				File tempFile = FileUtil
+						.getAppFolderFile(Constants.IMAGE_FILE_NAME);
 				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile),GoodsAddActivity.this);
 			} else {
 				Toast.makeText(GoodsAddActivity.this, "未找到存储卡，无法存储照片！",
