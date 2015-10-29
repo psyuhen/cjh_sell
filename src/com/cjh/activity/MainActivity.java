@@ -19,17 +19,25 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.PushService;
+import com.avos.avoscloud.SaveCallback;
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
 import com.cjh.fragment.MeFragment;
 import com.cjh.fragment.ShopFragment;
 import com.cjh.fragment.StatisticsFragment;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 首页
  * @author ps
  *
  */
 public class MainActivity extends FragmentActivity implements OnClickListener {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
+
 	// 静态fragment管理器
 	private static FragmentManager fMgr;
 	// 设置按钮
@@ -55,6 +63,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		fMgr = getSupportFragmentManager();
 		initFragment();
 		dealBottomButtonsClickEvent();
+		
+		try{
+			PushService.setDefaultPushCallback(this, OrderActivity.class);
+			PushService.subscribe(this, "seller_" + sessionManager.getStoreId(), OrderActivity.class);
+			AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+		      @Override
+		      public void done(AVException e) {
+		        AVInstallation.getCurrentInstallation().saveInBackground();
+		      }
+		    });
+		}catch (Exception e) {
+			LOGGER.error(">>> 初始化push失败", e);
+		}
 	}
 
 	private void initData() {
@@ -62,9 +83,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public void onClick(View v) {
-				
-				startActivity(new Intent(MainActivity.this,
-						SettingActivity.class));
+				startActivity(new Intent(MainActivity.this, SettingActivity.class));
 			}
 		});
 	}

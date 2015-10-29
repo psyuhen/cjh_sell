@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +19,6 @@ import com.cjh.bean.OrderStat;
 import com.cjh.bean.VisitStat;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.LineView;
-import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.DateUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
@@ -82,12 +82,36 @@ public class MarketingActivity extends BaseTwoActivity implements
 
 	private void initData() {
 		title.setText("统计中心");
-
-		//成交订单
-		String today = DateUtil.today();
-		String yesterday = DateUtil.yesterday();
 		
-		OrderStat todayOrder = countByDay(today);
+		//TODO 修改为异步了，感觉代码有点冗余。。待优化。
+		new CountTask().execute();
+		new CountTask1().execute();
+		new CountTask2().execute();
+		new CountTask3().execute();
+	}
+
+	@SuppressLint("ResourceAsColor")
+	public void zouni() {
+		lineView = (LineView) findViewById(R.id.line_view);
+		today_mnoney_lineview = (LineView) findViewById(R.id.today_mnoney_lineview);
+		today_customer_lineview = (LineView) findViewById(R.id.today_customer_lineview);
+		everyday_collect_lineview = (LineView) findViewById(R.id.everyday_collect_lineview);
+		
+		fillBom(lineView);
+		fillBom(today_mnoney_lineview);
+		fillBom(today_customer_lineview);
+		fillBom(everyday_collect_lineview);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		//成交订单
+//		String today = DateUtil.today();
+//		String yesterday = DateUtil.yesterday();
+		
+		/*OrderStat todayOrder = countByDay(today);
 		OrderStat yesterdayOrder = countByDay(yesterday);
 		market_today_count.setText((todayOrder != null ? todayOrder.getOrder_sell() : 0)+"");
 		market_yesterday_count.setText((yesterdayOrder != null ? yesterdayOrder.getOrder_sell() : 0)+"");
@@ -96,10 +120,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 		if(sellOrder == null){
 			sellOrder = new ArrayList<OrderStat>();
 		}
-		fillSellData(sellOrder);
+		fillSellData(sellOrder);*/
 		
 		//成交金额
-		OrderStat todayMoney = countMoneyByDay(today);
+		/*OrderStat todayMoney = countMoneyByDay(today);
 		OrderStat yesterdayMoney = countMoneyByDay(yesterday);
 		
 		market_money_today_count.setText((todayMoney != null ? todayMoney.getAmount_money() : 0)+"");
@@ -109,10 +133,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 		if(sellMoney == null){
 			sellMoney = new ArrayList<OrderStat>();
 		}
-		fillMoneyData(sellMoney);
+		fillMoneyData(sellMoney);*/
 		
 		//每日收藏
-		FavoriteStat favoriteStat = new FavoriteStat();
+		/*FavoriteStat favoriteStat = new FavoriteStat();
 		int store_id = sessionManager.getInt("store_id");
 		favoriteStat.setStore_id(store_id);//商家ID
 		
@@ -129,10 +153,10 @@ public class MarketingActivity extends BaseTwoActivity implements
 		if(favorite == null){
 			favorite = new ArrayList<FavoriteStat>();
 		}
-		fillFavoriteData(favorite);
+		fillFavoriteData(favorite);*/
 		
 		//每日顾客
-		VisitStat visitStat = new VisitStat();
+		/*VisitStat visitStat = new VisitStat();
 		visitStat.setStore_id(store_id);//商家ID
 		
 		visitStat.setStat_date(today);
@@ -148,23 +172,9 @@ public class MarketingActivity extends BaseTwoActivity implements
 		if(visit == null){
 			visit = new ArrayList<VisitStat>();
 		}
-		fillVisitData(visit);
-		
+		fillVisitData(visit);*/
 	}
-
-	@SuppressLint("ResourceAsColor")
-	public void zouni() {
-		lineView = (LineView) findViewById(R.id.line_view);
-		today_mnoney_lineview = (LineView) findViewById(R.id.today_mnoney_lineview);
-		today_customer_lineview = (LineView) findViewById(R.id.today_customer_lineview);
-		everyday_collect_lineview = (LineView) findViewById(R.id.everyday_collect_lineview);
-		
-		fillBom(lineView);
-		fillBom(today_mnoney_lineview);
-		fillBom(today_customer_lineview);
-		fillBom(everyday_collect_lineview);
-	}
-
+	
 	public void fillBom(LineView lineView) {
 		ArrayList<String> bottomlist = new ArrayList<String>();
 		for (int i = 0; i < 24; i++) {
@@ -270,7 +280,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 				return null;
 			}
 			
@@ -278,7 +287,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return orderStat;
 		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
 		return null;
 	}
@@ -286,7 +294,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 		try {
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 				return null;
 			}
 			
@@ -294,7 +301,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
 		return null;
 	}
@@ -332,19 +338,43 @@ public class MarketingActivity extends BaseTwoActivity implements
 	
 	private FavoriteStat countByDayAndUser(FavoriteStat favoriteStat){
 		String url = HttpUtil.BASE_URL + "/storeuf/countByDayAndUser.do";
-		return countOrder(url,favoriteStat);
+		return (FavoriteStat)countT(url,favoriteStat);
 		
 	}
 	private List<FavoriteStat> countByDayHourAndUser(FavoriteStat favoriteStat){
 		String url = HttpUtil.BASE_URL + "/storeuf/countByDayHourAndUser.do";
-		return countList(url,favoriteStat);
+		return countTList(url,favoriteStat);
 	}
 	
-	private List<FavoriteStat> countList(String url,FavoriteStat favoriteStat){
+	private VisitStat countByDayAndUser(VisitStat visitStat){
+		String url = HttpUtil.BASE_URL + "/storevisit/countByDayAndUser.do";
+		return (VisitStat)countT(url,visitStat);
+		
+	}
+	private List<VisitStat> countByDayHourAndUser(VisitStat visitStat){
+		String url = HttpUtil.BASE_URL + "/storevisit/countByDayHourAndUser.do";
+		return countTList(url,visitStat);
+	}
+	
+	private Object countT(String url,Object obj){
 		try {
-			String json = HttpUtil.postRequest(url,favoriteStat);
+			String json = HttpUtil.postRequest(url,obj);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
+				return null;
+			}
+			
+			Object o = JsonUtil.parse2Object(json, obj.getClass());
+			return o;
+		} catch (Exception e) {
+			LOGGER.error(">>> 统计失败", e);
+		}
+		return null;
+	}
+	
+	private List<FavoriteStat> countTList(String url,FavoriteStat obj){
+		try {
+			String json = HttpUtil.postRequest(url,obj);
+			if(json == null){
 				return null;
 			}
 			
@@ -352,59 +382,13 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
 		return null;
 	}
-	
-	private FavoriteStat countOrder(String url, FavoriteStat favoriteStat){
+	private List<VisitStat> countTList(String url,VisitStat obj){
 		try {
-			String json = HttpUtil.postRequest(url,favoriteStat);
+			String json = HttpUtil.postRequest(url,obj);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-				return null;
-			}
-			
-			FavoriteStat fStat = JsonUtil.parse2Object(json, FavoriteStat.class);
-			return fStat;
-		} catch (Exception e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		}
-		return null;
-	}
-	
-	private VisitStat countByDayAndUser(VisitStat visitStat){
-		String url = HttpUtil.BASE_URL + "/storevisit/countByDayAndUser.do";
-		return countOrder(url,visitStat);
-		
-	}
-	private List<VisitStat> countByDayHourAndUser(VisitStat visitStat){
-		String url = HttpUtil.BASE_URL + "/storevisit/countByDayHourAndUser.do";
-		return countList(url,visitStat);
-	}
-	
-	private VisitStat countOrder(String url, VisitStat visitStat){
-		try {
-			String json = HttpUtil.postRequest(url,visitStat);
-			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-				return null;
-			}
-			
-			VisitStat vStat = JsonUtil.parse2Object(json, VisitStat.class);
-			return vStat;
-		} catch (Exception e) {
-			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
-		}
-		return null;
-	}
-	private List<VisitStat> countList(String url,VisitStat visitStat){
-		try {
-			String json = HttpUtil.postRequest(url,visitStat);
-			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 				return null;
 			}
 			
@@ -412,8 +396,145 @@ public class MarketingActivity extends BaseTwoActivity implements
 			return list;
 		} catch (Exception e) {
 			LOGGER.error(">>> 统计失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "统计失败");
 		}
 		return null;
+	}
+	
+	private class CountTask extends AsyncTask<Void, Void, CountResult>{
+		@Override
+		protected CountResult doInBackground(Void... params) {
+			String today = DateUtil.today();
+			String yesterday = DateUtil.yesterday();
+			
+			OrderStat todayOrder = countByDay(today);
+			OrderStat yesterdayOrder = countByDay(yesterday);
+			
+			List<OrderStat> sellOrder = countByDayHour(today);
+			if(sellOrder == null){
+				sellOrder = new ArrayList<OrderStat>();
+			}
+			
+			int today_count = todayOrder == null ? 0 : todayOrder.getOrder_sell();
+			int yesterday_count = yesterdayOrder == null ? 0 : yesterdayOrder.getOrder_sell();
+			return new CountResult(today_count, yesterday_count, sellOrder);
+		}
+		@Override
+		protected void onPostExecute(CountResult result) {
+			super.onPostExecute(result);
+			
+			market_today_count.setText(result.today_count+"");
+			market_yesterday_count.setText(result.yesterday_count+"");
+			fillSellData((List<OrderStat>)result.list);
+		}
+	}
+	private class CountTask1 extends AsyncTask<Void, Void, CountResult>{
+		@Override
+		protected CountResult doInBackground(Void... params) {
+			String today = DateUtil.today();
+			String yesterday = DateUtil.yesterday();
+			
+			OrderStat todayMoney = countMoneyByDay(today);
+			OrderStat yesterdayMoney = countMoneyByDay(yesterday);
+			
+			
+			List<OrderStat> sellMoney = countMoneyByDayHour(today);
+			if(sellMoney == null){
+				sellMoney = new ArrayList<OrderStat>();
+			}
+			
+			float today_count = todayMoney == null ? 0 : todayMoney.getAmount_money();
+			float yesterday_count = yesterdayMoney == null ? 0 : yesterdayMoney.getAmount_money();
+			return new CountResult(today_count, yesterday_count, sellMoney);
+		}
+		@Override
+		protected void onPostExecute(CountResult result) {
+			super.onPostExecute(result);
+			
+			market_money_today_count.setText(result.today_count+"");
+			market_money_yesterday_count.setText(result.yesterday_count+"");
+			fillMoneyData((List<OrderStat>)result.list);
+		}
+	}
+	private class CountTask2 extends AsyncTask<Void, Void, CountResult>{
+		@Override
+		protected CountResult doInBackground(Void... params) {
+			String today = DateUtil.today();
+			String yesterday = DateUtil.yesterday();
+			
+			FavoriteStat favoriteStat = new FavoriteStat();
+			int store_id = sessionManager.getInt("store_id");
+			favoriteStat.setStore_id(store_id);//商家ID
+			
+			favoriteStat.setStat_date(today);
+			FavoriteStat todayFavorite = countByDayAndUser(favoriteStat);
+			favoriteStat.setStat_date(yesterday);
+			FavoriteStat yesterdayFavorite = countByDayAndUser(favoriteStat);
+			
+			favoriteStat.setStat_date(today);
+			List<FavoriteStat> favorite = countByDayHourAndUser(favoriteStat);
+			if(favorite == null){
+				favorite = new ArrayList<FavoriteStat>();
+			}
+			
+			int today_count = todayFavorite == null ? 0 : todayFavorite.getFavorite_count();
+			int yesterday_count = yesterdayFavorite == null ? 0 : yesterdayFavorite.getFavorite_count();
+			return new CountResult(today_count, yesterday_count, favorite);
+		}
+		@Override
+		protected void onPostExecute(CountResult result) {
+			super.onPostExecute(result);
+			
+			market_everyday_collect_today_count.setText(result.today_count+"");
+			market_everyday_collect_yesterday_count.setText(result.yesterday_count+"");
+			fillFavoriteData((List<FavoriteStat>)result.list);
+		}
+	}
+	private class CountTask3 extends AsyncTask<Void, Void, CountResult>{
+		@Override
+		protected CountResult doInBackground(Void... params) {
+			String today = DateUtil.today();
+			String yesterday = DateUtil.yesterday();
+			
+			
+			VisitStat visitStat = new VisitStat();
+			int store_id = sessionManager.getInt("store_id");
+			visitStat.setStore_id(store_id);//商家ID
+			
+			visitStat.setStat_date(today);
+			VisitStat todayVisit = countByDayAndUser(visitStat);
+			visitStat.setStat_date(yesterday);
+			VisitStat yesterdayVisit = countByDayAndUser(visitStat);
+			
+			
+			visitStat.setStat_date(today);
+			List<VisitStat> visit = countByDayHourAndUser(visitStat);
+			if(visit == null){
+				visit = new ArrayList<VisitStat>();
+			}
+			
+			int today_count = todayVisit == null ? 0 : todayVisit.getVisit_count();
+			int yesterday_count = yesterdayVisit == null ? 0 : yesterdayVisit.getVisit_count();
+			return new CountResult(today_count, yesterday_count, visit);
+		}
+		@Override
+		protected void onPostExecute(CountResult result) {
+			super.onPostExecute(result);
+			
+			market_customer_today_count.setText(result.today_count+"");
+			market_customer_yesterday_count.setText(result.yesterday_count+"");
+			fillVisitData((List<VisitStat>)result.list);
+		}
+	}
+	
+	private class CountResult{
+		private float today_count;//今天
+		private float yesterday_count;//昨天
+		private List<?> list;
+		
+		public CountResult(float today_count,float yesterday_count,List<?> list) {
+			this.today_count = today_count;
+			this.yesterday_count = yesterday_count;
+			this.list = list;
+		}
 	}
 }

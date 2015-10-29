@@ -1,5 +1,6 @@
 package com.cjh.activity;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
 

@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,16 @@ import android.widget.TextView;
 import com.cjh.bean.ChatMsgItem;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.DateUtil;
+import com.google.code.microlog4android.Logger;
+import com.google.code.microlog4android.LoggerFactory;
 /**
  * 聊天窗口适配器
  * @author ps
  *
  */
 public class ChatMsgViewAdapter extends BaseAdapter {
-	public static final String TAG = "ChatMsgViewAdapter";
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatMsgViewAdapter.class);
+
 	private List<ChatMsgItem> data;
 	private Context context;
 	private LayoutInflater mInflater;
@@ -57,19 +59,14 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			if (isComing) {
-				convertView = mInflater.inflate(
-						R.layout.chatting_item_msg_left, null);
+				convertView = mInflater.inflate(R.layout.chatting_item_msg_left, null);
 			} else {
-				convertView = mInflater.inflate(
-						R.layout.chatting_item_msg_right, null);
+				convertView = mInflater.inflate(R.layout.chatting_item_msg_right, null);
 			}
 			viewHolder = new ViewHolder();
-			viewHolder.msg_sendtime = (TextView) convertView
-					.findViewById(R.id.msg_sendtime);
-			viewHolder.msg_text = (TextView) convertView
-					.findViewById(R.id.msg_text);
-			viewHolder.msg_username = (TextView) convertView
-					.findViewById(R.id.msg_username);
+			viewHolder.msg_sendtime = (TextView) convertView.findViewById(R.id.msg_sendtime);
+			viewHolder.msg_text = (TextView) convertView.findViewById(R.id.msg_text);
+			viewHolder.msg_username = (TextView) convertView.findViewById(R.id.msg_username);
 			viewHolder.isComing = isComing;
 			convertView.setTag(viewHolder);
 		} else {
@@ -77,8 +74,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		}
 		String regular = "appkefu_f0[0-9]{2}";
 		String str = entity.getContent();
-		SpannableString spannableString = ChatMsgViewAdapter
-				.getExpressionString(context, str, regular);
+		SpannableString spannableString = ChatMsgViewAdapter.getExpressionString(context, str, regular);
 
 		viewHolder.msg_text.setText(spannableString);
 		viewHolder.msg_sendtime.setText(DateUtil.format(entity.getSendDate()));
@@ -119,14 +115,8 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 					}
 					break;
 				}
-			} catch (NoSuchFieldException e) {
-				Log.e(TAG, "聊天出错", e);
-			} catch (NumberFormatException e) {
-				Log.e(TAG, "聊天出错", e);
-			} catch (IllegalAccessException e) {
-				Log.e(TAG, "聊天出错", e);
-			} catch (IllegalArgumentException e) {
-				Log.e(TAG, "聊天出错", e);
+			} catch (Exception e) {
+				LOGGER.error("显示表情出错", e);
 			}
 
 		}

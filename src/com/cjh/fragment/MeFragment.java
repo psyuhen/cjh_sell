@@ -21,15 +21,15 @@ import com.cjh.activity.OrdersActivity;
 import com.cjh.activity.ShopActivity;
 import com.cjh.cjh_sell.R;
 /**
- * 首页民航
+ * 首页导航
  * @author ps
  *
  */
 public class MeFragment extends Fragment implements OnClickListener {
-	private RelativeLayout[] relativeLayouts = new RelativeLayout[7];
 	private int ids[] = { R.id.me_order_rl, R.id.me_goods_rl,
-			R.id.me_category_rl, R.id.me_marketing_rl, R.id.me_ad_rl,
-			R.id.me_shop_rl, R.id.me_help_ll };
+			R.id.me_category_rl, R.id.me_marketing_rl, R.id.me_ad_rl,R.id.me_shop_rl,
+			R.id.me_help_ll };
+	private RelativeLayout[] relativeLayouts = new RelativeLayout[ids.length];
 //	private Button login_btn;
 	
 	private TextView order_title;

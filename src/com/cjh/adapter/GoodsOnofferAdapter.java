@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,7 +141,12 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			viewHolder.img_image.setImageResource(R.drawable.c3);
 		}*/
 		
-		viewHolder.img_image.setImageBitmap(goodsItem.getBitmap());
+		Bitmap bitmap = goodsItem.getBitmap();
+		if(bitmap == null){
+			viewHolder.img_image.setImageResource(R.drawable.login_head_icon);
+		}else{
+			viewHolder.img_image.setImageBitmap(bitmap);
+		}
 		
 		//删除
 		viewHolder.good_delete_image_rl.setOnClickListener(new OnClickListener() {

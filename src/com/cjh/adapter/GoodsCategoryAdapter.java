@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,7 +92,12 @@ public class GoodsCategoryAdapter extends BaseAdapter{
 			viewHolder.category_edit_ll.setVisibility(View.GONE);
 			viewHolder.category_arrow.setVisibility(View.VISIBLE);
 		}
-		viewHolder.img_image.setImageBitmap(categoryItem.getBitmap());
+		Bitmap bitmap = categoryItem.getBitmap();
+		if(bitmap == null){
+			viewHolder.img_image.setImageResource(R.drawable.login_head_icon);
+		}else{
+			viewHolder.img_image.setImageBitmap(bitmap);
+		}
 		viewHolder.categort_detail.setText(categoryItem.getDetail());
 		viewHolder.title_text.setText(categoryItem.getTitle());
 		viewHolder.category_num.setText(categoryItem.getNum() + "件商品");

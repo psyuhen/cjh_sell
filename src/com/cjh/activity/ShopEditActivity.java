@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -193,11 +192,11 @@ public class ShopEditActivity extends BaseTwoActivity {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(data == null){
-			return;
-		}
 		switch (requestCode) {
 		case Constants.IMAGE_REQUEST_CODE://打开相册后返回的数据
+			if(data == null){
+				break;
+			}
 			Uri selectImage = data.getData();
 			if (selectImage != null) {
 				String uriStr = selectImage.toString();
@@ -224,9 +223,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			break;
 		case Constants.CAMERA_REQUEST_CODE://打开相机后返回来数据 
 			if (CommonsUtil.hasSdcard()) {
-				File tempFile = new File(
-						Environment.getExternalStorageDirectory()
-								+ Constants.IMAGE_FILE_NAME);
+				File tempFile = FileUtil.getAppFolderFile(Constants.IMAGE_FILE_NAME);
 				ImageUtil.startPhotoZoom(Uri.fromFile(tempFile),
 						ShopEditActivity.this);
 			} else {
@@ -238,6 +235,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 		case Constants.RESULT_REQUEST_CODE:
 			if (data != null) {
 				getImageToView(data, ShopEditActivity.this);
+				imageChooseDialog.hide();
 			}
 			break;
 		default:
@@ -270,7 +268,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 			}
 			addImage.setFile(image);
 			addImage.setFileName(image.getName());
-			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			int user_id = sessionManager.getUserId();
 			QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
 				@Override
 				public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
@@ -352,53 +350,50 @@ public class ShopEditActivity extends BaseTwoActivity {
 		String person = shop_edit_detail_person.getText().toString();
 		
 		boolean cancel = false;
-		View focusView = null;
 		
 		if (TextUtils.isEmpty(shopName)) {
 			shop_edit_detail_title.setError(getString(R.string.error_field_required));
-			focusView = shop_edit_detail_title;
 			cancel = true;
 		}else if (TextUtils.isEmpty(shopDesc)) {
 			shop_edit_detail_content.setError(getString(R.string.error_field_required));
-			focusView = shop_edit_detail_content;
 			cancel = true;
 		}else if (TextUtils.isEmpty(address)) {
 			shop_edit_detail_address.setError(getString(R.string.error_field_required));
-			focusView = shop_edit_detail_address;
 			cancel = true;
 		}else if (TextUtils.isEmpty(phone)) {
 			shop_edit_detail_tel.setError(getString(R.string.error_field_required));
-			focusView = shop_edit_detail_tel;
 			cancel = true;
 		}else if (TextUtils.isEmpty(person)) {
 			shop_edit_detail_tel.setError(getString(R.string.error_field_required));
-			focusView = shop_edit_detail_person;
 			cancel = true;
 		}
 		
 		if (cancel) {
 			// 有错误，不提交
-			focusView.requestFocus();
-		}else {
-			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-			int store_id = sessionManager.getInt("store_id");
-			
-			Store storeInfo = new Store();
-			storeInfo.setUser_id(user_id);
-//			storeInfo.setClassify_id(Integer.parseInt(classify_id));
-			storeInfo.setPerson(person);
-			storeInfo.setDesc(shopDesc);
-			storeInfo.setAddress(address);
-			storeInfo.setPhone(phone);
-			storeInfo.setName(shopName);
-			storeInfo.setStore_id(store_id);
-
-			if(store_id > 0){
-				updateStore(storeInfo);
-			}else{
-				addStore(storeInfo);
-			}
+			return;
 		}
+
+		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+		int store_id = sessionManager.getInt("store_id");
+		
+		Store storeInfo = new Store();
+		storeInfo.setUser_id(user_id);
+//		storeInfo.setClassify_id(Integer.parseInt(classify_id));
+		storeInfo.setPerson(person);
+		storeInfo.setDesc(shopDesc);
+		storeInfo.setAddress(address);
+		storeInfo.setPhone(phone);
+		storeInfo.setName(shopName);
+		storeInfo.setStore_id(store_id);
+
+		if(store_id > 0){
+			updateStore(storeInfo);
+		}else{
+			addStore(storeInfo);
+		}
+		
+		setResult(RESULT_OK);
+		finish();
 	}
 	
 	private void addStore(Store storeInfo){

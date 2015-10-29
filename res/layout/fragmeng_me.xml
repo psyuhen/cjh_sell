@@ -283,7 +283,7 @@
 
                     <RelativeLayout
                         android:id="@+id/me_shop_rl"
-                        style="@style/me_item_rl" >
+                        style="@style/me_item_rl"  android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/me_shop_image"

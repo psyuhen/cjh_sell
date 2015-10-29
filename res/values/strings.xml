@@ -80,6 +80,8 @@
     <string name="setting_me_text">头像</string>
     <string name="setting_name_text">名字</string>
     <string name="setting_city_text">所在城市</string>
+    <string name="setting_qq_text">QQ</string>
+    <string name="setting_wechat_text">微信号</string>
     <string name="setting_card_text">关联卡号</string>
     <string name="setting_password_text">重置取现密码</string>
     <string name="setting_remind_text">提示音</string>
@@ -398,5 +400,16 @@
     <string name="goods_view_standard_text">规格</string>
     <string name="goods_view_details_text">图文详情</string>
     <string name="add_category_btn_text">新建类别</string>
-
+	<!-- 找回密码 -->
+    <string name="retrievePswd_text">找回密码</string>
+    <string name="retrieve_pswd_tel_text">手机号:</string>
+    <string name="retrieve_pswd_tel_hint">请输入手机号</string>
+    <string name="retrieve_pswd_tel_send_code_btn_text">获取验证码</string>
+    <string name="retrieve_pswd_code_text">验证码:</string>
+    <string name="retrieve_pswd_code_hint">请输入获取到的验证码</string>
+    <string name="retrieve_pswd_new_pswd_text">新密码:</string>
+    <string name="retrieve_pswd_new_pswd_edit_hint">请输入要设置的新密码</string>
+    <string name="retrieve_pswd_confirm_btn">确认</string>
+    
+    <string name="setting_exit_btn">退出</string>
 </resources>

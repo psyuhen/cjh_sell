@@ -1,11 +1,14 @@
 package com.cjh.fragment;
 
-import java.util.concurrent.ExecutionException;
+import java.io.File;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +26,11 @@ import com.cjh.activity.ShopEditActivity;
 import com.cjh.bean.Store;
 import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
+import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
+import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -121,6 +126,8 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				if(logo != null && !"".equals(logo)){
 					Bitmap bitmap = FileUtil.getCacheFile(logo);
 					shop_my_image.setImageBitmap(bitmap);
+				}else{//没有上传图片就默认一个吧
+					shop_my_image.setImageResource(R.drawable.login_head_icon);
 				}
 			}
 		} catch (Exception e) {
@@ -132,7 +139,8 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.view_in_shop_content_ll:
-			startActivity(new Intent(getActivity(), ShopEditActivity.class));
+			Intent intent = new Intent(getActivity(), ShopEditActivity.class);
+			startActivityForResult(intent, Constants.SHOPEDIT_REQUEST_CODE);
 			break;
 		case R.id.shop_nav_item_delivery_rl:
 			Toast.makeText(getActivity(), "送货员", Toast.LENGTH_SHORT).show();
@@ -149,4 +157,15 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 		}
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case Constants.SHOPEDIT_REQUEST_CODE:
+			querybyuserid();
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 }
