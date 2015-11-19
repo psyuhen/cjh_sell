@@ -197,7 +197,7 @@ public class OrderClosedFragment extends Fragment implements OnClickListener {
 				orderItem.setBuyer(order.getBuyer_user_name());
 				orderItem.setOrdertime(new Date());
 				orderItem.setPrice(order.getAmount_money());
-				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
+//				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
 				
 				String status = order.getStatus();
 				if(status != null && !"".equals(status)){

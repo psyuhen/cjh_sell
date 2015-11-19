@@ -47,11 +47,15 @@ import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.AVImClientManager;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.HttpUtil;
+import com.cjh.utils.JsonUtil;
+import com.cjh.utils.PageUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 /**
  * 聊天窗口
+ * @deprecated 由CommunicationActivity替代
  * @author ps
  *
  */
@@ -101,6 +105,8 @@ public class ChatActivity extends BaseTwoActivity{
 		mListView.setAdapter(mAdapter);
 		
 		//getOffLineMsg();
+		
+		queryUserInfo(buyer_user_id);
 	}
 	@Override
 	public void onClick(View v) {
@@ -114,6 +120,23 @@ public class ChatActivity extends BaseTwoActivity{
 			break;
 		default:
 			break;
+		}
+	}
+	
+	//查询买家信息
+	private void queryUserInfo(String user_id){
+		String url = HttpUtil.BASE_URL + "/user/query.do?id=" + user_id;
+		try{
+			String json = HttpUtil.getRequest(url);
+			if(json == null){
+				return;
+			}
+			
+			User buyerInfo = JsonUtil.parse2Object(json, User.class);
+			buyer_user_name = buyerInfo.getName();
+			buyer_user_mobile = buyerInfo.getMobile();
+		}catch (Exception e) {
+			LOGGER.error("查询用户信息出错",e);
 		}
 	}
 
@@ -186,6 +209,9 @@ public class ChatActivity extends BaseTwoActivity{
 				if (e == null) {
 					HashMap<String,Object> attributes=new HashMap<String, Object>();
 		            attributes.put("buyer_user_id", buyer_user_id);
+		            attributes.put("buyer_user_name", buyer_user_name);
+		            attributes.put("seller_user_id", user.getUser_id());
+		            attributes.put("seller_user_name", user.getName());
 					// 创建与Jerry之间的对话
 					client.createConversation(Arrays.asList(buyer_user_mobile), buyer_user_name, attributes, new AVIMConversationCreatedCallback() {
 						@Override

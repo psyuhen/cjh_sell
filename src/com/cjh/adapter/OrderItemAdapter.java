@@ -17,7 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cjh.activity.ChatActivity;
+import com.cjh.activity.CommunicationActivity;
 import com.cjh.activity.OrderDetailsActivity;
 import com.cjh.bean.OrderItem;
 import com.cjh.cjh_sell.R;
@@ -139,7 +139,8 @@ public class OrderItemAdapter extends BaseAdapter {
 				.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(context, ChatActivity.class);
+//						Intent intent = new Intent(context, ChatActivity.class);
+						Intent intent = new Intent(context, CommunicationActivity.class);
 						intent.putExtra("buyer_user_id", orderItem.getBuyer_user_id());
 						intent.putExtra("buyer_user_name", orderItem.getBuyer());
 						intent.putExtra("buyer_user_mobile", orderItem.getBuyer_user_mobile());

@@ -29,7 +29,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl1"
+        android:id="@+id/rl2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"

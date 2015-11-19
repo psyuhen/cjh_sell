@@ -412,4 +412,8 @@
     <string name="retrieve_pswd_confirm_btn">确认</string>
     
     <string name="setting_exit_btn">退出</string>
+    
+    <!-- leancloud -->
+    <string name="unspport_message_type">不支持的消息类型</string>
+    <string name="audio_message_type">你有一条语音信息，请查收</string>
 </resources>

@@ -211,7 +211,7 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 				orderItem.setBuyer(order.getBuyer_user_name());
 				orderItem.setOrdertime(DateUtil.parseDate(order.getTrad_time(), new String[]{"yyyyMMddHHmmss"}));//订单时间
 				orderItem.setPrice(order.getAmount_money());
-				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
+//				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
 				
 				String status = order.getStatus();
 				if(status != null && !"".equals(status)){
