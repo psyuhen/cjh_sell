@@ -18,6 +18,7 @@ import com.cjh.auth.SessionManager;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
+import com.cjh.fragment.OrderInFragment;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
@@ -76,6 +77,7 @@ public class LimitTimeAddActivity extends BaseTwoActivity {
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
+				LimitTimeAddActivity.this.start = PageUtil.START;
 				querybyuserid(PageUtil.START);
 			}
 

@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVOSCloud;
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
 

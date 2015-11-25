@@ -63,6 +63,7 @@ public class LimitTimeActivity extends BaseTwoActivity {
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
+				LimitTimeActivity.this.start = PageUtil.START;
 				querybyuserid(PageUtil.START);
 			}
 

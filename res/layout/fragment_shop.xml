@@ -32,8 +32,7 @@
                 style="@style/goods_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15.0dip"
-                android:text="@string/order_title_text" />
+                android:layout_marginTop="15.0dip" />
 
             <ImageView
                 android:id="@+id/order_stars"

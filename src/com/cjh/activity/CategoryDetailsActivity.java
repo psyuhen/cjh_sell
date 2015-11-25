@@ -95,8 +95,6 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		right_imgbtn.setVisibility(View.GONE);
 		right_text.setVisibility(View.VISIBLE);
 		right_text.setText("完成");
-		category_detail_image.setVisibility(View.GONE);
-		
 		querybyid();
 	}
 	
@@ -138,6 +136,15 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			showImageChoose();
 			break;
 		case R.id.category_detail_image1:
+			if(gallery != null){
+				deleteGallery(gallery.getGallery_id()+"");
+			}
+			
+			category_detail_image.setVisibility(View.VISIBLE);
+			category_detail_deleteimage1.setVisibility(View.GONE);
+			category_detail_image1.setVisibility(View.GONE);
+			break;
+		case R.id.category_detail_deleteimage1:
 			if(gallery != null){
 				deleteGallery(gallery.getGallery_id()+"");
 			}
@@ -191,7 +198,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		}
 	}
 	//删除类别
-	private void deleteClassify(){
+	/*private void deleteClassify(){
 		String url = HttpUtil.BASE_URL + "/classify/delete.do?classify_id="+String.valueOf(classify_id);
 		try {
 			String json = HttpUtil.getRequest(url);
@@ -206,7 +213,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			LOGGER.error(">>> 删除分类信息失败", e);
 			CommonsUtil.showShortToast(getApplicationContext(), "删除分类信息失败");
 		}
-	}
+	}*/
 
 	private void showImageChoose() {
 		imageChooseDialog = new AlertDialog.Builder(
@@ -352,7 +359,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.getRequest(url);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "查询分类图片失败");
+				//CommonsUtil.showShortToast(getApplicationContext(), "查询分类图片失败");
 				return null;
 			}
 			
@@ -376,7 +383,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.postRequest(url, gallery);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
+//				CommonsUtil.showShortToast(getApplicationContext(), "新增图片失败");
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
@@ -392,7 +399,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.postRequest(url, gallery);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
+//				CommonsUtil.showShortToast(getApplicationContext(), "更新图片失败");
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);
@@ -410,7 +417,7 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 			map.put("gallery_id", gallery_id);
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+				//CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 				return;
 			}
 			CommonsUtil.showShortToast(getApplicationContext(), json);

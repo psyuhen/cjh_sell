@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.cjh.activity.CommunicationActivity;
 import com.cjh.activity.OrderDetailsActivity;
+import com.cjh.bean.FreshFlag;
 import com.cjh.bean.OrderItem;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
@@ -28,6 +29,16 @@ public class OrderItemAdapter extends BaseAdapter {
 	private List<OrderItem> orderlist;
 	private Context context;
 	private OrderImageAdapter orderImageAdapter = null;
+	private String from = "";
+	private FreshFlag freshFlag;
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public void setFreshFlag(FreshFlag freshFlag) {
+		this.freshFlag = freshFlag;
+	}
+
 
 	public OrderItemAdapter(Context context, List<OrderItem> orderlist) {
 		this.context = context;
@@ -132,21 +143,22 @@ public class OrderItemAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Intent intent = new Intent(context, OrderDetailsActivity.class);
 				intent.putExtra("order_id", orderItem.getSerialnum());
+				intent.putExtra("from", OrderItemAdapter.this.from);
+				freshFlag.setFlag(freshFlag.getFlag() + 1);
 				context.startActivity(intent);
 			}
 		});
-		viewHolder.order_communication_btn
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
+		viewHolder.order_communication_btn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 //						Intent intent = new Intent(context, ChatActivity.class);
-						Intent intent = new Intent(context, CommunicationActivity.class);
-						intent.putExtra("buyer_user_id", orderItem.getBuyer_user_id());
-						intent.putExtra("buyer_user_name", orderItem.getBuyer());
-						intent.putExtra("buyer_user_mobile", orderItem.getBuyer_user_mobile());
-						context.startActivity(intent);
-					}
-				});
+				Intent intent = new Intent(context, CommunicationActivity.class);
+				intent.putExtra("buyer_user_id", orderItem.getBuyer_user_id());
+				intent.putExtra("buyer_user_name", orderItem.getBuyer());
+				intent.putExtra("buyer_user_mobile", orderItem.getBuyer_user_mobile());
+				context.startActivity(intent);
+			}
+		});
 		return convertView;
 	}
 

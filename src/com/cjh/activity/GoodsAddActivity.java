@@ -157,6 +157,7 @@ public class GoodsAddActivity extends BaseTwoActivity {
 				LOGGER.error(">>> 转换分类列表信息失败");
 				return;
 			}
+			categoryList.clear();
 			for (ClassifyInfo classifyInfo : list) {
 				CategoryItem categoryItem=new CategoryItem();
 				categoryItem.setId(classifyInfo.getClassify_id());
@@ -266,30 +267,30 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		String stock = pop_stock_edit.getText().toString();//价格
 		String type = pop_type_edit.getText().toString();//单位
 		
+		String required = getString(R.string.error_field_required);
 		if(TextUtils.isEmpty(title)){
-			pop_title_edit.setError(getString(R.string.error_field_required));
+			pop_title_edit.setError("标题" + required);
+			CommonsUtil.showShortToast(GoodsAddActivity.this, "标题" + required);
 			return;
 		}
 		
 		if(TextUtils.isEmpty(content)){
-			pop_content_edit.setError(getString(R.string.error_field_required));
+			pop_content_edit.setError("内容" + required);
+			CommonsUtil.showShortToast(GoodsAddActivity.this, "内容" + required);
 			return;
 		}
 		
 		int store_id = sessionManager.getInt("store_id");//获取商家ID
 		
 		MerchInfo merchInfo = new MerchInfo();
-		merchInfo.setName(title);
-		merchInfo.setDesc(content);
-		merchInfo.setStore_id(store_id);
-		merchInfo.setClassify_id(classify_id);
-		merchInfo.setUnit(type);
-		merchInfo.setOut_published("0");
+		
 		if(!TextUtils.isEmpty(price)){
 			if(Validator.isNumber(price)){
 				merchInfo.setPrice(Float.valueOf(price));
 			}else{
-				pop_price_edit.setError(getString(R.string.error_invalid_float));
+				String error_price = getString(R.string.error_invalid_price);
+				pop_price_edit.setError(error_price);
+				CommonsUtil.showShortToast(GoodsAddActivity.this, error_price);
 				return;
 			}
 		}
@@ -297,10 +298,27 @@ public class GoodsAddActivity extends BaseTwoActivity {
 			if(Validator.isDigits(stock)){
 				merchInfo.setIn_stock(Integer.valueOf(stock));
 			}else{
-				pop_price_edit.setError(getString(R.string.error_invalid_digit));
+				String error_stock = getString(R.string.error_invalid_stock);
+				pop_stock_edit.setError(error_stock);
+				CommonsUtil.showShortToast(GoodsAddActivity.this, error_stock);
 				return;
 			}
 		}
+		
+		if(!TextUtils.isEmpty(type)){
+			if(type.length() > 10){
+				pop_type_edit.setError("单位输入超过10位");
+				CommonsUtil.showShortToast(GoodsAddActivity.this, "单位输入超过10位");
+				return;
+			}
+		}
+		
+		merchInfo.setName(title);
+		merchInfo.setDesc(content);
+		merchInfo.setStore_id(store_id);
+		merchInfo.setClassify_id(classify_id);
+		merchInfo.setUnit(type);
+		merchInfo.setOut_published("0");
 		
 		
 		String url = HttpUtil.BASE_URL + "/merch/add.do";

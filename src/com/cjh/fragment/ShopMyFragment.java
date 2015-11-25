@@ -1,14 +1,9 @@
 package com.cjh.fragment;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +25,6 @@ import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
-import com.cjh.utils.ImageUtil;
 import com.cjh.utils.JsonUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;

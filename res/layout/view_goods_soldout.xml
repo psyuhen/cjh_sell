@@ -46,7 +46,7 @@
                 android:button="@null"
                 android:drawableRight="@drawable/sort_selector"
                 android:paddingRight="3.0dip"
-                android:text="@string/goods_add_time_text" />
+                android:text="@string/goods_sale_num_text" />
         </RelativeLayout>
 
         <RelativeLayout

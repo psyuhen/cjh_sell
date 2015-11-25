@@ -65,8 +65,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		dealBottomButtonsClickEvent();
 		
 		try{
-			PushService.setDefaultPushCallback(this, OrderActivity.class);
-			PushService.subscribe(this, "seller_" + sessionManager.getStoreId(), OrderActivity.class);
+			PushService.setDefaultPushCallback(this, OrdersActivity.class);
+			PushService.subscribe(this, "seller_" + sessionManager.getStoreId(), OrdersActivity.class);
 			AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
 		      @Override
 		      public void done(AVException e) {

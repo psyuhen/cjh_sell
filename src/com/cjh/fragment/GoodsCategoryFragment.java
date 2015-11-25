@@ -8,6 +8,7 @@ import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -102,6 +103,7 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {//重新刷新
+				GoodsCategoryFragment.this.start = PageUtil.START;
 				queryClassify(PageUtil.START);
 			}
 
@@ -121,62 +123,76 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 		queryClassify(PageUtil.START);
 	}
 	
-	//根据用户查询分类
-	private void queryClassify(int start){
-		GoodActivity activity = (GoodActivity)context;
-		SessionManager sessionManager = activity.sessionManager;
-		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-		
-		String url = HttpUtil.BASE_URL + "/classify/querybyuseridpage.do?user_id="+user_id+"&start="+start+"&limit="+PageUtil.LIMIT;
-		try {
-			String jsons = HttpUtil.getRequest(url);
-			if(jsons == null){
-				CommonsUtil.showShortToast(getActivity(), "查询分类信息失败");
-				kjListView.stopRefreshData();
-				return;
-			}
-			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
-			if(list == null){
-				LOGGER.warn("转换分类列表信息失败");
-				kjListView.stopRefreshData();
-				return;
-			}
+	//根据分类查询商品
+	private class queryGoodsTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			int start = params[0];
 			
-			int length = list.size();
-			//查询的数据为空时，不作处理
-			if(length == 0){
-				kjListView.stopRefreshData();
-				return;
-			}
+			GoodActivity activity = (GoodActivity)context;
+			SessionManager sessionManager = activity.sessionManager;
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
 			
-			//默认开始的时候，先清空列表数据
-			if(start == PageUtil.START){
-				categoryList.clear();
-			}
-			
-			for (int i = 0; i < length; i++) {
-				ClassifyInfo classifyInfo = list.get(i);
-				CategoryItem categoryItem=new CategoryItem();
-				categoryItem.setId(classifyInfo.getClassify_id());
-				categoryItem.setNum(classifyInfo.getClassify_num());
-				categoryItem.setTitle(classifyInfo.getName());
-				categoryItem.setDetail(classifyInfo.getDesc());
-				
-				String classify_image = classifyInfo.getClassify_image();
-				if(classify_image != null && !"".equals(classify_image)){
-					categoryItem.setBitmap(FileUtil.getCacheFile(classify_image));
+			String url = HttpUtil.BASE_URL + "/classify/querybyuseridpage.do?user_id="+user_id+"&start="+start+"&limit="+PageUtil.LIMIT;
+			try {
+				String jsons = HttpUtil.getRequest(url);
+				if(jsons == null){
+					CommonsUtil.showShortToast(getActivity(), "查询分类信息失败");
+					return null;
+				}
+				List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
+				if(list == null){
+					LOGGER.warn("转换分类列表信息失败");
+					return null;
 				}
 				
-				categoryList.add(categoryItem);
+				int length = list.size();
+				//查询的数据为空时，不作处理
+				if(length == 0){
+					return null;
+				}
+				
+				//默认开始的时候，先清空列表数据
+				if(start == PageUtil.START){
+					categoryList.clear();
+				}
+				
+				for (int i = 0; i < length; i++) {
+					ClassifyInfo classifyInfo = list.get(i);
+					CategoryItem categoryItem=new CategoryItem();
+					categoryItem.setId(classifyInfo.getClassify_id());
+					categoryItem.setNum(classifyInfo.getClassify_num());
+					categoryItem.setTitle(classifyInfo.getName());
+					categoryItem.setDetail(classifyInfo.getDesc());
+					
+					String classify_image = classifyInfo.getClassify_image();
+					if(classify_image != null && !"".equals(classify_image)){
+						categoryItem.setBitmap(FileUtil.getCacheFile(classify_image));
+					}
+					
+					categoryList.add(categoryItem);
+				}
+				
+				GoodsCategoryFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
+			} catch (Exception e) {
+				LOGGER.error("查询分类列表失败", e);
+				CommonsUtil.showShortToast(getActivity(), "查询分类列表失败");
 			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 			
-			this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsCategoryAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (Exception e) {
-			LOGGER.error("查询分类列表失败", e);
-			CommonsUtil.showShortToast(getActivity(), "查询分类列表失败");
 		}
+	}
+	
+	//根据用户查询分类
+	private void queryClassify(int start){
+		new queryGoodsTask().execute(start);
 	}
 	
 	@Override

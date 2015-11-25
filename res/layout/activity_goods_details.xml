@@ -92,11 +92,11 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10.0dip"
-                    android:background="@drawable/goods_detail_edit"
-                    android:text="@string/goods_detail_title" />
+                    android:background="@drawable/goods_detail_edit" />
 
                 <ImageView style="@style/goods_detail_line" />
 
+                <!-- 内容 -->
                 <TextView
                     android:id="@+id/goods_detail_content_text"
                     style="@style/goods_detail_gray_style"
@@ -109,10 +109,10 @@
                     android:id="@+id/goods_detail_content"
                     style="@style/goods_detail_black_style"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="240dip"
+                    android:gravity="top|left"
                     android:layout_margin="10.0dip"
-                    android:background="@drawable/goods_detail_edit"
-                    android:text="@string/goods_detail_content" />
+                    android:background="@drawable/goods_detail_edit" />
             </LinearLayout>
 
             <LinearLayout
@@ -142,8 +142,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
-                        android:background="@drawable/goods_detail_edit"
-                        android:text="@string/goods_detail_price" />
+                        android:background="@drawable/goods_detail_edit" 
+                        android:numeric="decimal" />
                 </LinearLayout>
 
                 <ImageView style="@style/goods_detail_line" />
@@ -168,8 +168,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
-                        android:background="@drawable/goods_detail_edit"
-                        android:text="@string/goods_detail_stock" />
+                        android:background="@drawable/goods_detail_edit" 
+                        android:numeric="integer" />
                 </LinearLayout>
 
                 <ImageView style="@style/goods_detail_line" />
@@ -195,11 +195,11 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5.0dip"
-                        android:background="@drawable/goods_detail_edit"
-                        android:text="@string/goods_detail_type" />
+                        android:background="@drawable/goods_detail_edit"  />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- 选择分类类别 -->
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -238,13 +238,14 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10.0dip"
                         android:layout_toLeftOf="@+id/goods_detail_category_arrow"
-                        android:text="@string/goods_detail_category" />
+                        android:text="@string/default_category" />
                 </RelativeLayout>
 
                 <ImageView style="@style/goods_detail_line" />
 
             </LinearLayout>
 
+            <!-- 发布 删除 上下架按钮 -->
             <RelativeLayout
                 android:id="@+id/goods_detail_bottom_rl"
                 android:layout_width="fill_parent"
@@ -253,6 +254,7 @@
                 android:layout_marginBottom="10.0dip"
                 android:background="@color/whitebg" >
 
+                <!-- 发布 -->
                 <Button
                     android:id="@+id/goods_details_pubilsh_goods_btn"
                     style="@style/white_normal_style"
@@ -263,8 +265,9 @@
                     android:layout_toLeftOf="@+id/goods_details_delete_goods_btn"
                     android:background="@drawable/orange_btn"
                     android:padding="10.0dip"
-                    android:text="@string/publish_goods_text" />
+                    android:text="@string/publish_goods_text" android:visibility="gone"/>
                 
+                <!-- 删除 -->
                 <Button
                     android:id="@+id/goods_details_delete_goods_btn"
                     style="@style/white_normal_style"
@@ -277,6 +280,7 @@
                     android:padding="10.0dip"
                     android:text="@string/delete_goods_text" />
 
+                <!-- 上下架 -->
                 <Button
                     android:id="@+id/goods_details_offshelf_btn"
                     style="@style/white_normal_style"

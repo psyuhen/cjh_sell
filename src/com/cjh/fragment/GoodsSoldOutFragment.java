@@ -10,6 +10,7 @@ import org.kymjs.aframe.ui.widget.KJListView.KJListViewListener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.cjh.auth.SessionManager;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
+import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
@@ -60,6 +62,7 @@ public class GoodsSoldOutFragment extends Fragment {
 		fragment.setArguments(bundle);
 		return fragment;
 	}*/
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,7 +118,8 @@ public class GoodsSoldOutFragment extends Fragment {
 				Intent intent = new Intent(getActivity(), GoodsDetailsActivity.class);
 				intent.putExtra("merch_id", item.getId());
 				intent.putExtra("out_published", "1");//是否下架，1为下架
-				startActivity(intent);
+				intent.putExtra("from", "GoodsSoldOutFragment");//来自
+				startActivityForResult(intent, Constants.SOLDOUT_REQUEST_CODE);
 			}
 		});
 		//上下拉刷新
@@ -194,67 +198,101 @@ public class GoodsSoldOutFragment extends Fragment {
 		querybyuserid(PageUtil.START);
 	}
 	
-	//查询下架商品 
-	private void querybyuserid(int start){
-		GoodActivity activity = (GoodActivity)context;
-		SessionManager sessionManager = activity.sessionManager;
-		int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-		
-		MerchInfo info = new MerchInfo();
-		info.setUser_id(user_id);
-		info.setOut_published("1");
-		
-		String url = HttpUtil.BASE_URL + "/merch/querybypage.do?start="+start+"&limit="+PageUtil.LIMIT;
-		
-		try {
-			String listJson = HttpUtil.postRequest(url,info);
-			if(listJson == null){
-				CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
-				kjListView.stopRefreshData();
-				return;
-			}
+	//查询商品
+	private class queryGoodsTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			int start = params[0];
 			
-			List<MerchInfo> list = JsonUtil.parse2ListMerchInfo(listJson);
-			if(list == null){
-				LOGGER.warn("转换商品列表信息失败");
-				kjListView.stopRefreshData();
-				return;
-			}
-			
-			int length = list.size();
-			if(length == 0){
-				kjListView.stopRefreshData();
-				return;
-			}
-			
-			//默认开始的时候，先清空列表数据
 			if(start == PageUtil.START){
-				goodsList.clear();
+				GoodsSoldOutFragment.this.start = PageUtil.START;
 			}
 			
-			for (int i = 0; i < length; i++) {
-				MerchInfo merchInfo = list.get(i);
-				GoodsItem goodsItem = new GoodsItem();
-				goodsItem.setId(merchInfo.getMerch_id());
-				goodsItem.setDesc(merchInfo.getDesc());
-				goodsItem.setPrice(merchInfo.getPrice());
-				goodsItem.setSellmount(merchInfo.getSales_volume());
-				goodsItem.setStandard(merchInfo.getUnit());
-				goodsItem.setStock(merchInfo.getIn_stock());
-				goodsItem.setTitle(merchInfo.getName());
-				goodsItem.setCreate_time(merchInfo.getCreate_time());
+			GoodActivity activity = (GoodActivity)context;
+			SessionManager sessionManager = activity.sessionManager;
+			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			
+			MerchInfo info = new MerchInfo();
+			info.setUser_id(user_id);
+			info.setOut_published("1");
+			
+			String url = HttpUtil.BASE_URL + "/merch/querybypage.do?start="+start+"&limit="+PageUtil.LIMIT;
+			
+			try {
+				String listJson = HttpUtil.postRequest(url,info);
+				if(listJson == null){
+					CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
+					return null;
+				}
 				
-				goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
-				goodsList.add(goodsItem);
+				List<MerchInfo> list = JsonUtil.parse2ListMerchInfo(listJson);
+				if(list == null){
+					LOGGER.warn("转换商品列表信息失败");
+					return null;
+				}
+				
+				int length = list.size();
+				if(length == 0){
+					return null;
+				}
+				
+				//默认开始的时候，先清空列表数据
+				if(start == PageUtil.START){
+					goodsList.clear();
+				}
+				
+				for (int i = 0; i < length; i++) {
+					MerchInfo merchInfo = list.get(i);
+					GoodsItem goodsItem = new GoodsItem();
+					goodsItem.setId(merchInfo.getMerch_id());
+					goodsItem.setDesc(merchInfo.getDesc());
+					goodsItem.setPrice(merchInfo.getPrice());
+					goodsItem.setSellmount(merchInfo.getSales_volume());
+					goodsItem.setStandard(merchInfo.getUnit());
+					goodsItem.setStock(merchInfo.getIn_stock());
+					goodsItem.setTitle(merchInfo.getName());
+					goodsItem.setCreate_time(merchInfo.getCreate_time());
+					
+					goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
+					goodsList.add(goodsItem);
+				}
+				
+				GoodsSoldOutFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
+			} catch (Exception e) {
+				LOGGER.error("查询商品列表失败", e);
+				CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 			}
 			
-			this.start += PageUtil.LIMIT;//每次改变start的值 
+		
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			
 			goodsOnsoldoutAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (Exception e) {
-			LOGGER.error("查询商品列表失败", e);
-			CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 		}
+	}
+	
+	//查询下架商品 
+	private void querybyuserid(int start){
+		new queryGoodsTask().execute(start);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case Constants.SOLDOUT_REQUEST_CODE:
+			if(data != null){
+				querybyuserid(PageUtil.START);
+			}
+			break;
+		default:
+			break;
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 		
 	}
 }

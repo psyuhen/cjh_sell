@@ -213,10 +213,4 @@ public class LoginActivity extends BaseTwoActivity implements OnClickListener {
 		}
 	
 	}
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			
-		}
-	}
 }

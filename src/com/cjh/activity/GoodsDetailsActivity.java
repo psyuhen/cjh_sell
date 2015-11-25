@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -41,7 +42,6 @@ import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
-import com.cjh.utils.DateUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.ImageUtil;
@@ -78,7 +78,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	private EditText goods_detail_stock;//库存
 	private EditText goods_detail_type;//规格
 	
-	private Button goods_details_pubilsh_goods_btn;//发布商品
+//	private Button goods_details_pubilsh_goods_btn;//发布商品
 	private Button goods_details_delete_goods_btn;//删除商品
 	private Button goods_details_offshelf_btn;//下架商品
 	
@@ -88,14 +88,12 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 	
 	// 类别选择
 	private RelativeLayout goods_detail_category_rl;
-	// 添加类别对话框
-	private AlertDialog categoryChooseDialog = null;
-	//类别列表
-	private ListView category_listview;
 	//类别数据
 	private List<CategoryItem> categoryList;
 	//类别显示
 	private TextView goods_detail_category;
+	private CommonAdapter<CategoryItem> categoryAdapter;//分类
+//	private String from;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +118,8 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		goods_detail_stock = (EditText) findViewById(R.id.goods_detail_stock);
 		goods_detail_type = (EditText) findViewById(R.id.goods_detail_type);
 
-		goods_details_pubilsh_goods_btn = (Button)findViewById(R.id.goods_details_pubilsh_goods_btn);
-		goods_details_pubilsh_goods_btn.setOnClickListener(this);
+//		goods_details_pubilsh_goods_btn = (Button)findViewById(R.id.goods_details_pubilsh_goods_btn);
+//		goods_details_pubilsh_goods_btn.setOnClickListener(this);
 		goods_details_delete_goods_btn = (Button)findViewById(R.id.goods_details_delete_goods_btn);
 		goods_details_delete_goods_btn.setOnClickListener(this);
 		goods_details_offshelf_btn = (Button)findViewById(R.id.goods_details_offshelf_btn);
@@ -163,37 +161,39 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		Bundle extras = intent.getExtras();
 		merch_id = extras.getInt("merch_id");
 		out_published = extras.getString("out_published");
+//		from = extras.getString("from");
 		
-		if("0".equals(out_published)){//未下架
-			goods_details_offshelf_btn.setText(getString(R.string.goods_details_offshelft_btn));
-			goods_details_pubilsh_goods_btn.setVisibility(View.VISIBLE);
-		}else if("1".equals(out_published)){//已下架
-			goods_details_pubilsh_goods_btn.setVisibility(View.GONE);
-			goods_details_offshelf_btn.setText(getString(R.string.goods_details_onshelft_btn));
-		}
+		setPublishedText();
 		
 		queryclassify();
 	}
 	
-	//查询分类信息
-	private void queryclassify() {
-		categoryList=new ArrayList<CategoryItem>();
-		
+	private void setPublishedText(){
+		if("0".equals(out_published)){//未下架
+			goods_details_offshelf_btn.setText(getString(R.string.goods_details_offshelft_btn));
+//			goods_details_pubilsh_goods_btn.setVisibility(View.VISIBLE);
+		}else if("1".equals(out_published)){//已下架
+//			goods_details_pubilsh_goods_btn.setVisibility(View.GONE);
+			goods_details_offshelf_btn.setText(getString(R.string.goods_details_onshelft_btn));
+		}
+	}
+	
+	//查询分类
+	private List<ClassifyInfo> queryclassify2() {
 		int user_id = sessionManager.getUserId();
 		String url = HttpUtil.BASE_URL + "/classify/querybyuserid.do?user_id="+user_id;
 		try {
 			String jsons = HttpUtil.getRequest(url);
 			if(jsons == null){
 				CommonsUtil.showShortToast(getApplicationContext(), "查询分类信息失败");
-				queryGoods();
-				return;
+				return null;
 			}
 			List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 			if(list == null){
 				LOGGER.error(">>> 转换分类列表信息失败");
-				queryGoods();
-				return;
+				return null;
 			}
+			categoryList.clear();
 			for (ClassifyInfo classifyInfo : list) {
 				CategoryItem categoryItem=new CategoryItem();
 				categoryItem.setId(classifyInfo.getClassify_id());
@@ -202,11 +202,20 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				
 				categoryList.add(categoryItem);
 			}
-			queryGoods();
+			
+			return list;
 		} catch (Exception e) {
-			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 			LOGGER.error(">>> 查询分类列表失败",e);
+			CommonsUtil.showShortToast(getApplicationContext(), "查询分类列表失败");
 		}
+		
+		return null;
+	}
+	
+	//查询分类信息
+	private void queryclassify() {
+		queryclassify2();
+		queryGoods();
 	}
 
 	@Override
@@ -236,7 +245,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			offshelfGoods();
 			break;
 		case R.id.goods_details_pubilsh_goods_btn://发布
-			publishGoods();
+//			publishGoods();
 			break;
 		case R.id.goods_detail_category_rl:
 			showCategoryList();
@@ -245,15 +254,25 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			break;
 		}
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(categoryAdapter != null){
+			queryclassify2();
+			categoryAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	//分类类别
 	private void showCategoryList() {
-		categoryChooseDialog = new AlertDialog.Builder(
-				GoodsDetailsActivity.this).create();
+		final AlertDialog categoryChooseDialog = new AlertDialog.Builder(GoodsDetailsActivity.this).create();
 		categoryChooseDialog.show();
 		categoryChooseDialog.getWindow().setContentView(R.layout.pop_category);
-		category_listview = (ListView) categoryChooseDialog
-				.findViewById(R.id.category_listview);
-
-		category_listview.setAdapter(showAdater());
+		ListView category_listview = (ListView) categoryChooseDialog.findViewById(R.id.category_listview);
+		Button add_category = (Button) categoryChooseDialog.findViewById(R.id.add_category_btn);//新增类型
+		categoryAdapter = showAdater();
+		category_listview.setAdapter(categoryAdapter);
 		category_listview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -265,7 +284,12 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				classify_id = item.getId();
 			}
 		});
-
+		add_category.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				startActivity(new Intent(GoodsDetailsActivity.this, CategoryAddActivity.class));
+			}
+		});
 	}
 
 	public CommonAdapter<CategoryItem> showAdater() {
@@ -294,32 +318,52 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		String stock = goods_detail_stock.getText().toString();//库存
 		String type = goods_detail_type.getText().toString();//分类
 		
+		String required = getString(R.string.error_field_required);
 		if(TextUtils.isEmpty(title)){
-			goods_detail_title.setError(getString(R.string.error_field_required));
+			goods_detail_title.setError("标题" + required);
+			CommonsUtil.showShortToast(getApplicationContext(), "标题" + required);
 			return;
 		}
 		
 		if(TextUtils.isEmpty(content)){
-			goods_detail_content.setError(getString(R.string.error_field_required));
+			goods_detail_content.setError("内容" + required);
+			CommonsUtil.showShortToast(getApplicationContext(), "内容" + required);
 			return;
 		}
-		
-		if(!TextUtils.isEmpty(price) && !Validator.isNumber(price)){
-			goods_detail_price.setError(getString(R.string.error_invalid_number));
-			return;
-		}
-		
-		if(!TextUtils.isEmpty(stock) && !Validator.isDigits(stock)){
-			goods_detail_stock.setError(getString(R.string.error_invalid_number));
-			return;
-		}
-		
 		MerchInfo merchInfo = new MerchInfo();
+		
+		if(!TextUtils.isEmpty(price)){
+			if(Validator.isNumber(price)){
+				merchInfo.setPrice(Float.valueOf(price));
+			}else{
+				String error_price = getString(R.string.error_invalid_price);
+				goods_detail_price.setError(error_price);
+				CommonsUtil.showShortToast(getApplicationContext(), error_price);
+				return;
+			}
+		}
+		if(!TextUtils.isEmpty(stock)){
+			if(Validator.isDigits(stock)){
+				merchInfo.setIn_stock(Integer.valueOf(stock));
+			}else{
+				String error_stock = getString(R.string.error_invalid_stock);
+				goods_detail_stock.setError(error_stock);
+				CommonsUtil.showShortToast(getApplicationContext(), error_stock);
+				return;
+			}
+		}
+		
+		if(!TextUtils.isEmpty(type)){
+			if(type.length() > 10){
+				goods_detail_type.setError("单位输入超过10位");
+				CommonsUtil.showShortToast(getApplicationContext(), "单位输入超过10位");
+				return;
+			}
+		}
+		
 		merchInfo.setMerch_id(merch_id);
 		merchInfo.setName(title);
 		merchInfo.setDesc(content);
-		merchInfo.setIn_stock(Integer.valueOf(stock));
-		merchInfo.setPrice(Float.valueOf(price));
 		merchInfo.setClassify_id(classify_id);
 		merchInfo.setUnit(type);
 		
@@ -360,7 +404,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 					}
 				}
 				
-				
+				setResult(RESULT_OK,new Intent());
 				finish();
 			}else{
 				CommonsUtil.showShortToast(GoodsDetailsActivity.this, "更新失败");
@@ -395,10 +439,10 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			map.put("gallery_id", gallery_id);
 			String json = HttpUtil.postRequest(url,map);
 			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
+				//CommonsUtil.showShortToast(getApplicationContext(), "删除图片失败");
 				return;
 			}
-			CommonsUtil.showShortToast(getApplicationContext(), json);
+			//CommonsUtil.showShortToast(getApplicationContext(), json);
 			
 			QiNiuUtil.deleteFile(fileName);
 		} catch (Exception e) {
@@ -424,6 +468,8 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			goods_detail_price.setText(merchInfo.getPrice() + "");
 			goods_detail_stock.setText(merchInfo.getIn_stock() + "");
 			goods_detail_type.setText(merchInfo.getUnit());
+			out_published = merchInfo.getOut_published();
+			setPublishedText();
 			
 			int classifyId = merchInfo.getClassify_id();
 			for (int i = 0; i < categoryList.size(); i++) {
@@ -472,6 +518,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			}
 			
 			CommonsUtil.showLongToast(getApplicationContext(), json);
+			setResult(RESULT_OK,new Intent());
 			finish();
 		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), "删除商品失败");
@@ -503,6 +550,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 				return ;
 			}
 			CommonsUtil.showShortToast(GoodsDetailsActivity.this, msg + "商品成功");
+			setResult(RESULT_OK,new Intent());
 			finish();
 		} catch (Exception e) {
 			CommonsUtil.showLongToast(getApplicationContext(), msg + "商品失败");
@@ -511,7 +559,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 		
 	}
 	//发布商品
-	private void publishGoods(){
+	/*private void publishGoods(){
 		MerchInfo merchInfo = new MerchInfo();
 		merchInfo.setPublished_date(DateUtil.currentTime());
 		merchInfo.setOut_published("0");
@@ -532,7 +580,7 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 			LOGGER.error(">>> 发布商品失败",e);
 		}
 		
-	}
+	}*/
 	private void showImageChoose() {
 		/*imageChooseDialog = new AlertDialog.Builder(GoodsDetailsActivity.this).create();
 		imageChooseDialog.show();

@@ -59,15 +59,14 @@
                         <ImageView
                             android:id="@+id/category_detail_image1"
                             android:layout_width="@dimen/goods_detail_image_width"
-                            android:layout_height="@dimen/goods_detail_image_height"
-                            android:background="@drawable/c1" />
+                            android:layout_height="@dimen/goods_detail_image_height" android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/category_detail_deleteimage1"
                             android:layout_width="@dimen/goods_detail_deleteimage_width"
                             android:layout_height="@dimen/goods_detail_deleteimage_height"
                             android:layout_marginLeft="60.0dip"
-                            android:background="@drawable/btn_delete" />
+                            android:background="@drawable/btn_delete" android:visibility="gone"/>
                     </FrameLayout>
 
                     <FrameLayout

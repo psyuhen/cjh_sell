@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.cjh.activity.OrderDetailsActivity;
 import com.cjh.activity.OrdersActivity;
 import com.cjh.activity.SettingActivity;
 import com.cjh.adapter.OrderItemAdapter;
+import com.cjh.bean.FreshFlag;
 import com.cjh.bean.MerchGallery;
 import com.cjh.bean.Order;
 import com.cjh.bean.OrderDetail;
@@ -68,6 +70,7 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 	public OrderInFragment(Context context) {
 		this.context = context;
 	}
+	private FreshFlag freshFlag = new FreshFlag();
 	
 	public OrderInFragment() {
 	}
@@ -91,6 +94,8 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 		kjListView = (KJListView) contentView.findViewById(R.id.in_order_listview);
 		orderlist = new ArrayList<OrderItem>();
 		orderItemAdapter = new OrderItemAdapter(getActivity(), orderlist);
+		orderItemAdapter.setFrom("OrderInFragment");
+		orderItemAdapter.setFreshFlag(freshFlag);
 		// initEvent();
 		kjListView.setAdapter(orderItemAdapter);
 		kjListView.setPullRefreshEnable(true);
@@ -121,6 +126,7 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
+				OrderInFragment.this.start = PageUtil.START;
 				getInOrderInfo(PageUtil.START);
 			}
 
@@ -135,9 +141,8 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 	}
 	
 	private void initView() {
-		
-		view = LayoutInflater.from(getActivity()).inflate(
-				R.layout.item_order_headview, null);
+		freshFlag.setFlag(1);
+		view = LayoutInflater.from(getActivity()).inflate(R.layout.item_order_headview, null);
 		order_top_rl = (RelativeLayout) view.findViewById(R.id.order_top_rl);
 		order_top_rl.setOnClickListener(this);
 		order_left_rl = (RelativeLayout) view.findViewById(R.id.order_left_rl);
@@ -152,105 +157,130 @@ public class OrderInFragment extends Fragment implements OnClickListener{
 	public void initData() {
 		getInOrderInfo(PageUtil.START);
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		//回调要刷新吧
+		LOGGER.info("freshFlag ====>" + freshFlag);
+		if(freshFlag.getFlag() > 1){
+			OrderInFragment.this.start = PageUtil.START;
+			getInOrderInfo(PageUtil.START);
+		}
+	}
 
-	//查询正在进行中的订单
-	private void getInOrderInfo(int start){
-		int user_id = 0;
-		if(context instanceof OrderActivity){
-			OrderActivity activity = (OrderActivity)context;
-			user_id = activity.sessionManager.getUserId();
-		}else if(context instanceof MainActivity){
-			MainActivity activity = (MainActivity)context;
-			user_id = activity.sessionManager.getUserId();
-		}else if(context instanceof OrdersActivity){
-			OrdersActivity activity = (OrdersActivity)context;
-			user_id = activity.sessionManager.getUserId();
+	//查询订单
+	private class queryOrderInfoTask extends AsyncTask<Integer, Void, Void>{
+		@Override
+		protected Void doInBackground(Integer... params) {
+			int start = params[0];
+
+			int user_id = 0;
+			if(context instanceof OrderActivity){
+				OrderActivity activity = (OrderActivity)context;
+				user_id = activity.sessionManager.getUserId();
+			}else if(context instanceof MainActivity){
+				MainActivity activity = (MainActivity)context;
+				user_id = activity.sessionManager.getUserId();
+			}else if(context instanceof OrdersActivity){
+				OrdersActivity activity = (OrdersActivity)context;
+				user_id = activity.sessionManager.getUserId();
+			}
+			
+			
+			String url = HttpUtil.BASE_URL + "/order/getInOrderInfoByPage.do?start="+start+"&limit="+PageUtil.LIMIT;
+			Order order1 = new Order();
+			order1.setSeller_user_id(user_id);
+			
+			try {
+				String listJson = HttpUtil.postRequest(url, order1);
+				if(listJson == null){
+					CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
+					return null;
+				}
+				
+				List<Order> list = JsonUtil.parse2ListOrder(listJson);
+				if(list == null){
+					LOGGER.warn("转换订单列表信息失败");
+					return null;
+				}
+				
+				int length = list.size();
+				if(length == 0){
+					return null;
+				}
+				
+				//默认开始的时候，先清空列表数据
+				if(start == PageUtil.START){
+					orderlist.clear();
+				}
+				
+				for (int i = 0; i < length; i++) {
+					Order order = list.get(i);
+					List<OrderDetail> orderDetails = order.getOrderDetails();
+					
+					OrderItem orderItem = new OrderItem();
+					orderItem.setId(i);
+					orderItem.setBuyer_user_id(order.getBuyer_user_id()+"");
+					orderItem.setSeller_user_id(order.getSeller_user_id()+"");
+					orderItem.setSerialnum(order.getOrder_id());
+//					orderItem.setAddress("aaaa");
+					orderItem.setBuyer(order.getBuyer_user_name());
+					orderItem.setOrdertime(DateUtil.parseDate(order.getTrad_time(), new String[]{"yyyyMMddHHmmss"}));//订单时间
+					orderItem.setPrice(order.getAmount_money());
+//					orderItem.setBuyer_user_mobile(order.getBuyer_phone());
+					
+					String status = order.getStatus();
+					if(status != null && !"".equals(status)){
+						char[] statusChars = status.toCharArray();
+						orderItem.setStatus(statusChars[0]);
+					}
+					
+					if(orderDetails != null && !orderDetails.isEmpty()){
+						OrderDetail orderDetail = orderDetails.get(0);
+						
+						orderItem.setNum(orderDetail.getAmount());//默认显示第一个商品的数量
+						orderItem.setGoodtitle(orderDetail.getMerch_name());//默认为第一个商品的名称
+						//默认显示第一个商品的图片
+						List<MerchGallery> merchGallerys = orderDetail.getMerchGallerys();
+						if(merchGallerys != null && !merchGallerys.isEmpty()){
+							int gallerySize = merchGallerys.size();
+							List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+							for (int j = 0; j < gallerySize; j++) {
+								Bitmap cacheFile = FileUtil.getCacheFile(merchGallerys.get(j).getName());
+								if(cacheFile == null){
+									continue;
+								}
+								bitmapList.add(cacheFile);
+							}
+							orderItem.setBitmapList(bitmapList);
+						}
+					}
+					
+					orderlist.add(orderItem);
+				}
+				
+				OrderInFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
+			} catch (Exception e) {
+				LOGGER.error("查询订单列表失败", e);
+				CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
+			}
+			
+			return null;
 		}
 		
-		
-		String url = HttpUtil.BASE_URL + "/order/getInOrderInfoByPage.do?start="+start+"&limit="+PageUtil.LIMIT;
-		Order order1 = new Order();
-		order1.setSeller_user_id(user_id);
-		
-		try {
-			String listJson = HttpUtil.postRequest(url, order1);
-			if(listJson == null){
-				CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
-				kjListView.stopRefreshData();
-				return;
-			}
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
 			
-			List<Order> list = JsonUtil.parse2ListOrder(listJson);
-			if(list == null){
-				LOGGER.warn("转换订单列表信息失败");
-				kjListView.stopRefreshData();
-				return;
-			}
-			
-			int length = list.size();
-			if(length == 0){
-				kjListView.stopRefreshData();
-				return;
-			}
-			
-			//默认开始的时候，先清空列表数据
-			if(start == PageUtil.START){
-				orderlist.clear();
-			}
-			
-			for (int i = 0; i < length; i++) {
-				Order order = list.get(i);
-				List<OrderDetail> orderDetails = order.getOrderDetails();
-				
-				OrderItem orderItem = new OrderItem();
-				orderItem.setId(i);
-				orderItem.setBuyer_user_id(order.getBuyer_user_id()+"");
-				orderItem.setSeller_user_id(order.getSeller_user_id()+"");
-				orderItem.setSerialnum(order.getOrder_id());
-//				orderItem.setAddress("aaaa");
-				orderItem.setBuyer(order.getBuyer_user_name());
-				orderItem.setOrdertime(DateUtil.parseDate(order.getTrad_time(), new String[]{"yyyyMMddHHmmss"}));//订单时间
-				orderItem.setPrice(order.getAmount_money());
-//				orderItem.setBuyer_user_mobile(order.getBuyer_phone());
-				
-				String status = order.getStatus();
-				if(status != null && !"".equals(status)){
-					char[] statusChars = status.toCharArray();
-					orderItem.setStatus(statusChars[0]);
-				}
-				
-				if(orderDetails != null && !orderDetails.isEmpty()){
-					OrderDetail orderDetail = orderDetails.get(0);
-					
-					orderItem.setNum(orderDetail.getAmount());//默认显示第一个商品的数量
-					orderItem.setGoodtitle(orderDetail.getMerch_name());//默认为第一个商品的名称
-					//默认显示第一个商品的图片
-					List<MerchGallery> merchGallerys = orderDetail.getMerchGallerys();
-					if(merchGallerys != null && !merchGallerys.isEmpty()){
-						int gallerySize = merchGallerys.size();
-						List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-						for (int j = 0; j < gallerySize; j++) {
-							Bitmap cacheFile = FileUtil.getCacheFile(merchGallerys.get(j).getName());
-							if(cacheFile == null){
-								continue;
-							}
-							bitmapList.add(cacheFile);
-						}
-						orderItem.setBitmapList(bitmapList);
-					}
-				}
-				
-				orderlist.add(orderItem);
-			}
-			
-			this.start += PageUtil.LIMIT;//每次改变start的值 
 			orderItemAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
-		} catch (Exception e) {
-			LOGGER.error("查询订单列表失败", e);
-			CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
 		}
-		
+	}
+	
+	//查询正在进行中的订单
+	private void getInOrderInfo(int start){
+		new queryOrderInfoTask().execute(start);
 	}
 	
 	@Override

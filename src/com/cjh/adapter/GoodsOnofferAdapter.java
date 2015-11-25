@@ -27,7 +27,6 @@ import com.cjh.bean.MerchDisacount;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.HttpUtil;
-import com.cjh.utils.JsonUtil;
 import com.cjh.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
@@ -238,7 +237,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 	 * @param merch_id
 	 * @return
 	 */
-	private MerchDisacount queryFirst(String merch_id){
+	/*private MerchDisacount queryFirst(String merch_id){
 		String url = HttpUtil.BASE_URL + "/disacount/queryFirstByMerchId.do?merch_id="+merch_id;
 		try {
 			String listJson = HttpUtil.getRequest(url);
@@ -253,5 +252,5 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		}
 		
 		return null;
-	}
+	}*/
 }

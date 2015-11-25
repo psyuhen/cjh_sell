@@ -88,6 +88,7 @@ public class CouponsActivity extends BaseTwoActivity {
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
+				CouponsActivity.this.start = PageUtil.START;
 				queryCoupon(PageUtil.START);
 			}
 

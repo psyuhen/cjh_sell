@@ -395,6 +395,50 @@
                         android:layout_marginRight="10.0dip" />
                 </RelativeLayout>
             </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/order_details_ll5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dip"
+                android:layout_marginTop="20.0dip"
+                android:background="@color/whitebg"
+                android:orientation="vertical" >
+
+               <RelativeLayout
+                android:id="@+id/order_detail_bottom_rl"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10.0dip"
+                android:background="@color/whitebg" >
+
+                
+                <Button
+                    android:id="@+id/order_details_complete"
+                    style="@style/white_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="5.0dip"
+                    android:layout_toLeftOf="@+id/order_details_close"
+                    android:background="@drawable/orange_btn"
+                    android:padding="10.0dip"
+                    android:text="@string/order_complete_btn_text" />
+
+                <Button
+                    android:id="@+id/order_details_close"
+                    style="@style/white_normal_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20.0dip"
+                    android:layout_marginTop="5.0dip"
+                    android:background="@drawable/orange_btn"
+                    android:padding="10.0dip"
+                    android:text="@string/order_close_btn_text" />
+            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

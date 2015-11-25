@@ -5,6 +5,9 @@ public class Constants {
 	public static final int CAMERA_REQUEST_CODE = 1;
 	public static final int RESULT_REQUEST_CODE = 2;
 	public static final int SHOPEDIT_REQUEST_CODE = 3;
+	public static final int ONOFFER_REQUEST_CODE = 4;
+	public static final int SOLDOUT_REQUEST_CODE = 5;
+	public static final int CATEGORY_REQUEST_CODE = 6;
 	public static final String IMAGE_FILE_NAME = "tmp.png";
 	
 	public static final String READED = "1";

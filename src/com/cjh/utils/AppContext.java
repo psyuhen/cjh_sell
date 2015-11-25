@@ -24,7 +24,7 @@ public class AppContext extends Application {
 		sessionManager = new SessionManager(this);
 		
 		try{
-			AVOSCloud.setDebugLogEnabled(true);
+			//AVOSCloud.setDebugLogEnabled(true);
 			AVOSCloud.initialize(this, "OMnLPjX7ykL6B82b7TeKNvcT", "TF17FlFxgKD9KFaFuPgRi9Xr");
 			// 必须在启动的时候注册 MessageHandler
 		    // 应用一启动就会重连，服务器会推送离线消息过来，需要 MessageHandler 来处理
