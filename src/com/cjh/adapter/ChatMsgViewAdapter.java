@@ -28,7 +28,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class ChatMsgViewAdapter extends BaseAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChatMsgViewAdapter.class);
+	private Logger LOGGER = LoggerFactory.getLogger(ChatMsgViewAdapter.class);
 
 	private List<ChatMsgItem> data;
 	private Context context;
@@ -74,7 +74,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		}
 		String regular = "appkefu_f0[0-9]{2}";
 		String str = entity.getContent();
-		SpannableString spannableString = ChatMsgViewAdapter.getExpressionString(context, str, regular);
+		SpannableString spannableString = getExpressionString(context, str, regular);
 
 		viewHolder.msg_text.setText(spannableString);
 		viewHolder.msg_sendtime.setText(DateUtil.format(entity.getSendDate()));
@@ -83,7 +83,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	public static SpannableString getExpressionString(Context context,
+	public SpannableString getExpressionString(Context context,
 			String str, String regular) {
 		SpannableString spannableString = new SpannableString(str);
 		Pattern pattern = Pattern.compile(regular, Pattern.CASE_INSENSITIVE);
@@ -91,7 +91,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
 		return spannableString;
 	}
 
-	public static void dealExpression(Context context,
+	public void dealExpression(Context context,
 			SpannableString spannableString, Pattern pattern, int start) {
 		Matcher matcher = pattern.matcher(spannableString);
 		while (matcher.find()) {

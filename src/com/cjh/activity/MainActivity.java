@@ -36,7 +36,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class MainActivity extends FragmentActivity implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(MainActivity.class);
 
 	// 静态fragment管理器
 	private static FragmentManager fMgr;

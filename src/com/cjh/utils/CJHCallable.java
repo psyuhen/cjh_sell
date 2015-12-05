@@ -18,7 +18,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class CJHCallable <V> implements Callable<V>{
-	private static final Logger LOGGER = LoggerFactory.getLogger(CJHCallable.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CJHCallable.class);
 
 	private String url = "";
 	private Class<V> cls = null;

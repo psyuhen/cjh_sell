@@ -32,7 +32,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsCategoryAdapter extends BaseAdapter{
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsCategoryAdapter.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsCategoryAdapter.class);
 	
 	private List<CategoryItem> categoryList;
 	private Context context;

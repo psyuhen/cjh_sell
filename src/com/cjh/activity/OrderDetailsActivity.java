@@ -1,26 +1,32 @@
 package com.cjh.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.cjh.adapter.CommonAdapter;
+import com.cjh.adapter.ViewHolder;
+import com.cjh.bean.MerchGallery;
 import com.cjh.bean.Order;
 import com.cjh.bean.OrderDetail;
 import com.cjh.cjh_sell.R;
 import com.cjh.utils.CommonsUtil;
+import com.cjh.utils.DateUtil;
+import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.cjh.utils.StringUtil;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
@@ -30,7 +36,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class OrderDetailsActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderDetailsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(OrderDetailsActivity.class);
 	private TextView order_details_serial;
 	private TextView order_details_time;
 	private TextView order_details_payway;
@@ -44,7 +50,6 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 	private TextView order_details_freight;
 	private ListView order_details_goodslist;
 	private TextView order_details_shoulpay;
-	private List<Map<String, Object>> maps;
 	
 	private LinearLayout order_details_ll5;
 	private Button order_details_complete;
@@ -52,6 +57,9 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 
 	private String order_id;
 	private String from;
+	
+	private List<OrderDetail> details;
+	private CommonAdapter<OrderDetail> commonAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,24 +71,52 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 	@Override
 	public void initView() {
 		super.initView();
-		order_details_serial = (TextView) findViewById(R.id.order_details_serial);
-		order_details_time = (TextView) findViewById(R.id.order_details_time);
-		order_details_payway = (TextView) findViewById(R.id.order_details_payway);
-		order_details_status = (TextView) findViewById(R.id.order_details_status);
-		order_details_person = (TextView) findViewById(R.id.order_details_person);
-		order_details_tel = (TextView) findViewById(R.id.order_details_tel);
-		order_details_address = (TextView) findViewById(R.id.order_details_address);
-		order_details_deliverytime = (TextView) findViewById(R.id.order_details_deliverytime);
-		order_details_bill = (TextView) findViewById(R.id.order_details_bill);
-		order_details_allmoney = (TextView) findViewById(R.id.order_details_allmoney);
-		order_details_freight = (TextView) findViewById(R.id.order_details_freight);
-		order_details_goodslist = (ListView) findViewById(R.id.order_details_goodslist);
-		order_details_shoulpay=(TextView) findViewById(R.id.order_details_shoulpay);
-		order_details_complete=(Button) findViewById(R.id.order_details_complete);
+		//订单详细的头和尾
+		View headView = LayoutInflater.from(this).inflate(R.layout.activity_orderdetails_header,null);
+		View footView = LayoutInflater.from(this).inflate(R.layout.activity_orderdetails_footer, null);
+		
+		//订单编号
+		order_details_serial = (TextView) headView.findViewById(R.id.order_details_serial);
+		//订单时间
+		order_details_time = (TextView) headView.findViewById(R.id.order_details_time);
+		//支付方式
+		order_details_payway = (TextView) headView.findViewById(R.id.order_details_payway);
+		//订单状态
+		order_details_status = (TextView) headView.findViewById(R.id.order_details_status);
+		//收货人
+		order_details_person = (TextView) footView.findViewById(R.id.order_details_person);
+		//电话
+		order_details_tel = (TextView) footView.findViewById(R.id.order_details_tel);
+		//地址
+		order_details_address = (TextView) footView.findViewById(R.id.order_details_address);
+		//收货时间
+		order_details_deliverytime = (TextView) footView.findViewById(R.id.order_details_deliverytime);
+		//发票抬头
+		order_details_bill = (TextView) footView.findViewById(R.id.order_details_bill);
+		//金额
+		order_details_allmoney = (TextView) footView.findViewById(R.id.order_details_allmoney);
+		//邮费
+		order_details_freight = (TextView) footView.findViewById(R.id.order_details_freight);
+		//应付金额
+		order_details_shoulpay = (TextView) footView.findViewById(R.id.order_details_shoulpay);
+		//订单完成
+		order_details_complete=(Button) footView.findViewById(R.id.order_details_complete);
 		order_details_complete.setOnClickListener(this);
-		order_details_close=(Button) findViewById(R.id.order_details_close);
+		//订单关闭
+		order_details_close=(Button) footView.findViewById(R.id.order_details_close);
 		order_details_close.setOnClickListener(this);
-		order_details_ll5=(LinearLayout) findViewById(R.id.order_details_ll5);
+		
+		order_details_ll5=(LinearLayout) footView.findViewById(R.id.order_details_ll5);
+		
+		
+		order_details_goodslist = (ListView) findViewById(R.id.order_details_goodslist);
+		
+		order_details_goodslist.addHeaderView(headView);
+		order_details_goodslist.addFooterView(footView);
+		
+		details = new ArrayList<OrderDetail>();
+		commonAdapter = showAdapter();
+		order_details_goodslist.setAdapter(commonAdapter);
 		
 	}
 
@@ -99,6 +135,38 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 		
 		new queryOrderByIdTask().execute();
 	}
+	/**
+	 * 显示适配数据
+	 * 
+	 * @return
+	 */
+	public CommonAdapter<OrderDetail> showAdapter() {
+		return new CommonAdapter<OrderDetail>(OrderDetailsActivity.this, details, R.layout.item_order_details) {
+
+			@Override
+			public void convert(ViewHolder helper, OrderDetail item) {
+				
+				helper.setText(R.id.item_order_details_title,  item.getMerch_name());
+				helper.setText(R.id.order_details_num, item.getAmount() + "");
+				helper.setText(R.id.order_details_money, StringUtil.format2string(item.getPrice()));
+				
+				List<MerchGallery> merchGallerys = item.getMerchGallerys();
+				if(merchGallerys == null || merchGallerys.isEmpty()){
+					helper.setImageResource(R.id.item_order_details_image, R.drawable.login_head_icon);
+				}else{
+					MerchGallery merchGallery = merchGallerys.get(0);
+					Bitmap file = FileUtil.getCacheFile(merchGallery.getName());
+					if(file == null){
+						helper.setImageResource(R.id.item_order_details_image, R.drawable.login_head_icon);
+					}else{
+						helper.setImageBitmap(R.id.item_order_details_image, file);
+					}
+				}
+				
+			}
+		};
+	}
+	
 	
 	@Override
 	public void onClick(View v) {
@@ -145,6 +213,7 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 			
 			Order order = new Order();
 			order.setOrder_id(order_id);
+			order.setTrad_finish_time(DateUtil.currentTime());
 			order.setStatus(status);
 			
 			String json = HttpUtil.postRequest(url,order);
@@ -163,7 +232,6 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 		try {
 			String json = HttpUtil.getRequest(url);
 			if(json == null){
-				CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 				return null;
 			}
 			
@@ -171,7 +239,6 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 			return order;
 		} catch (Exception e) {
 			LOGGER.error(">>> 查询订单信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询订单信息失败");
 		}
 		
 		return null;
@@ -214,25 +281,9 @@ public class OrderDetailsActivity extends BaseTwoActivity {
 		order_details_freight.setText("￥"+order.getFreight());//运费
 		
 		//商品列表
-		maps = new ArrayList<Map<String, Object>>();
-		List<OrderDetail> details = order.getOrderDetails();
-		for (int i = 0; i < details.size(); i++) {
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			OrderDetail detail = details.get(i);
-			
-			map.put("title", detail.getMerch_name());
-			map.put("image", R.drawable.login_head_icon);
-			map.put("num", detail.getAmount());
-			map.put("money", detail.getPrice());
-			maps.add(map);
-		}
-		SimpleAdapter simpleAdapter = new SimpleAdapter(
-				OrderDetailsActivity.this, maps, R.layout.item_order_details,
-				new String[] { "image", "title", "num", "money" }, new int[] {
-						R.id.item_order_details_image,
-						R.id.item_order_details_title, R.id.order_details_num,
-						R.id.order_details_money });
-		order_details_goodslist.setAdapter(simpleAdapter);
+		details.addAll(order.getOrderDetails());
+		commonAdapter.notifyDataSetChanged();
+		
 		order_details_shoulpay.setText("￥"+(order.getAmount_money()+order.getFreight()));//应付金额
 		right_imgbtn.setVisibility(View.GONE);
 	}

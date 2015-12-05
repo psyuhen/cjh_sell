@@ -31,7 +31,7 @@ import com.google.code.microlog4android.LoggerFactory;
  */
 public class MarketingActivity extends BaseTwoActivity implements
 		OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MarketingActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(MarketingActivity.class);
 	private Button order_completed_source_btn;
 	
 	//成交订单的今日与昨日
@@ -84,9 +84,26 @@ public class MarketingActivity extends BaseTwoActivity implements
 		title.setText("统计中心");
 		
 		//TODO 修改为异步了，感觉代码有点冗余。。待优化。
+		countOrder();
+		countMoney();
+		countFavorite();
+		countVisit();
+	}
+	
+	private void countOrder(){
+		startProgressDialog();
 		new CountTask().execute();
+	}
+	private void countMoney(){
+		startProgressDialog();
 		new CountTask1().execute();
+	}
+	private void countFavorite(){
+		startProgressDialog();
 		new CountTask2().execute();
+	}
+	private void countVisit(){
+		startProgressDialog();
 		new CountTask3().execute();
 	}
 
@@ -106,73 +123,6 @@ public class MarketingActivity extends BaseTwoActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		//成交订单
-//		String today = DateUtil.today();
-//		String yesterday = DateUtil.yesterday();
-		
-		/*OrderStat todayOrder = countByDay(today);
-		OrderStat yesterdayOrder = countByDay(yesterday);
-		market_today_count.setText((todayOrder != null ? todayOrder.getOrder_sell() : 0)+"");
-		market_yesterday_count.setText((yesterdayOrder != null ? yesterdayOrder.getOrder_sell() : 0)+"");
-		
-		List<OrderStat> sellOrder = countByDayHour(today);
-		if(sellOrder == null){
-			sellOrder = new ArrayList<OrderStat>();
-		}
-		fillSellData(sellOrder);*/
-		
-		//成交金额
-		/*OrderStat todayMoney = countMoneyByDay(today);
-		OrderStat yesterdayMoney = countMoneyByDay(yesterday);
-		
-		market_money_today_count.setText((todayMoney != null ? todayMoney.getAmount_money() : 0)+"");
-		market_money_yesterday_count.setText((yesterdayMoney != null ? yesterdayMoney.getAmount_money() : 0)+"");
-		
-		List<OrderStat> sellMoney = countMoneyByDayHour(today);
-		if(sellMoney == null){
-			sellMoney = new ArrayList<OrderStat>();
-		}
-		fillMoneyData(sellMoney);*/
-		
-		//每日收藏
-		/*FavoriteStat favoriteStat = new FavoriteStat();
-		int store_id = sessionManager.getInt("store_id");
-		favoriteStat.setStore_id(store_id);//商家ID
-		
-		favoriteStat.setStat_date(today);
-		FavoriteStat todayFavorite = countByDayAndUser(favoriteStat);
-		favoriteStat.setStat_date(yesterday);
-		FavoriteStat yesterdayFavorite = countByDayAndUser(favoriteStat);
-		
-		market_everyday_collect_today_count.setText((todayFavorite != null ? todayFavorite.getFavorite_count() : 0)+"");
-		market_everyday_collect_yesterday_count.setText((yesterdayFavorite != null ? yesterdayFavorite.getFavorite_count() : 0)+"");
-		
-		favoriteStat.setStat_date(today);
-		List<FavoriteStat> favorite = countByDayHourAndUser(favoriteStat);
-		if(favorite == null){
-			favorite = new ArrayList<FavoriteStat>();
-		}
-		fillFavoriteData(favorite);*/
-		
-		//每日顾客
-		/*VisitStat visitStat = new VisitStat();
-		visitStat.setStore_id(store_id);//商家ID
-		
-		visitStat.setStat_date(today);
-		VisitStat todayVisit = countByDayAndUser(visitStat);
-		visitStat.setStat_date(yesterday);
-		VisitStat yesterdayVisit = countByDayAndUser(visitStat);
-		
-		market_customer_today_count.setText((todayVisit != null ? todayVisit.getVisit_count() : 0)+"");
-		market_customer_yesterday_count.setText((yesterdayVisit != null ? yesterdayVisit.getVisit_count() : 0)+"");
-		
-		visitStat.setStat_date(today);
-		List<VisitStat> visit = countByDayHourAndUser(visitStat);
-		if(visit == null){
-			visit = new ArrayList<VisitStat>();
-		}
-		fillVisitData(visit);*/
 	}
 	
 	public void fillBom(LineView lineView) {
@@ -182,11 +132,11 @@ public class MarketingActivity extends BaseTwoActivity implements
 		}
 		lineView.setBottomTextList(bottomlist);
 	}
-	
+	//成交订单
 	public void fillSellData(List<OrderStat> sell){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (OrderStat v : sell) {
 				String hour = v.getStat_date();
@@ -205,7 +155,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 	public void fillMoneyData(List<OrderStat> money){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (OrderStat v : money) {
 				String hour = v.getStat_date();
@@ -224,7 +174,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 	public void fillFavoriteData(List<FavoriteStat> favorite){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (FavoriteStat v : favorite) {
 				String hour = v.getStat_date();
@@ -244,7 +194,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 	public void fillVisitData(List<VisitStat> visit){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (VisitStat v : visit) {
 				String hour = v.getStat_date();
@@ -421,6 +371,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		@Override
 		protected void onPostExecute(CountResult result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
 			
 			market_today_count.setText(result.today_count+"");
 			market_yesterday_count.setText(result.yesterday_count+"");
@@ -449,6 +400,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		@Override
 		protected void onPostExecute(CountResult result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
 			
 			market_money_today_count.setText(result.today_count+"");
 			market_money_yesterday_count.setText(result.yesterday_count+"");
@@ -483,6 +435,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		@Override
 		protected void onPostExecute(CountResult result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
 			
 			market_everyday_collect_today_count.setText(result.today_count+"");
 			market_everyday_collect_yesterday_count.setText(result.yesterday_count+"");
@@ -519,6 +472,7 @@ public class MarketingActivity extends BaseTwoActivity implements
 		@Override
 		protected void onPostExecute(CountResult result) {
 			super.onPostExecute(result);
+			stopProgressDialog();
 			
 			market_customer_today_count.setText(result.today_count+"");
 			market_customer_yesterday_count.setText(result.yesterday_count+"");

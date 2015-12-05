@@ -30,7 +30,7 @@ import de.greenrobot.event.EventBus;
  * 处理离线信息等等
  */
 public class MessageHandler extends AVIMMessageHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
+	private Logger LOGGER = LoggerFactory.getLogger(AppContext.class);
 
 	private Context context;
 

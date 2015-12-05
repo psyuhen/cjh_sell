@@ -34,7 +34,6 @@ import com.cjh.bean.Order;
 import com.cjh.bean.OrderDetail;
 import com.cjh.bean.OrderItem;
 import com.cjh.cjh_sell.R;
-import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.DateUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
@@ -48,7 +47,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class OrderCompletedFragment extends Fragment implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(OrderCompletedFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(OrderCompletedFragment.class);
 
 	private KJListView kjListView;
 	private OrderItemAdapter orderItemAdapter;
@@ -112,7 +111,6 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 		kjListView.setKJListViewListener(new KJListViewListener() {
 			@Override
 			public void onRefresh() {
-				OrderCompletedFragment.this.start = PageUtil.START;
 				getCompletedOrderInfo(PageUtil.START);
 			}
 
@@ -143,9 +141,7 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 	public void onResume() {
 		super.onResume();
 		//回调要刷新吧
-		LOGGER.info("freshFlag ====>" + freshFlag);
 		if(freshFlag.getFlag() > 1){
-			OrderCompletedFragment.this.start = PageUtil.START;
 			getCompletedOrderInfo(PageUtil.START);
 		}
 	}
@@ -155,49 +151,38 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 	}
 	
 	//查询订单
-	private class queryOrderInfoTask extends AsyncTask<Integer, Void, Void>{
+	private class queryOrderInfoTask extends AsyncTask<Integer, Void, List<OrderItem>>{
+		private int user_id;
+		private int start;
+		public queryOrderInfoTask(int user_id) {
+			this.user_id = user_id;
+		}
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<OrderItem> doInBackground(Integer... params) {
 			int start = params[0];
-
-			int user_id = 0;
-			if(context instanceof OrderActivity){
-				OrderActivity activity = (OrderActivity)context;
-				user_id = activity.sessionManager.getUserId();
-			}else if(context instanceof MainActivity){
-				MainActivity activity = (MainActivity)context;
-				user_id = activity.sessionManager.getUserId();
-			}else if(context instanceof OrdersActivity){
-				OrdersActivity activity = (OrdersActivity)context;
-				user_id = activity.sessionManager.getUserId();
-			}
+			this.start = start;
 			
 			String url = HttpUtil.BASE_URL + "/order/getCompletedOrderInfoPage.do?start="+start+"&limit="+PageUtil.LIMIT;
 			Order order1 = new Order();
 			order1.setSeller_user_id(user_id);
-			
+			List<OrderItem> tmpList = new ArrayList<OrderItem>();
+
 			try {
 				String listJson = HttpUtil.postRequest(url, order1);
 				if(listJson == null){
-					CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
-					return null;
+					return tmpList;
 				}
 				
 				List<Order> list = JsonUtil.parse2ListOrder(listJson);
 				
 				if(list == null){
 					LOGGER.warn("转换订单列表信息失败");
-					return null;
+					return tmpList;
 				}
 				
 				int length = list.size();
 				if(length == 0){
-					return null;
-				}
-				
-				//默认开始的时候，先清空列表数据
-				if(start == PageUtil.START){
-					orderlist.clear();
+					return tmpList;
 				}
 				
 				for (int i = 0; i < length; i++) {
@@ -241,23 +226,33 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 							orderItem.setBitmapList(bitmapList);
 						}
 					}
-					orderlist.add(orderItem);
+					tmpList.add(orderItem);
 				}
 				
-				OrderCompletedFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 				
 			} catch (Exception e) {
 				LOGGER.error("查询订单列表失败", e);
-				CommonsUtil.showLongToast(getActivity(), "查询订单列表失败");
 			}
 		
-			return null;
+			return tmpList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<OrderItem> result) {
 			super.onPostExecute(result);
 			
+			if(context instanceof OrdersActivity){
+				OrdersActivity activity = (OrdersActivity)context;
+				activity.stopProgressDialog();
+			}
+			
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				orderlist.clear();
+			}
+			orderlist.addAll(result);
+			
+			OrderCompletedFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 			orderItemAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
 		}
@@ -265,7 +260,25 @@ public class OrderCompletedFragment extends Fragment implements OnClickListener 
 	
 	//查询已完成的订单
 	private void getCompletedOrderInfo(int start){
-		new queryOrderInfoTask().execute(start);
+		int user_id = 0;
+		
+		if(context instanceof OrderActivity){
+			OrderActivity activity = (OrderActivity)context;
+			user_id = activity.sessionManager.getUserId();
+		}else if(context instanceof MainActivity){
+			MainActivity activity = (MainActivity)context;
+			user_id = activity.sessionManager.getUserId();
+		}else if(context instanceof OrdersActivity){
+			OrdersActivity activity = (OrdersActivity)context;
+			user_id = activity.sessionManager.getUserId();
+			activity.startProgressDialog();
+		}
+		
+		if(start == PageUtil.START){
+			OrderCompletedFragment.this.start = PageUtil.START;
+		}
+		
+		new queryOrderInfoTask(user_id).execute(start);
 	}
 	
 	@Override

@@ -68,7 +68,7 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class CommunicationActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CommunicationActivity.class);
 
 	private Button mBtnSend;
 	private TextView mBtnRcd;
@@ -242,6 +242,7 @@ public class CommunicationActivity extends BaseTwoActivity {
 					HashMap<String, Object> attributes = new HashMap<String, Object>();
 					attributes.put("audio_time", audio_time);
 					attributes.put("photo", photo);
+					attributes.put("file_name", text);
 					audioMessage.setAttrs(attributes);
 					audioMessage.setTimestamp(timestamp);
 					audioMessage.setFrom(user_mobile);
@@ -349,7 +350,7 @@ public class CommunicationActivity extends BaseTwoActivity {
 	 */
 	protected boolean filterException(Exception e) {
 		if (e != null) {
-			CommonsUtil.showShortToast(getApplicationContext(), e.getMessage());
+			//CommonsUtil.showShortToast(getApplicationContext(), e.getMessage());
 			LOGGER.error(e.getMessage(), e);
 			return false;
 		} else {

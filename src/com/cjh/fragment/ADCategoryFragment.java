@@ -14,7 +14,7 @@ import com.google.code.microlog4android.LoggerFactory;
 
 
 public class ADCategoryFragment extends Fragment{
-	private static final Logger LOGGER = LoggerFactory.getLogger(ADCategoryFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(ADCategoryFragment.class);
 
 	private Context context;
 	public ADCategoryFragment(Context context) {

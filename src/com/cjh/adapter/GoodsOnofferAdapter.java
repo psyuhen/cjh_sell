@@ -19,9 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cjh.activity.GoodsDetailsActivity;
 import com.cjh.activity.GoodsViewActivity;
 import com.cjh.activity.LimitTimeActivity;
 import com.cjh.activity.LimitTimeAddActivity;
+import com.cjh.bean.FreshFlag;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchDisacount;
 import com.cjh.cjh_sell.R;
@@ -32,10 +34,25 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class GoodsOnofferAdapter extends BaseAdapter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsOnofferAdapter.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsOnofferAdapter.class);
 
 	private List<GoodsItem> goodsList;
 	private Context context;
+	private String out_published;//是否下架，
+	private String fragment_name;//类名
+	private FreshFlag freshFlag;//刷新的标志
+	
+	public void setFreshFlag(FreshFlag freshFlag) {
+		this.freshFlag = freshFlag;
+	}
+	
+	public void setOut_published(String out_published) {
+		this.out_published = out_published;
+	}
+	
+	public void setFragment_name(String fragment_name) {
+		this.fragment_name = fragment_name;
+	}
 
 	public GoodsOnofferAdapter(List<GoodsItem> goodsList, Context context) {
 		this.goodsList = goodsList;
@@ -73,6 +90,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 			viewHolder.good_see_image_rl = (RelativeLayout) convertView.findViewById(R.id.good_see_image_rl);
 			viewHolder.good_bind_image_rl = (RelativeLayout) convertView.findViewById(R.id.good_bind_image_rl);
 			viewHolder.good_share_image_rl = (RelativeLayout) convertView.findViewById(R.id.good_share_image_rl);
+			viewHolder.good_edit_image_rl = (RelativeLayout) convertView.findViewById(R.id.good_edit_image_rl);
 			viewHolder.bottm_rl = (LinearLayout) convertView.findViewById(R.id.bottm_rl);
 			viewHolder.goods_discount = (TextView) convertView.findViewById(R.id.goods_discount);
 			viewHolder.original_price = (TextView) convertView.findViewById(R.id.goods_orignal_price);
@@ -189,6 +207,18 @@ public class GoodsOnofferAdapter extends BaseAdapter {
                 context.startActivity(Intent.createChooser(intent, "分享到")); 
 			}
 		});
+		//编辑
+		viewHolder.good_edit_image_rl.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				freshFlag.setFlag(2);
+				Intent intent = new Intent(context, GoodsDetailsActivity.class);
+				intent.putExtra("merch_id", goodsItem.getId());
+				intent.putExtra("out_published", out_published);//是否下架，0为未下架
+				intent.putExtra("from", fragment_name);//来自
+				context.startActivity(intent);
+			}
+		});
 		return convertView;
 	}
 
@@ -203,6 +233,7 @@ public class GoodsOnofferAdapter extends BaseAdapter {
 		private RelativeLayout good_see_image_rl;
 		private RelativeLayout good_bind_image_rl;
 		private RelativeLayout good_share_image_rl;
+		private RelativeLayout good_edit_image_rl;
 		private LinearLayout bottm_rl;
 		private TextView goods_discount;
 		private TextView original_price;

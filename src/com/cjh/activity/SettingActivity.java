@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -42,7 +43,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
  *
  */
 public class SettingActivity extends BaseTwoActivity implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(SettingActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(SettingActivity.class);
 
 	private RelativeLayout setting_item_about_rl;
 	private EditText setting_name_text_details;//名称
@@ -81,6 +82,8 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 		setting_me_image_head = (ImageView)findViewById(R.id.setting_me_image_head);
 		setting_me_image_head.setOnClickListener(this);
 		
+		Button setting_logout_btn = (Button) findViewById(R.id.setting_logout_btn);
+		setting_logout_btn.setOnClickListener(this);
 		Button setting_exit_btn = (Button) findViewById(R.id.setting_exit_btn);
 		setting_exit_btn.setOnClickListener(this);
 	}
@@ -108,6 +111,9 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 			isExit.setButton(DialogInterface.BUTTON_NEGATIVE,"取消", listener);
 			// 显示对话框
 			isExit.show();
+			break;
+		case R.id.setting_logout_btn:
+			logout();
 			break;
 		case R.id.right_text:
 			finishEdit();
@@ -221,20 +227,25 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 				@Override
 				public void complete(String key, com.qiniu.android.http.ResponseInfo info, JSONObject jsonObj) {
 					if(info.statusCode == HttpStatus.OK.value()){
-						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-						
+//						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+						LOGGER.info("上传图片成功！");
 						//更新数据库的文件名
 						User user = new User();
 						user.setUser_id(sessionManager.getUserId());
 						user.setPhoto(key);
 						saveUser(user);
 					}else{
-						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-						LOGGER.error("保存图片到服务器失败");
+//						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+						LOGGER.error("保存图片到服务器失败" + info.error);
 					}
 				}
 			});
 		}
+	}
+	//注销
+	private void logout(){
+		sessionManager.logoutUser();
+		finish();
 	}
 	
 	private void finishEdit(){
@@ -253,17 +264,45 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 	
 	//更新用户信息
 	private void saveUser(User user){
+		startProgressDialog();
+		new saveUserTask(user).execute();
+	}
+	
+	private class saveUserTask extends AsyncTask<Void, Void, ResponseInfo>{
+		private User user;
+		public saveUserTask(User user) {
+			this.user = user;
+		}
+		@Override
+		protected ResponseInfo doInBackground(Void... params) {
+			String url = HttpUtil.BASE_URL + "/user/updateUser.do";
+			try{
+				String json = HttpUtil.postRequest(url, user);
+				if(json == null){
+					return null;
+				}
+				
+				ResponseInfo responseInfo = JsonUtil.parse2Object(json, ResponseInfo.class);
+				
+				return responseInfo;
+			}catch (Exception e) {
+				LOGGER.error(">>> 修改失败", e);
+			}
+			return null;
+		}
 		
-		String url = HttpUtil.BASE_URL + "/user/updateUser.do";
-		try{
-			String json = HttpUtil.postRequest(url, user);
-			if(json == null){
+		@Override
+		protected void onPostExecute(ResponseInfo responseInfo) {
+			super.onPostExecute(responseInfo);
+			stopProgressDialog();
+			
+			if(responseInfo == null){
 				CommonsUtil.showLongToast(getApplicationContext(), "修改失败");
 				return;
 			}
 			
-			ResponseInfo responseInfo = JsonUtil.parse2Object(json, ResponseInfo.class);
 			CommonsUtil.showLongToast(getApplicationContext(), responseInfo.getDesc());
+			
 			if(ResponseInfo.SUCCESS.equals(responseInfo.getStatus())){
 				if(user.getName()  != null){
 					sessionManager.put(SessionManager.KEY_NAME, user.getName());
@@ -278,34 +317,57 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 					sessionManager.put(SessionManager.KEY_PHOTO, user.getPhoto());
 				}
 			}
-			
-		}catch (Exception e) {
-			LOGGER.error(">>> 修改失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "修改失败");
 		}
 	}
 	
+	
 	private void queryById(){
-		String url = HttpUtil.BASE_URL + "/user/query.do?id="+sessionManager.getUserId();
-		try{
-			String json = HttpUtil.getRequest(url);
-			if(json == null){
+		startProgressDialog();
+		new queryByIdTask(sessionManager.getUserId()).execute();
+	}
+	
+	private class queryByIdTask extends AsyncTask<Void, Void, User>{
+		private int user_id;
+		public queryByIdTask(int user_id) {
+			this.user_id = user_id;
+		}
+		@Override
+		protected User doInBackground(Void... params) {
+			String url = HttpUtil.BASE_URL + "/user/query.do?id="+user_id;
+			try{
+				String json = HttpUtil.getRequest(url);
+				if(json == null){
+					return null;
+				}
+				
+				User user = JsonUtil.parse2Object(json, User.class);
+				
+				return user;
+			}catch (Exception e) {
+				LOGGER.error(">>> 查询用户信息失败", e);
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(User user) {
+			super.onPostExecute(user);
+			stopProgressDialog();
+			
+			if(user == null){
 				CommonsUtil.showLongToast(getApplicationContext(), "查询用户信息失败");
 				return;
 			}
 			
-			User user = JsonUtil.parse2Object(json, User.class);
 			setting_name_text_details.setText(user.getName());
 			setting_qq_text_details.setText(user.getQq());
 			setting_wechat_text_details.setText(user.getWe_chat());
 			
 			String photo = user.getPhoto();
 			getImageToView(photo);
-		}catch (Exception e) {
-			LOGGER.error(">>> 查询用户信息失败", e);
-			CommonsUtil.showLongToast(getApplicationContext(), "查询用户信息失败");
 		}
 	}
+	
 	
 	/**
 	 * 先从本地中获取，如果获取不到再获取网络图片
@@ -328,13 +390,13 @@ public class SettingActivity extends BaseTwoActivity implements OnClickListener 
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE:// "确认"按钮退出程序
-				sessionManager.logoutUser();
+				sessionManager.clearData();
 				/**
 				 * 完全退出程序
 				 */
 				Intent intent = new Intent(Intent.ACTION_MAIN);
 				intent.addCategory(Intent.CATEGORY_HOME);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(intent);
 				android.os.Process.killProcess(android.os.Process.myPid());
 				break;

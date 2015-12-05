@@ -43,7 +43,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
  *
  */
 public class CategoryDetailsActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryDetailsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CategoryDetailsActivity.class);
 
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
@@ -327,8 +327,8 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 				@Override
 				public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
 					if(info.statusCode == HttpStatus.OK.value()){
-						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-						
+//						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+						LOGGER.info("上传图片成功！");
 						//获取7牛上的文件名和路径保存到数据库中
 						boolean isAdd = false;
 						if(gallery == null){//新增图片数据
@@ -345,8 +345,8 @@ public class CategoryDetailsActivity extends BaseTwoActivity {
 							updateGallery(gallery);
 						}
 					}else{
-						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-						LOGGER.error(">>> 保存图片到服务器失败");
+//						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+						LOGGER.error(">>> 保存图片到服务器失败" + info.error);
 					}
 				}
 			});

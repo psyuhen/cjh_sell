@@ -32,7 +32,7 @@ import com.google.code.microlog4android.config.PropertyConfigurator;
  * 
  */
 public class SplashActivity extends Activity {
-	private static final Logger logger = LoggerFactory.getLogger(SplashActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(SplashActivity.class);
 	
 	boolean isFirstIn = false;
 
@@ -67,12 +67,11 @@ public class SplashActivity extends Activity {
 		PropertyConfigurator.getConfigurator(this).configure();
 		setContentView(R.layout.splash);
 
-		logger.info(">>> starting cjh sell app");
-		
-		init();
-		
 		//创建app目录
 		FileUtil.createAppFolder();
+		LOGGER.info(">>> starting cjh sell app");
+		
+		init();
 	}
 
 	private void init() {

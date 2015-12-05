@@ -483,8 +483,7 @@
                         android:id="@+id/market_customer_today_rl"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1" 
-                        android:visibility="gone">
+                        android:layout_weight="1"  >
 
                         <ImageView
                             android:id="@+id/market_customer_today_image"
@@ -618,8 +617,7 @@
                         android:id="@+id/market_everyday_collect_today_rl"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:visibility="gone" >
+                        android:layout_weight="1"  >
 
                         <ImageView
                             android:id="@+id/market_everyday_collect_today_image"
@@ -656,8 +654,7 @@
                         android:layout_height="fill_parent"
                         android:layout_marginBottom="5.0dip"
                         android:layout_marginTop="5.0dip"
-                        android:background="?android:attr/listDivider"
-                        android:visibility="gone" />
+                        android:background="?android:attr/listDivider" />
 
                     <RelativeLayout
                         android:id="@+id/market_everyday_collect_yesterday_rl"
@@ -797,7 +794,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20.0dip"
                 android:background="@drawable/btn_common"
-                android:text="@string/order_completed_source_btn_text" />
+                android:text="@string/order_completed_source_btn_text" android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 

@@ -29,11 +29,11 @@ import com.cjh.activity.GoodsAddActivity;
 import com.cjh.activity.GoodsDetailsActivity;
 import com.cjh.adapter.GoodsOnofferAdapter;
 import com.cjh.auth.SessionManager;
+import com.cjh.bean.FreshFlag;
 import com.cjh.bean.GoodsItem;
 import com.cjh.bean.MerchInfo;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
-import com.cjh.utils.CommonsUtil;
 import com.cjh.utils.FileUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
@@ -47,7 +47,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsOnOfferFragment extends Fragment {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsOnOfferFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsOnOfferFragment.class);
 
 	
 	private KJListView kjListView;
@@ -56,6 +56,7 @@ public class GoodsOnOfferFragment extends Fragment {
 	private int start = PageUtil.START;//分页的开始
 	
 	private Context context;
+	private FreshFlag freshFlag = new FreshFlag();
 	
 	public GoodsOnOfferFragment(Context context) {
 		this.context = context;
@@ -103,7 +104,7 @@ public class GoodsOnOfferFragment extends Fragment {
 		goods_add_rl.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(context, GoodsAddActivity.class));
+				startActivityForResult(new Intent(context, GoodsAddActivity.class), Constants.ADDGOODS_REQUEST_CODE2);
 			}
 		});
 		
@@ -111,6 +112,9 @@ public class GoodsOnOfferFragment extends Fragment {
 		
 		goodsList = new ArrayList<GoodsItem>();
 		goodsOnofferAdapter=new GoodsOnofferAdapter(goodsList, getActivity());
+		goodsOnofferAdapter.setFragment_name("GoodsOnOfferFragment");
+		goodsOnofferAdapter.setOut_published("0");
+		goodsOnofferAdapter.setFreshFlag(freshFlag);
 		kjListView.setAdapter(goodsOnofferAdapter);
 		kjListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -143,6 +147,15 @@ public class GoodsOnOfferFragment extends Fragment {
 		
 		initData();
 		return contentView;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(freshFlag.getFlag() > 1){
+			querybyuserid(PageUtil.START);
+		}
+		freshFlag.setFlag(1);
 	}
 
 	private void initData() {
@@ -204,46 +217,38 @@ public class GoodsOnOfferFragment extends Fragment {
 	}
 	
 	//查询商品
-	private class queryGoodsTask extends AsyncTask<Integer, Void, Void>{
+	private class queryGoodsTask extends AsyncTask<Integer, Void, List<GoodsItem>>{
+		private int user_id;
+		private int start;
+		public queryGoodsTask(int user_id) {
+			this.user_id = user_id;
+		}
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<GoodsItem> doInBackground(Integer... params) {
 			int start = params[0];
-
-			if(start == PageUtil.START){
-				GoodsOnOfferFragment.this.start = PageUtil.START;
-			}
-			
-			GoodActivity activity = (GoodActivity)context;
-			SessionManager sessionManager = activity.sessionManager;
-			int user_id = sessionManager.getUserId();
+			this.start = start;
 			
 			MerchInfo info = new MerchInfo();
 			info.setUser_id(user_id);
 			info.setOut_published("0");
 			
 			String url = HttpUtil.BASE_URL + "/merch/querybypage.do?start="+start+"&limit="+PageUtil.LIMIT;
-			
+			List<GoodsItem> tmpList = new ArrayList<GoodsItem>();
 			try {
 				String listJson = HttpUtil.postRequest(url,info);
 				if(listJson == null){
-					CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
-					return null;
+					return tmpList;
 				}
 				
 				List<MerchInfo> list = JsonUtil.parse2ListMerchInfo(listJson);
 				if(list == null){
 					LOGGER.warn("转换商品列表信息失败");
-					return null;
+					return tmpList;
 				}
 				
 				int length = list.size();
 				if(length == 0){
-					return null;
-				}
-				
-				//默认开始的时候，先清空列表数据
-				if(start == PageUtil.START){
-					goodsList.clear();
+					return tmpList;
 				}
 				
 				for (int i = 0; i < length; i++) {
@@ -260,23 +265,28 @@ public class GoodsOnOfferFragment extends Fragment {
 					
 					//goodsItem.setImg("image");
 					goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
-					goodsList.add(goodsItem);
+					tmpList.add(goodsItem);
 				}
 				
-				GoodsOnOfferFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 				
 			} catch (Exception e) {
 				LOGGER.error("查询商品列表失败", e);
-				CommonsUtil.showLongToast(getActivity(), "查询商品列表失败");
 			}
 			
-			return null;
+			return tmpList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<GoodsItem> result) {
 			super.onPostExecute(result);
 			
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				goodsList.clear();
+			}
+			goodsList.addAll(result);
+			
+			GoodsOnOfferFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsOnofferAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
 		}
@@ -284,7 +294,15 @@ public class GoodsOnOfferFragment extends Fragment {
 	
 	//根据用户查询商品信息
 	private void querybyuserid(int start){
-		new queryGoodsTask().execute(start);
+		GoodActivity activity = (GoodActivity)context;
+		SessionManager sessionManager = activity.sessionManager;
+		int user_id = sessionManager.getUserId();
+		
+		if(start == PageUtil.START){
+			GoodsOnOfferFragment.this.start = PageUtil.START;
+		}
+		
+		new queryGoodsTask(user_id).execute(start);
 	}
 	
 	
@@ -292,6 +310,11 @@ public class GoodsOnOfferFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case Constants.ONOFFER_REQUEST_CODE:
+			if(data != null){
+				querybyuserid(PageUtil.START);
+			}
+			break;
+		case Constants.ADDGOODS_REQUEST_CODE2:
 			if(data != null){
 				querybyuserid(PageUtil.START);
 			}

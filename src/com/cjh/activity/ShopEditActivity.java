@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -30,7 +31,6 @@ import com.cjh.adapter.AddImageAdapter;
 import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.Store;
-import com.cjh.bean.User;
 import com.cjh.cjh_sell.R;
 import com.cjh.common.Constants;
 import com.cjh.utils.CommonsUtil;
@@ -51,7 +51,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
  *
  */
 public class ShopEditActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShopEditActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(ShopEditActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	private ImageView content_add_image;
@@ -72,6 +72,8 @@ public class ShopEditActivity extends BaseTwoActivity {
 	private EditText shop_edit_detail_person;//负责人
 	
 	private Button shop_edit_details_complete_btn;//完成编辑
+	
+	private boolean isBack2Last = false;//是否跳转到上一个页面
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,12 +133,14 @@ public class ShopEditActivity extends BaseTwoActivity {
 					storeInfo.setStore_id(store_id);
 					storeInfo.setLogo("");
 
+					isBack2Last = false;
 					updateStore(storeInfo);
 				}
 			}
 		});
 		
-		querybyuserid();
+		int user_id = sessionManager.getUserId();
+		querybyuserid(user_id);
 	}
 
 	@Override
@@ -251,47 +255,55 @@ public class ShopEditActivity extends BaseTwoActivity {
 	 */
 	private void getImageToView(Intent data, Context context) {
 		Bundle extras = data.getExtras();
-		if (extras != null) {
-			Bitmap photo = extras.getParcelable("data");
-			AddImage addImage = new AddImage();
-			addImage.setBitmap(photo);
-			lists.add(addImage);
-			adapter.notifyDataSetChanged();
-			//添加图片控件消失
-			content_add_image.setVisibility(View.GONE);
-			
-			//上传图片到7牛
-			File image = ImageUtil.bitmap2file(photo);
-			if(image == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
-				return;
-			}
-			addImage.setFile(image);
-			addImage.setFileName(image.getName());
-			int user_id = sessionManager.getUserId();
-			QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
-				@Override
-				public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
-					if(info.statusCode == HttpStatus.OK.value()){
-						CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-						
-						//更新数据库的文件名
-						Store storeInfo = new Store();
-						int store_id = sessionManager.getInt("store_id");
-						if(store_id > 0){
-							storeInfo.setStore_id(store_id);
-							storeInfo.setLogo(key);
-
-							updateStore(storeInfo);
-						}
-						
-					}else{
-						CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-						LOGGER.error("保存图片到服务器失败");
-					}
-				}
-			});
+		if(extras == null){
+			return;
 		}
+		
+		//显示加载图片
+		startProgressDialog();
+
+		Bitmap photo = extras.getParcelable("data");
+		AddImage addImage = new AddImage();
+		addImage.setBitmap(photo);
+		lists.add(addImage);
+		adapter.notifyDataSetChanged();
+		//添加图片控件消失
+		content_add_image.setVisibility(View.GONE);
+		
+		//上传图片到7牛
+		File image = ImageUtil.bitmap2file(photo);
+		if(image == null){
+			stopProgressDialog();
+			CommonsUtil.showShortToast(getApplicationContext(), "生成图片文件失败");
+			return;
+		}
+		addImage.setFile(image);
+		addImage.setFileName(image.getName());
+		int user_id = sessionManager.getUserId();
+		QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
+			@Override
+			public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+				stopProgressDialog();
+				if(info.statusCode == HttpStatus.OK.value()){
+//					CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+					LOGGER.info("上传图片成功！");
+					//更新数据库的文件名
+					Store storeInfo = new Store();
+					int store_id = sessionManager.getInt("store_id");
+					if(store_id > 0){
+						storeInfo.setStore_id(store_id);
+						storeInfo.setLogo(key);
+
+						isBack2Last = false;
+						updateStore(storeInfo);
+					}
+					
+				}else{
+//					CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+					LOGGER.error("保存图片到服务器失败" + info.error);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -318,14 +330,34 @@ public class ShopEditActivity extends BaseTwoActivity {
 		}
 	}
 	
-	private void querybyuserid(){
-		User user = sessionManager.getUserDetails();
-		//根据用户查询商家信息
-		String url1 = HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user.getUser_id();
-		try {
-			String json = HttpUtil.getRequest(url1);
-			if(json != null){
-				Store store = JsonUtil.parse2Object(json, Store.class);
+	private void querybyuserid(int user_id){
+		new querybyuseridTask(user_id).execute();
+	}
+	
+	private class querybyuseridTask extends AsyncTask<Void, Void, String>{
+		private int user_id;
+		public querybyuseridTask(int user_id) {
+			this.user_id = user_id;
+		}
+		@Override
+		protected String doInBackground(Void... params) {
+			//根据用户查询商家信息
+			String url1 = HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
+			try {
+				String json = HttpUtil.getRequest(url1);
+				
+				return json;
+			} catch (Exception e) {
+				LOGGER.error(">>> 根据用户获取商家信息失败",e);
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			if(result != null){
+				Store store = JsonUtil.parse2Object(result, Store.class);
 				shop_edit_detail_title.setText(store.getName());
 				shop_edit_detail_content.setText(store.getDesc());
 				shop_edit_detail_address.setText(store.getAddress());
@@ -335,10 +367,7 @@ public class ShopEditActivity extends BaseTwoActivity {
 				String fileName = store.getLogo();
 				getImageToView(fileName);
 			}
-		} catch (Exception e) {
-			LOGGER.error(">>> 根据用户获取商家信息失败",e);
 		}
-		
 	}
 	
 	//完成编辑
@@ -386,56 +415,113 @@ public class ShopEditActivity extends BaseTwoActivity {
 		storeInfo.setName(shopName);
 		storeInfo.setStore_id(store_id);
 
+		isBack2Last = true;
 		if(store_id > 0){
 			updateStore(storeInfo);
 		}else{
 			addStore(storeInfo);
 		}
+	}
+	//增加商家
+	private class addStoreTask extends AsyncTask<Void, Void, Store>{
+		private int user_id;
+		private Store storeInfo;
+		public addStoreTask(int user_id, Store storeInfo) {
+			this.user_id = user_id;
+			this.storeInfo = storeInfo;
+		}
+		@Override
+		protected Store doInBackground(Void... params) {
+			//注册商家信息
+			String url = HttpUtil.BASE_URL + "/store/register.do";
+			String json = null;
+			try {
+				json = HttpUtil.postRequest(url, storeInfo);
+				if(json == null){
+					return null;
+				}
+				CommonsUtil.showShortToast(getApplicationContext(), json);
+				
+				if("注册商店成功!".equals(json)){
+					url =  HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
+					json = HttpUtil.getRequest(url);
+					if(json != null){
+						Store store = JsonUtil.parse2Object(json, Store.class);
+						return store;
+					}
+				}
+				
+			} catch (Exception e) {
+				LOGGER.error(">>> 注册商家信息失败", e);
+			}
+			return null;
+		}
 		
-		setResult(RESULT_OK);
-		finish();
+		@Override
+		protected void onPostExecute(Store result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			if(result == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "注册商家信息失败");
+			}else{
+				sessionManager.putInt("store_id", result.getStore_id());
+				sessionManager.put("store_name", result.getName());
+			}
+			
+			if(isBack2Last){
+				ShopEditActivity.this.setResult(RESULT_OK);
+				ShopEditActivity.this.finish();
+			}
+		}
 	}
 	
 	private void addStore(Store storeInfo){
-		//注册商家信息
-		String url = HttpUtil.BASE_URL + "/store/register.do";
-		String json = null;
-		try {
-			json = HttpUtil.postRequest(url, storeInfo);
-			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "注册商家信息失败");
-				return;
+		startProgressDialog();
+		int user_id = sessionManager.getUserId();
+		new addStoreTask(user_id, storeInfo).execute();
+	}
+	
+	//增加商家
+	private class updateStoreTask extends AsyncTask<Void, Void, String>{
+		private Store storeInfo;
+		public updateStoreTask(Store storeInfo) {
+			this.storeInfo = storeInfo;
+		}
+		@Override
+		protected String doInBackground(Void... params) {
+			//更新商家信息
+			String url = HttpUtil.BASE_URL + "/store/modify.do";
+			String json = null;
+			try {
+				json = HttpUtil.postRequest(url, storeInfo);
+				return json;
+			} catch (Exception e) {
+				LOGGER.error(">>> 更新商家信息失败", e);
 			}
-			CommonsUtil.showShortToast(getApplicationContext(), json);
-			
-			if("注册商店成功!".equals(json)){
-				int user_id = sessionManager.getUserId();
-				url =  HttpUtil.BASE_URL + "/store/querybyuser.do?user_id="+user_id;
-				json = HttpUtil.getRequest(url);
-				if(json != null){
-					Store store = JsonUtil.parse2Object(json, Store.class);
-					sessionManager.putInt("store_id", store.getStore_id());
-					sessionManager.put("store_name", store.getName());
-				}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			if(result == null){
+				CommonsUtil.showShortToast(getApplicationContext(), "更新商家信息失败");
+			}else{
+				CommonsUtil.showShortToast(getApplicationContext(), result);
 			}
 			
-		} catch (Exception e) {
-			LOGGER.error(">>> 注册商家信息失败", e);
+			if(isBack2Last){
+				ShopEditActivity.this.setResult(RESULT_OK);
+				ShopEditActivity.this.finish();
+			}
 		}
 	}
+	
+	
 	private void updateStore(Store storeInfo){
 		//更新商家信息
-		String url = HttpUtil.BASE_URL + "/store/modify.do";
-		String json = null;
-		try {
-			json = HttpUtil.postRequest(url, storeInfo);
-			if(json == null){
-				CommonsUtil.showShortToast(getApplicationContext(), "更新商家信息失败");
-				return;
-			}
-			CommonsUtil.showShortToast(getApplicationContext(), json);
-		} catch (Exception e) {
-			LOGGER.error(">>> 更新商家信息失败", e);
-		}
+		startProgressDialog();
+		new updateStoreTask(storeInfo).execute();
 	}
 }

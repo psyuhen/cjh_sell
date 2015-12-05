@@ -16,7 +16,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class CommonsUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommonsUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(CommonsUtil.class);
 
 	/**
 	 * 判断是否有sdcard

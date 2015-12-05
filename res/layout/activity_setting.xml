@@ -24,6 +24,7 @@
                 android:orientation="vertical" >
 
                 <!-- 头像 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_me_rl"
                     style="@style/me_item_rl" >
@@ -40,7 +41,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10.0dip"
                         android:layout_toLeftOf="@+id/setting_me_image_arrow"
-                        android:src="@drawable/login_head_icon"/>
+                        android:src="@drawable/login_head_icon" />
 
                     <ImageView
                         android:id="@+id/setting_me_image_arrow"
@@ -56,6 +57,7 @@
                     style="@style/left_drawer_item_line" />
 
                 <!-- 名称 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_name_rl"
                     style="@style/me_item_rl" >
@@ -85,12 +87,15 @@
 
                 <ImageView
                     android:id="@+id/setting_me_line"
-                    style="@style/left_drawer_item_line" android:visibility="gone"/>
+                    style="@style/left_drawer_item_line"
+                    android:visibility="gone" />
 
-                <!-- 城市  -->
+                <!-- 城市 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_city_rl"
-                    style="@style/me_item_rl" android:visibility="gone">
+                    style="@style/me_item_rl"
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/setting_city_textview"
@@ -103,7 +108,7 @@
                         style="@style/setting_text_details_style"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10.0dip"
-                        android:layout_toLeftOf="@+id/setting_city_image_arrow"  />
+                        android:layout_toLeftOf="@+id/setting_city_image_arrow" />
 
                     <ImageView
                         android:id="@+id/setting_city_image_arrow"
@@ -113,12 +118,13 @@
                         android:layout_marginRight="30.0dip"
                         android:background="@drawable/arrow_right" />
                 </RelativeLayout>
-                
+
                 <ImageView
                     android:id="@+id/setting_me_line_qq"
                     style="@style/left_drawer_item_line" />
 
-                <!-- QQ  -->
+                <!-- QQ -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_qq_rl"
                     style="@style/me_item_rl" >
@@ -144,12 +150,13 @@
                         android:layout_marginRight="30.0dip"
                         android:background="@drawable/arrow_right" />
                 </RelativeLayout>
-                
+
                 <ImageView
                     android:id="@+id/setting_me_line_wechat"
                     style="@style/left_drawer_item_line" />
 
-                <!-- 微信号  -->
+                <!-- 微信号 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_wechat_rl"
                     style="@style/me_item_rl" >
@@ -178,6 +185,7 @@
             </LinearLayout>
 
             <!-- 银行卡 -->
+
             <LinearLayout
                 android:id="@+id/setting_ll2"
                 android:layout_width="fill_parent"
@@ -219,6 +227,7 @@
                     style="@style/left_drawer_item_line" />
 
                 <!-- 密码 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_password_rl"
                     style="@style/me_item_rl" >
@@ -312,6 +321,7 @@
                     style="@style/left_drawer_item_line" />
 
                 <!-- 检查更新 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_update_rl"
                     style="@style/me_item_rl" >
@@ -350,7 +360,8 @@
 
                 <RelativeLayout
                     android:id="@+id/setting_item_feedback_rl"
-                    style="@style/me_item_rl" android:visibility="gone">
+                    style="@style/me_item_rl"
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/setting_feedback_textview"
@@ -379,7 +390,8 @@
                     android:id="@+id/feedback_line"
                     style="@style/left_drawer_item_line" />
 
-                <!-- 分享朋友-->
+                <!-- 分享朋友 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_share_rl"
                     style="@style/me_item_rl"
@@ -413,6 +425,7 @@
                     style="@style/left_drawer_item_line" />
 
                 <!-- 关于 -->
+
                 <RelativeLayout
                     android:id="@+id/setting_item_about_rl"
                     style="@style/me_item_rl" >
@@ -439,21 +452,36 @@
                         android:layout_marginRight="30.0dip"
                         android:background="@drawable/arrow_right" />
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/setting_btn_rl1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/setting_logout_btn"
+                        style="@style/login_register_retrieve_style"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10.0dip"
+                        android:background="@drawable/orange_btn"
+                        android:text="@string/setting_logout_btn" />
+                </RelativeLayout>
                 
                 <RelativeLayout
-			        android:id="@+id/setting_btn_rl"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content">
-			
-			        <Button
-			            android:id="@+id/setting_exit_btn"
-			            style="@style/login_register_retrieve_style"
-			            android:layout_width="fill_parent"
-			            android:layout_height="wrap_content"
-			            android:layout_margin="10.0dip"
-			            android:background="@drawable/orange_btn"
-			            android:text="@string/setting_exit_btn" />
-			    </RelativeLayout>
+                    android:id="@+id/setting_btn_rl"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/setting_exit_btn"
+                        style="@style/login_register_retrieve_style"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10.0dip"
+                        android:background="@drawable/orange_btn"
+                        android:text="@string/setting_exit_btn" />
+                </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

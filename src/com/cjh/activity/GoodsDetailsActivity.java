@@ -58,7 +58,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
  *
  */
 public class GoodsDetailsActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsDetailsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsDetailsActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片
@@ -389,15 +389,16 @@ public class GoodsDetailsActivity extends BaseTwoActivity {
 							@Override
 							public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
 								if(info.statusCode == HttpStatus.OK.value()){
-									CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
+									LOGGER.info("上传图片成功！");
+									//CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
 									Gallery gallery = new Gallery();
 									gallery.setMerch_id(merch_id);
 									gallery.setFile_name(key);
 									gallery.setName(key);
 									addGallery(gallery);
 								}else{
-									CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-									LOGGER.error(">>> 保存图片到服务器失败");
+									//CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
+									LOGGER.error(">>> 保存图片到服务器失败"+ info.error);
 								}
 							}
 						});

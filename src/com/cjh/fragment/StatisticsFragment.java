@@ -29,6 +29,7 @@ import com.cjh.common.LineView;
 import com.cjh.utils.DateUtil;
 import com.cjh.utils.HttpUtil;
 import com.cjh.utils.JsonUtil;
+import com.cjh.utils.LoadingDialog;
 import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 /**
@@ -37,7 +38,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class StatisticsFragment extends Fragment implements OnClickListener{
-	private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(StatisticsFragment.class);
 	private Button order_completed_source_btn;
 
 	//成交订单的今日与昨日
@@ -63,6 +64,27 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 	private Context context;
 	public void setContext(Context context) {
 		this.context = context;
+	}
+	private LoadingDialog progressDialog;//进度条
+	/**
+	 * 加载开始
+	 */
+	public void startProgressDialog() {
+		if (progressDialog == null) {
+			progressDialog = new LoadingDialog(StatisticsFragment.this.context);
+			progressDialog.setCancelable(false);
+		}
+		progressDialog.show();
+	}
+
+	/**
+	 * 加载结束
+	 */
+	public void stopProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
 	}
 
 	@Override
@@ -95,10 +117,12 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 
 	private void initData() {
 		//TODO 修改为异步了，感觉代码有点冗余。。待优化。
+		startProgressDialog();
 		new CountTask().execute();
 		new CountTask1().execute();
 		new CountTask2().execute();
 		new CountTask3().execute();
+		stopProgressDialog();
 	}
 
 	@SuppressLint("ResourceAsColor")
@@ -121,11 +145,11 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 		}
 		lineView.setBottomTextList(bottomlist);
 	}
-	
+	//成交订单
 	public void fillSellData(List<OrderStat> sell){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (OrderStat v : sell) {
 				String hour = v.getStat_date();
@@ -144,7 +168,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 	public void fillMoneyData(List<OrderStat> money){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (OrderStat v : money) {
 				String hour = v.getStat_date();
@@ -163,7 +187,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 	public void fillFavoriteData(List<FavoriteStat> favorite){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (FavoriteStat v : favorite) {
 				String hour = v.getStat_date();
@@ -183,7 +207,7 @@ public class StatisticsFragment extends Fragment implements OnClickListener{
 	public void fillVisitData(List<VisitStat> visit){
 		ArrayList<Integer> dataslist = new ArrayList<Integer>();
 		for (int i = 0; i < 24; i++) {
-			String index = (i < 10) ? "0"+i : i+"";
+			String index = ((i < 10) ? ("0" + i) : i) +":00";
 			boolean isFound = false;
 			for (VisitStat v : visit) {
 				String hour = v.getStat_date();

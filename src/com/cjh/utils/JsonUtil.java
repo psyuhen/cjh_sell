@@ -32,7 +32,7 @@ import com.google.code.microlog4android.LoggerFactory;
  * 
  */
 public class JsonUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
 	/**
 	 * 把json字符串转换为一个Map
 	 * @param json json字符串

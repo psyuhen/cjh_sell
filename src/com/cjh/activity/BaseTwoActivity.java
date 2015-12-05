@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.cjh.auth.SessionManager;
 import com.cjh.cjh_sell.R;
+import com.cjh.utils.LoadingDialog;
 
 public class BaseTwoActivity extends FragmentActivity implements OnClickListener{
 	public TextView title;
@@ -18,6 +19,27 @@ public class BaseTwoActivity extends FragmentActivity implements OnClickListener
 	public ImageButton right_imgbtn;
 	
 	public SessionManager sessionManager;
+	private LoadingDialog progressDialog;//进度条
+	/**
+	 * 加载开始
+	 */
+	public void startProgressDialog() {
+		if (progressDialog == null) {
+			progressDialog = new LoadingDialog(BaseTwoActivity.this);
+			progressDialog.setCancelable(false);
+		}
+		progressDialog.show();
+	}
+
+	/**
+	 * 加载结束
+	 */
+	public void stopProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -20,7 +20,7 @@ import com.google.code.microlog4android.Logger;
 import com.google.code.microlog4android.LoggerFactory;
 
 public class CouponAddActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CouponAddActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CouponAddActivity.class);
 
 	private EditText coupons_startdate_edit;
 	private EditText coupons_enddate_edit;

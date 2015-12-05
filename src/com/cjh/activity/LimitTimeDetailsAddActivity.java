@@ -26,7 +26,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class LimitTimeDetailsAddActivity extends BaseTwoActivity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(LimitTimeDetailsAddActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(LimitTimeDetailsAddActivity.class);
 
 	private TextView limit_time_title;
 	private TextView limit_time_price;

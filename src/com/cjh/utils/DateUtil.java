@@ -19,7 +19,7 @@ import com.google.code.microlog4android.LoggerFactory;
  * 
  */
 public class DateUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DateUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(DateUtil.class);
 
 	/**
 	 * 获取当前日期，默认格式为yyyyMMdd

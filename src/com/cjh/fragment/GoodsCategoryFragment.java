@@ -42,7 +42,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsCategoryFragment extends Fragment implements OnClickListener{
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsCategoryFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsCategoryFragment.class);
 	private RelativeLayout add_category_rl;
 	private RelativeLayout edit_category_rl;
 	
@@ -124,37 +124,35 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 	}
 	
 	//根据分类查询商品
-	private class queryGoodsTask extends AsyncTask<Integer, Void, Void>{
+	private class queryGoodsTask extends AsyncTask<Integer, Void, List<CategoryItem>>{
+		private int start;
+		private int user_id;
+		public queryGoodsTask(int user_id) {
+			this.user_id = user_id;
+		}
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<CategoryItem> doInBackground(Integer... params) {
 			int start = params[0];
-			
-			GoodActivity activity = (GoodActivity)context;
-			SessionManager sessionManager = activity.sessionManager;
-			int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
+			this.start = start;
 			
 			String url = HttpUtil.BASE_URL + "/classify/querybyuseridpage.do?user_id="+user_id+"&start="+start+"&limit="+PageUtil.LIMIT;
+			List<CategoryItem> tmpList = new ArrayList<CategoryItem>();
 			try {
 				String jsons = HttpUtil.getRequest(url);
 				if(jsons == null){
 					CommonsUtil.showShortToast(getActivity(), "查询分类信息失败");
-					return null;
+					return tmpList;
 				}
 				List<ClassifyInfo> list = JsonUtil.parse2ListClassifyInfo(jsons);
 				if(list == null){
 					LOGGER.warn("转换分类列表信息失败");
-					return null;
+					return tmpList;
 				}
 				
 				int length = list.size();
 				//查询的数据为空时，不作处理
 				if(length == 0){
-					return null;
-				}
-				
-				//默认开始的时候，先清空列表数据
-				if(start == PageUtil.START){
-					categoryList.clear();
+					return tmpList;
 				}
 				
 				for (int i = 0; i < length; i++) {
@@ -170,21 +168,28 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 						categoryItem.setBitmap(FileUtil.getCacheFile(classify_image));
 					}
 					
-					categoryList.add(categoryItem);
+					tmpList.add(categoryItem);
 				}
 				
-				GoodsCategoryFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
+				
 			} catch (Exception e) {
 				LOGGER.error("查询分类列表失败", e);
-				CommonsUtil.showShortToast(getActivity(), "查询分类列表失败");
 			}
-			return null;
+			return tmpList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<CategoryItem> result) {
 			super.onPostExecute(result);
 			
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				categoryList.clear();
+			}
+			
+			categoryList.addAll(result);
+			
+			GoodsCategoryFragment.this.start += PageUtil.LIMIT;//每次改变start的值 
 			goodsCategoryAdapter.notifyDataSetChanged();
 			kjListView.stopRefreshData();
 		}
@@ -192,7 +197,11 @@ public class GoodsCategoryFragment extends Fragment implements OnClickListener{
 	
 	//根据用户查询分类
 	private void queryClassify(int start){
-		new queryGoodsTask().execute(start);
+		GoodActivity activity = (GoodActivity)context;
+		SessionManager sessionManager = activity.sessionManager;
+		int user_id = sessionManager.getUserId();
+		
+		new queryGoodsTask(user_id).execute(start);
 	}
 	
 	@Override

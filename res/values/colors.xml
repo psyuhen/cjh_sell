@@ -13,7 +13,7 @@
     <color name="gray_deep">#787878</color>
     <color name="gray_line">#dadada</color>
     <color name="gray_bg">#e8eaea</color>
-    <color name="orange_text">#FE7442</color>
+<!--      <color name="orange_text">#FE7442</color> -->
     <color name="red">#ff0000</color>
     <color name="black">#ff000000</color>
     <color name="order_item_line">#d3d7d4</color>

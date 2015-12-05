@@ -32,7 +32,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class LimitTimeAddActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(LimitTimeActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(LimitTimeActivity.class);
 
 	private KJListView kjListView;
 	private List<GoodsItem> goodsList;

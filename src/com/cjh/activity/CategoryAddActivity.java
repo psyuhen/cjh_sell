@@ -39,7 +39,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class CategoryAddActivity extends BaseTwoActivity{
-	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryAddActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(CategoryAddActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片

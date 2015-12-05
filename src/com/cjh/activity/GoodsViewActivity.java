@@ -32,7 +32,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsViewActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsViewActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsViewActivity.class);
 
 	private ListView goodsViewListView;
 	private List<AddImage> lists;

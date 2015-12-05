@@ -22,7 +22,7 @@ import com.google.code.microlog4android.LoggerFactory;
  * 
  */
 public class FileUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);
 	private final static String FOLDER = "cjh_seller";
 	private final static String AUDIO_FOLDER = "audio";
 
@@ -205,6 +205,7 @@ public class FileUtil {
 			bos = new BufferedOutputStream(fos);
 			
 			bos.write(fileBytes);
+			bos.flush();
 		} catch (Exception e) {
 			LOGGER.error("获取语音文件失败", e);
 		}finally{

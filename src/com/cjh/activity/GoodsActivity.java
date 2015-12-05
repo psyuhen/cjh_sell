@@ -31,7 +31,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsActivity.class);
 
 //	private TextView order_title;
 	
@@ -143,15 +143,19 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 		}
 	}*/
 	//根据分类查询商品
-	private class queryGoodsTask extends AsyncTask<Integer, Void, Void>{
+	private class queryGoodsTask extends AsyncTask<Integer, Void, List<GoodsItem>>{
+		private int start;
 		@Override
-		protected Void doInBackground(Integer... params) {
+		protected List<GoodsItem> doInBackground(Integer... params) {
 			int start = params[0];
+			this.start = start;
 			//根据商家ID查询商品信息
 			MerchInfo merch = new MerchInfo();
 			merch.setClassify_id(classify_id);
 			//TODO 未作分页
 			String url = HttpUtil.BASE_URL + "/merch/querybypage.do?start="+start+"&limit="+PageUtil.LIMIT;
+			
+			List<GoodsItem> tmpList = new ArrayList<GoodsItem>();
 			try {
 				String json = HttpUtil.postRequest(url,merch);
 				if(json != null){
@@ -159,12 +163,7 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 					int length = list.size();
 					
 					if(length == 0){
-						return null;
-					}
-					
-					//默认开始的时候，先清空列表数据
-					if(start == PageUtil.START){
-						goodsList.clear();
+						return tmpList;
 					}
 					
 					for (int i = 0; i < length; i++) {
@@ -180,19 +179,26 @@ public class GoodsActivity extends BaseTwoActivity implements OnClickListener {
 						goodsItem.setTitle(merchInfo.getName());
 						
 						goodsItem.setBitmap(FileUtil.getCacheFile(merchInfo.getImage_name()));
-						goodsList.add(goodsItem);
+						tmpList.add(goodsItem);
 					}
 				}
 			} catch (Exception e) {
 				LOGGER.error(">>> 根据分类ID查询商品信息失败",e);
 			}
-			return null;
+			return tmpList;
 		}
 		
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(List<GoodsItem> result) {
 			super.onPostExecute(result);
 			
+			//默认开始的时候，先清空列表数据
+			if(start == PageUtil.START){
+				goodsList.clear();
+			}
+			goodsList.addAll(result);
+			
+			GoodsActivity.this.start += PageUtil.LIMIT;
 			adapter.notifyDataSetChanged();
 			goods_listview.stopRefreshData();
 		}

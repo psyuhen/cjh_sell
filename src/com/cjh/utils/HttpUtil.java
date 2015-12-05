@@ -28,14 +28,14 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class HttpUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
+	private final static Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 	
 //	public static final String IP = "192.168.1.103";
 	public static final String IP = "203.195.245.171";
 //	public static final String IP = "192.168.43.67";
-//	public static final String IP = "128.128.80.58";
+//	public static final String IP = "128.128.85.102";
 	public static final String BASE_URL = "http://"+ IP +":8001/sgams";
-	private static final int CONNECT_TIME_OUT = 1000;
+	private static final int CONNECT_TIME_OUT = 10000;
 	
 	public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 	

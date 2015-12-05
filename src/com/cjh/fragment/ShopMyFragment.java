@@ -1,8 +1,11 @@
 package com.cjh.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -35,7 +38,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class ShopMyFragment extends Fragment implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShopMyFragment.class);
+	private Logger LOGGER = LoggerFactory.getLogger(ShopMyFragment.class);
 	private Context context;
 	
 	private LinearLayout view_in_shop_content_ll;
@@ -119,14 +122,23 @@ public class ShopMyFragment extends Fragment implements OnClickListener {
 				String logo = store.getLogo();
 				if(logo != null && !"".equals(logo)){
 					Bitmap bitmap = FileUtil.getCacheFile(logo);
-					shop_my_image.setImageBitmap(bitmap);
+//					shop_my_image.setImageBitmap(bitmap);
+					shop_my_image.setBackgroundDrawable(getDrawable(bitmap)); 
 				}else{//没有上传图片就默认一个吧
-					shop_my_image.setImageResource(R.drawable.login_head_icon);
+//					shop_my_image.setImageResource(R.drawable.login_head_icon);
+					shop_my_image.setBackgroundResource(R.drawable.login_head_icon);
 				}
 			}
 		} catch (Exception e) {
 			LOGGER.error("根据用户获取商家信息失败", e);
 		}
+	}
+	
+	@SuppressLint("NewApi") private Drawable getDrawable(Bitmap bitmap){
+		Drawable drawable = new BitmapDrawable(getResources(), bitmap);  
+//		drawable.setTileModeXY(TileMode.REPEAT , TileMode.REPEAT );  
+		drawable.setDither(true);  
+		return drawable;
 	}
 
 	@Override

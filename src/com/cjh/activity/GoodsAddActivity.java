@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -34,7 +35,6 @@ import android.widget.Toast;
 import com.cjh.adapter.AddImageAdapter;
 import com.cjh.adapter.CommonAdapter;
 import com.cjh.adapter.ViewHolder;
-import com.cjh.auth.SessionManager;
 import com.cjh.bean.AddImage;
 import com.cjh.bean.CategoryItem;
 import com.cjh.bean.ClassifyInfo;
@@ -59,7 +59,7 @@ import com.qiniu.android.storage.UpCompletionHandler;
  *
  */
 public class GoodsAddActivity extends BaseTwoActivity {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodsAddActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodsAddActivity.class);
 	// 添加图片对话框
 	private AlertDialog imageChooseDialog = null;
 	// 添加图片
@@ -321,61 +321,81 @@ public class GoodsAddActivity extends BaseTwoActivity {
 		merchInfo.setOut_published("0");
 		
 		
-		String url = HttpUtil.BASE_URL + "/merch/add.do";
-		try {
-			String json = HttpUtil.postRequest(url, merchInfo);
-			if(json == null){
-				CommonsUtil.showShortToast(GoodsAddActivity.this, "添加商品失败");
-				return ;
-			}
+		startProgressDialog();
+		int user_id = sessionManager.getUserId();
+		new addMerchTask(merchInfo, user_id).execute();
+	}
+	
+	private class addMerchTask extends AsyncTask<Void, Void, String>{
+		private MerchInfo merchInfo;
+		private int user_id;
+		public addMerchTask(MerchInfo merchInfo, int user_id) {
+			this.merchInfo = merchInfo;
+			this.user_id = user_id;
+		}
+		@Override
+		protected String doInBackground(Void... params) {
+			String url = HttpUtil.BASE_URL + "/merch/add.do";
+			String msg = "";
+			try {
+				String merchInfoJson = HttpUtil.postRequest(url, merchInfo);
+				if(merchInfoJson == null){
+					return "添加商品失败";
+				}
 			
-			CommonsUtil.showShortToast(GoodsAddActivity.this, json);
-			//查询Merch_id
-			url = HttpUtil.BASE_URL + "/merch/queryMerchByMap.do";
-			Map<String,String> map = new HashMap<String, String>();
-			map.put("name", title);
-			map.put("desc", content);
-			map.put("store_id", store_id+"");
-			json = HttpUtil.postRequest(url, map);
-			if(json != null){
-				List<MerchInfo> merchList = JsonUtil.parse2ListMerchInfo(json);
-				if(merchList != null && !merchList.isEmpty()){
-					MerchInfo merch = merchList.get(0);
-					final int merchId = merch.getMerch_id();
-					//上传图片到7牛吧
-					if(lists != null && !lists.isEmpty()){
-						for (AddImage addImage : lists) {
-							File image = addImage.getFile();
-							int user_id = sessionManager.getInt(SessionManager.KEY_USER_ID);
-							QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
-								@Override
-								public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
-									if(info.statusCode == HttpStatus.OK.value()){
-										CommonsUtil.showShortToast(getApplicationContext(), "更新图片成功");
-										
-										Gallery gallery = new Gallery();
-										gallery.setMerch_id(merchId);
-										gallery.setFile_name(key);
-										gallery.setName(key);
-										addGallery(gallery);
-									}else{
-										CommonsUtil.showShortToast(getApplicationContext(), "保存图片到服务器失败");
-										LOGGER.error(">>> 保存图片到服务器失败");
+				msg = merchInfoJson;
+				//查询Merch_id
+				url = HttpUtil.BASE_URL + "/merch/queryMerchByMap.do";
+				Map<String,String> map = new HashMap<String, String>();
+				map.put("name", merchInfo.getName());
+				map.put("desc", merchInfo.getDesc());
+				map.put("store_id", merchInfo.getStore_id()+"");
+				String json = HttpUtil.postRequest(url, map);
+				if(json != null){
+					List<MerchInfo> merchList = JsonUtil.parse2ListMerchInfo(json);
+					if(merchList != null && !merchList.isEmpty()){
+						MerchInfo merch = merchList.get(0);
+						final int merchId = merch.getMerch_id();
+						//上传图片到7牛吧
+						if(lists != null && !lists.isEmpty()){
+							for (AddImage addImage : lists) {
+								File image = addImage.getFile();
+								QiNiuUtil.resumeUploadFile(image.getName(), image, String.valueOf(user_id), new UpCompletionHandler() {
+									@Override
+									public void complete(String key, ResponseInfo info, JSONObject jsonObj) {
+										if(info.statusCode == HttpStatus.OK.value()){
+											LOGGER.info("上传图片成功！");
+											Gallery gallery = new Gallery();
+											gallery.setMerch_id(merchId);
+											gallery.setFile_name(key);
+											gallery.setName(key);
+											addGallery(gallery);
+										}else{
+											LOGGER.error(">>> 保存图片到服务器失败" + info.error);
+										}
 									}
-								}
-							});
+								});
+							}
 						}
 					}
 				}
+				
+			} catch (Exception e) {
+				LOGGER.error(">>> 添加商品失败",e);
+				return "添加商品失败";
 			}
-			
-			//startActivity(new Intent(GoodsAddActivity.this, GoodsActivity.class));
-			GoodsAddActivity.this.finish();
-		} catch (Exception e) {
-			LOGGER.error(">>> 添加商品失败",e);
-			CommonsUtil.showLongToast(getApplicationContext(), "添加商品失败");
+			return msg;
 		}
-		
+	
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			stopProgressDialog();
+			CommonsUtil.showShortToast(getApplicationContext(), result);
+			
+			setResult(RESULT_OK,new Intent());
+			GoodsAddActivity.this.finish();
+		}
 	}
 	
 	//新增图片信息

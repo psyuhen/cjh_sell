@@ -16,7 +16,7 @@
     <string name="goods_category_num_text">11</string>
     <string name="goods_category_text">分类</string>
     <!-- 订单管理 -->
-    <string name="order_title_text">暨南社区便利店</string>
+    <string name="order_title_text"></string>
     <string name="good_level_text">LV1</string>
     <string name="order_horn_text">你还有未领取的商家补贴</string>
     <string name="order_complete_num_text">0</string>
@@ -343,6 +343,7 @@
     <string name="goods_sale_num_text">销售数量</string>
     <string name="goods_stock_text">库存</string>
     <string name="good_share_text">分享</string>
+    <string name="good_edit_text">编辑</string>
     <string name="goods_see_text">查看</string>
     <string name="goods_bind_text">复制</string>
     <string name="add_category_text">新建分类</string>
@@ -415,6 +416,7 @@
     <string name="retrieve_pswd_new_pswd_edit_hint">请输入要设置的新密码</string>
     <string name="retrieve_pswd_confirm_btn">确认</string>
     
+    <string name="setting_logout_btn">注销</string>
     <string name="setting_exit_btn">退出</string>
     
     <!-- leancloud -->

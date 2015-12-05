@@ -23,7 +23,7 @@ import com.google.code.microlog4android.LoggerFactory;
  *
  */
 public class GoodActivity extends FragmentActivity implements OnClickListener {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GoodActivity.class);
+	private Logger LOGGER = LoggerFactory.getLogger(GoodActivity.class);
 
 	private RadioGroup mRadioGroup;
 	private ViewPager mViewPager;

@@ -111,6 +111,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
+                    <!-- 我的订单 -->
                     <RelativeLayout
                         android:id="@+id/me_order_rl"
                         style="@style/me_item_rl" >
@@ -150,6 +151,7 @@
                         android:id="@+id/order_line"
                         style="@style/left_drawer_item_line" />
 
+                    <!-- 商品管理 -->
                     <RelativeLayout
                         android:id="@+id/me_goods_rl"
                         style="@style/me_item_rl" >
@@ -213,9 +215,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goods_bottom_ll1"
-                    android:layout_marginTop="30.0dip"
                     android:orientation="vertical" >
 
+                    <!-- 统计中心 -->
                     <RelativeLayout
                         android:id="@+id/me_marketing_rl"
                         style="@style/me_item_rl" >
@@ -278,8 +280,7 @@
                     android:id="@+id/goods_bottom_ll3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/goods_bottom_ll2"
-                    android:layout_marginTop="30.0dip"
+                    android:layout_below="@+id/goods_bottom_ll2" 
                     android:orientation="vertical" >
 
                     <RelativeLayout
@@ -343,6 +344,7 @@
                         android:id="@+id/customerservice_line"
                         style="@style/left_drawer_item_line" />
 
+                    <!-- 关于我们 -->
                     <RelativeLayout
                         android:id="@+id/me_help_ll"
                         style="@style/me_item_rl" >
